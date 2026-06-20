@@ -1,59 +1,191 @@
-# RentalSaasWeb
+# 🚗 Rental SaaS — Frontend Web App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.16.
+A multi-tenant car rental SaaS management dashboard built with **Angular 21** (standalone, zoneless signals). Features full RBAC, fleet management, reservations, rentals, and finance/invoicing.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📋 Requirements
 
-```bash
-ng serve
-```
+| Dependency | Version |
+|---|---|
+| Node.js | `^20.x` or `^22.x` (LTS recommended) |
+| npm | `^10.x` |
+| Angular CLI | `^21.x` |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+> **Backend API must be running** at `http://127.0.0.1:8000` before starting the frontend. See [`rental-saas-api/README.md`](../rental-saas-api/README.md).
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ⚙️ Tech Stack
 
-```bash
-ng generate component component-name
-```
+- **Framework:** Angular 21 (Standalone Components, Signals, Zoneless)
+- **Language:** TypeScript 5.9
+- **Styling:** Vanilla CSS (custom design system with CSS variables)
+- **Charts:** Chart.js 4
+- **HTTP:** Angular `HttpClient` with JWT interceptor
+- **Auth:** JWT token stored in `localStorage`
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🚀 Installation & Setup
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 1. Clone the repository
 
 ```bash
-ng test
+git clone <repo-url>
+cd rental-saas-web
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### 2. Install dependencies
 
 ```bash
-ng e2e
+npm install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 3. Verify API URL
 
-## Additional Resources
+The app is pre-configured to talk to the backend at:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```
+http://127.0.0.1:8000/api/v1
+```
+
+This is set directly in each service file under:
+```
+src/app/core/services/
+```
+
+If your backend runs on a different port or host, update `apiUrl` in each service accordingly.
+
+### 4. Start the development server
+
+```bash
+npm start
+```
+
+or equivalently:
+
+```bash
+npx ng serve
+```
+
+The app will be available at: **`http://localhost:4200`**
+
+The dev server supports **Hot Module Replacement (HMR)** — changes reload automatically.
+
+---
+
+## 🔑 Login Credentials
+
+Use these credentials on the login page at `http://localhost:4200/login`:
+
+### Super Admin _(full access to all modules)_
+
+| Field    | Value                   |
+|----------|-------------------------|
+| Email    | `admin@acmerental.com`  |
+| Password | `password`              |
+| Role     | Super Admin             |
+
+### Agent _(limited access)_
+
+| Field    | Value                   |
+|----------|-------------------------|
+| Email    | `agent@acmerental.com`  |
+| Password | `password`              |
+| Role     | Agent                   |
+
+> **Agent** can access: Customers, Assets (view only), Reservations, Rentals. Cannot access Finance or User Management.
+
+---
+
+## 📁 Project Structure
+
+```
+rental-saas-web/
+├── src/
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── services/        # API services (auth, customers, assets, etc.)
+│   │   │   ├── guards/          # Auth route guards
+│   │   │   └── interceptors/    # JWT token interceptor
+│   │   ├── features/
+│   │   │   ├── auth/            # Login page
+│   │   │   ├── dashboard/       # Main dashboard with charts
+│   │   │   ├── customers/       # Customer management
+│   │   │   ├── assets/          # Fleet asset management
+│   │   │   ├── reservations/    # Reservation management
+│   │   │   ├── rentals/         # Active rental management
+│   │   │   ├── finance/         # Invoices & finance
+│   │   │   └── users/           # User & role management
+│   │   └── shared/
+│   │       ├── components/      # Layout (header, sidebar, app-layout)
+│   │       └── directives/      # *hasPermission directive
+│   ├── styles.css               # Global design system (CSS variables, tokens)
+│   └── main.ts                  # App bootstrap (zoneless)
+├── package.json
+└── angular.json
+```
+
+---
+
+## 🧩 Available Features
+
+| Module | Route | Description |
+|--------|-------|-------------|
+| Dashboard | `/dashboard` | Analytics overview with charts |
+| Customers | `/customers` | Full CRUD — Individual & Business |
+| Fleet (Assets) | `/assets` | Vehicle/asset management |
+| Reservations | `/reservations` | Booking management |
+| Rentals | `/rentals` | Active rental check-in/out |
+| Finance | `/finance/invoices` | Invoice listing & details |
+| Users | `/users` | Staff & role management |
+
+---
+
+## 🛠️ Useful Commands
+
+```bash
+# Start dev server
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+
+# Lint / format with Prettier
+npx prettier --write "src/**/*.{ts,html,css}"
+```
+
+---
+
+## 🔗 Backend Dependency
+
+This frontend **requires** the `rental-saas-api` Laravel backend to be running.
+
+Start the backend first:
+```bash
+# From the rental-saas-api directory
+php artisan serve --host=127.0.0.1 --port=8000
+
+# Or using XAMPP PHP
+D:\xampp\php\php.exe artisan serve --host=127.0.0.1 --port=8000
+```
+
+Then start the frontend:
+```bash
+# From rental-saas-web directory
+npm start
+```
+
+---
+
+## 🌐 Ports Summary
+
+| Service | URL |
+|---------|-----|
+| Frontend (Angular) | `http://localhost:4200` |
+| Backend API (Laravel) | `http://127.0.0.1:8000/api/v1` |
+| Database (MySQL/XAMPP) | `127.0.0.1:3306` |
