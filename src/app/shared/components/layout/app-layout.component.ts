@@ -20,10 +20,15 @@ export class AppLayoutComponent {
   readonly roles      = this.authService.roles;
 
   profileMenuOpen = signal(false);
+  sidebarCollapsed = signal(window.innerWidth < 1024);
   readonly currentYear = new Date().getFullYear();
 
   toggleProfileMenu(): void {
     this.profileMenuOpen.update(v => !v);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed.update(v => !v);
   }
 
   /** Close dropdown when clicking anywhere outside */

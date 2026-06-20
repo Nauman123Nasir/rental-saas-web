@@ -13,6 +13,12 @@ A chronological log of all features, fixes, and improvements built across the pr
 - Removed tenant/company name from the **header left side**
 - Branch info is now accessible only via the **Profile Menu dropdown** (right-side header)
 - Profile section and notification bell are now **right-aligned** in the header
+- Made the top header **sticky** (`position: sticky`) by resolving parent overflow conflict (`overflow-x: clip` in `.app-layout-container`)
+- Implemented **Collapsible Sidebar**:
+  - Added menu toggle button (hamburger) on the header left side
+  - Desktop: Sidebar slides out to the left and shifts content automatically for maximum work area
+  - Tablets/Mobiles: Sidebar slides in as a premium overlay drawer with blur backdrop overlay
+  - Automatically collapses sidebar on screens under `1024px` on initial load
 
 ### ✅ Fleet Listing Filters — Redesigned
 - Rebuilt the `asset-list` filter bar to fully match the **Customer List filter panel style**

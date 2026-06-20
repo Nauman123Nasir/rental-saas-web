@@ -6,7 +6,7 @@
   display: flex;
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: 'Outfit', 'Inter', sans-serif;
 }
 
@@ -27,6 +27,7 @@
   padding: 1.75rem 1.25rem;
   box-sizing: border-box;
   box-shadow: 4px 0 30px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-header { margin-bottom: 2rem; }
@@ -113,7 +114,20 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Collapsed State (Desktop) ── */
+.sidebar-collapsed .glass-sidebar {
+  transform: translateX(-260px);
+}
+.sidebar-collapsed .main-wrapper {
+  margin-left: 0;
+}
+
+/* ── Mobile Sidebar Backdrop Overlay ── */
+.sidebar-backdrop {
+  display: none;
 }
 
 /* ══ TOP HEADER ══════════════════════════════════ */
@@ -375,22 +389,43 @@
 
 /* ══ RESPONSIVE ══════════════════════════════════ */
 @media (max-width: 1024px) {
-  .glass-sidebar {
-    width: 72px;
-    padding: 1.75rem 0.5rem;
-    align-items: center;
+  /* On tablets and mobile, sidebar slides in as overlay drawer. Main content is full-width. */
+  .main-wrapper {
+    margin-left: 0 !important;
   }
-  .logo-text, .tenant-badge, .nav-label, .user-details { display: none; }
-  .app-logo { justify-content: center; }
-  .nav-item { justify-content: center; padding: 0.8rem; border-left: none; }
-  .nav-item.active { background: rgba(99, 102, 241, 0.1); border-radius: 12px; }
-  .user-profile { justify-content: center; }
-  .main-wrapper { margin-left: 72px; }
+  
+  .glass-sidebar {
+    z-index: 300;
+    box-shadow: 10px 0 45px rgba(15, 23, 42, 0.08);
+    transform: translateX(-260px);
+  }
+  
+  /* Slide in sidebar when sidebarCollapsed is false (meaning open) */
+  .app-layout-container:not(.sidebar-collapsed) .glass-sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 250; /* between content and sidebar */
+    animation: fadeInOverlay 0.22s ease-out;
+  }
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 640px) {
-  .glass-sidebar { display: none; }
-  .main-wrapper { margin-left: 0; }
   .top-header { padding: 0 1rem; }
   .header-user-info { display: none; }
   .header-branch { display: none; }
