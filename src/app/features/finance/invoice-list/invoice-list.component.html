@@ -1,0 +1,151 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 font-sans">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- ── Page Header ─────────────────────────────────────────────────────── -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Invoices</h1>
+        </div>
+        <p class="text-gray-500 text-sm">View and manage all tenant invoices generated from completed rentals.</p>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="flex items-center gap-3">
+        <label class="text-sm font-semibold text-gray-600">Status:</label>
+        <select [(ngModel)]="statusFilter" (ngModelChange)="onStatusChange()"
+          class="px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700 focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+          <option value="">All Statuses</option>
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ── Loading Skeleton ────────────────────────────────────────────────── -->
+    <div *ngIf="isLoading" class="space-y-4">
+      <div *ngFor="let i of [1,2,3,4,5]"
+        class="h-20 bg-white/70 rounded-2xl animate-pulse border border-gray-100">
+      </div>
+    </div>
+
+    <!-- ── Invoice Table ───────────────────────────────────────────────────── -->
+    <div *ngIf="!isLoading"
+      class="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl shadow-indigo-900/5 rounded-3xl overflow-hidden">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-100">
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Invoice #</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Customer</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Status</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Total</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Balance Due</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Issue Date</th>
+            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr *ngFor="let inv of invoices"
+            class="group hover:bg-indigo-50/20 transition-colors duration-150">
+
+            <!-- Invoice No -->
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <span class="font-bold text-gray-800 text-sm tracking-wide">{{ inv.invoice_no }}</span>
+              </div>
+            </td>
+
+            <!-- Customer -->
+            <td class="py-4 px-6">
+              <p class="text-sm font-semibold text-gray-700">
+                {{ inv.customer?.first_name }} {{ inv.customer?.last_name }}
+              </p>
+              <p class="text-xs text-gray-400">{{ inv.customer?.email }}</p>
+            </td>
+
+            <!-- Status Badge -->
+            <td class="py-4 px-6">
+              <span [class]="'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ' + statusClasses(inv.status || '')">
+                {{ inv.status }}
+              </span>
+            </td>
+
+            <!-- Total -->
+            <td class="py-4 px-6">
+              <p class="text-sm font-bold text-gray-800">
+                {{ inv.currency_code }} {{ inv.total_amount | number:'1.2-2' }}
+              </p>
+            </td>
+
+            <!-- Balance Due -->
+            <td class="py-4 px-6">
+              <p class="text-sm font-semibold"
+                [class.text-red-600]="(inv.balance_due ?? 0) > 0"
+                [class.text-emerald-600]="(inv.balance_due ?? 0) <= 0">
+                {{ inv.currency_code }} {{ inv.balance_due | number:'1.2-2' }}
+              </p>
+            </td>
+
+            <!-- Issue Date -->
+            <td class="py-4 px-6">
+              <p class="text-sm text-gray-500">{{ inv.issue_date | date:'mediumDate' }}</p>
+            </td>
+
+            <!-- Actions -->
+            <td class="py-4 px-6 text-right">
+              <a [routerLink]="[inv.id]"
+                class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 rounded-xl hover:bg-indigo-100 hover:shadow-sm transition-all duration-150">
+                View
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="invoices.length === 0">
+            <td colspan="7" class="py-20 text-center">
+              <div class="flex flex-col items-center justify-center gap-3">
+                <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <p class="text-gray-500 font-semibold text-lg">No invoices found</p>
+                <p class="text-gray-400 text-sm">Generate an invoice from a completed rental to get started.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div *ngIf="totalPages > 1"
+        class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+        <p class="text-xs text-gray-400 font-medium">Page {{ currentPage }} of {{ totalPages }}</p>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="currentPage === 1"
+            class="px-4 py-2 text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+            ← Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            class="px-4 py-2 text-xs font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

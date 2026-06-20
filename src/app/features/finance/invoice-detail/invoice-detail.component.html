@@ -1,0 +1,187 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 font-sans">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- ── Back Link ──────────────────────────────────────────────────────────── -->
+    <a routerLink="/finance/invoices"
+      class="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800 mb-8 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Back to Invoices
+    </a>
+
+    <!-- ── Loading ──────────────────────────────────────────────────────────── -->
+    <div *ngIf="isLoading" class="space-y-6 animate-pulse">
+      <div class="h-32 bg-white/70 rounded-3xl border border-gray-100"></div>
+      <div class="h-64 bg-white/70 rounded-3xl border border-gray-100"></div>
+    </div>
+
+    <!-- ── Error ─────────────────────────────────────────────────────────────── -->
+    <div *ngIf="error && !isLoading"
+      class="p-6 bg-red-50 border border-red-200 rounded-2xl text-red-700 font-semibold text-center">
+      {{ error }}
+    </div>
+
+    <!-- ── Invoice Content ────────────────────────────────────────────────────── -->
+    <div *ngIf="invoice && !isLoading" class="space-y-6">
+
+      <!-- Header Card -->
+      <div class="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl shadow-indigo-900/5 rounded-3xl overflow-hidden">
+        <!-- Top bar with gradient -->
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-8 py-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p class="text-indigo-200 text-xs font-bold uppercase tracking-widest mb-1">Invoice</p>
+              <h1 class="text-3xl font-extrabold text-white tracking-tight">{{ invoice.invoice_no }}</h1>
+            </div>
+            <div class="flex items-center gap-3">
+              <!-- Status Badge -->
+              <span [class]="'px-4 py-2 rounded-full text-sm font-bold border border-white/30 text-white bg-white/20 backdrop-blur ' + ''">
+                {{ invoice.status }}
+              </span>
+              <!-- Record Payment Button -->
+              <button *ngIf="invoice.status !== 'Void' && invoice.status !== 'Paid'"
+                (click)="goToPayment()"
+                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-indigo-700 bg-white rounded-xl hover:bg-indigo-50 shadow-lg transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                Record Payment
+              </button>
+              <!-- Void Button -->
+              <button *ngIf="invoice.status !== 'Void' && invoice.status !== 'Paid'"
+                (click)="voidInvoice()" [disabled]="isVoiding"
+                class="px-4 py-2.5 text-sm font-bold text-white/70 hover:text-white border border-white/30 rounded-xl hover:bg-white/10 transition-all disabled:opacity-50">
+                {{ isVoiding ? 'Voiding…' : 'Void' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer & Date Info -->
+        <div class="px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Customer</p>
+            <p class="font-bold text-gray-800">{{ invoice.customer?.first_name }} {{ invoice.customer?.last_name }}</p>
+            <p class="text-sm text-gray-400">{{ invoice.customer?.email }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Rental Ref</p>
+            <p class="font-semibold text-gray-700">{{ invoice.rental?.rental_no ?? '—' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Issue Date</p>
+            <p class="font-semibold text-gray-700">{{ invoice.issue_date | date:'mediumDate' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Due Date</p>
+            <p class="font-semibold text-gray-700">{{ invoice.due_date ? (invoice.due_date | date:'mediumDate') : '—' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Line Items Table -->
+      <div class="bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl rounded-3xl overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100">
+          <h2 class="text-lg font-bold text-gray-800">Line Items</h2>
+        </div>
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-gray-50/70 border-b border-gray-100">
+              <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Description</th>
+              <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Type</th>
+              <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Unit Price</th>
+              <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Qty</th>
+              <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr *ngFor="let line of invoice.lines" class="hover:bg-indigo-50/10 transition-colors">
+              <td class="py-3.5 px-6 text-sm font-medium text-gray-700">{{ line.description }}</td>
+              <td class="py-3.5 px-6">
+                <span class="px-2.5 py-1 text-xs font-semibold bg-slate-100 text-slate-600 rounded-lg">
+                  {{ line.line_type | titlecase }}
+                </span>
+              </td>
+              <td class="py-3.5 px-6 text-sm text-gray-600 text-right">{{ invoice.currency_code }} {{ line.unit_price | number:'1.2-2' }}</td>
+              <td class="py-3.5 px-6 text-sm text-gray-600 text-right">{{ line.quantity }}</td>
+              <td class="py-3.5 px-6 text-sm font-bold text-gray-800 text-right">{{ invoice.currency_code }} {{ line.total | number:'1.2-2' }}</td>
+            </tr>
+            <tr *ngIf="!invoice.lines?.length">
+              <td colspan="5" class="py-8 text-center text-sm text-gray-400">No line items.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="px-8 py-6 bg-gray-50/50 border-t border-gray-100">
+          <div class="max-w-xs ml-auto space-y-2.5">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Subtotal</span>
+              <span class="font-semibold">{{ invoice.currency_code }} {{ invoice.subtotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Discount</span>
+              <span class="font-semibold text-emerald-600">- {{ invoice.currency_code }} {{ invoice.discount_amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Tax</span>
+              <span class="font-semibold">{{ invoice.currency_code }} {{ invoice.tax_amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="border-t border-gray-200 pt-2.5 flex justify-between text-base font-extrabold text-gray-900">
+              <span>Total</span>
+              <span>{{ invoice.currency_code }} {{ invoice.total_amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500">
+              <span>Amount Paid</span>
+              <span class="font-semibold text-emerald-600">{{ invoice.currency_code }} {{ invoice.amount_paid | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-between text-base font-bold"
+              [class.text-red-600]="(invoice.balance_due ?? 0) > 0"
+              [class.text-emerald-600]="(invoice.balance_due ?? 0) <= 0">
+              <span>Balance Due</span>
+              <span>{{ invoice.currency_code }} {{ invoice.balance_due | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payments History -->
+      <div class="bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl rounded-3xl overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100">
+          <h2 class="text-lg font-bold text-gray-800">Payment History</h2>
+        </div>
+        <div *ngIf="invoice.payments?.length; else noPayments">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-gray-50/70 border-b border-gray-100">
+                <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Payment #</th>
+                <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Method</th>
+                <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Amount</th>
+                <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Date</th>
+                <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Receipt #</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <tr *ngFor="let pay of invoice.payments" class="hover:bg-emerald-50/10 transition-colors">
+                <td class="py-3.5 px-6 text-sm font-bold text-gray-800">{{ pay.payment_no }}</td>
+                <td class="py-3.5 px-6">
+                  <span class="px-2.5 py-1 text-xs font-semibold bg-blue-50 text-blue-700 rounded-lg capitalize">
+                    {{ pay.payment_method }}
+                  </span>
+                </td>
+                <td class="py-3.5 px-6 text-sm font-bold text-emerald-700 text-right">{{ invoice.currency_code }} {{ pay.amount | number:'1.2-2' }}</td>
+                <td class="py-3.5 px-6 text-sm text-gray-500">{{ pay.payment_datetime_utc | date:'medium' }}</td>
+                <td class="py-3.5 px-6 text-xs font-medium text-gray-500">{{ pay.receipt?.receipt_no ?? '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noPayments>
+          <div class="py-10 text-center text-gray-400 text-sm font-medium">No payments recorded yet.</div>
+        </ng-template>
+      </div>
+
+    </div>
+  </div>
+</div>

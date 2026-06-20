@@ -107,6 +107,29 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'finance',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'invoices',
+        pathMatch: 'full'
+      },
+      {
+        path: 'invoices',
+        loadComponent: () => import('./features/finance/invoice-list/invoice-list.component').then(m => m.InvoiceListComponent)
+      },
+      {
+        path: 'invoices/:id',
+        loadComponent: () => import('./features/finance/invoice-detail/invoice-detail.component').then(m => m.InvoiceDetailComponent)
+      },
+      {
+        path: 'payments/new',
+        loadComponent: () => import('./features/finance/payment-form/payment-form.component').then(m => m.PaymentFormComponent)
+      }
+    ]
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
