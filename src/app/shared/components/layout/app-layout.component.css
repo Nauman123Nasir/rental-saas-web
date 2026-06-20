@@ -1,0 +1,240 @@
+/* App Layout Container */
+.app-layout-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
+  overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Sidebar Styles */
+.glass-sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.02);
+}
+
+.sidebar-header {
+  margin-bottom: 2.5rem;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #4338ca;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #4338ca, #0f766e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.03em;
+}
+
+.tenant-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 3px solid transparent;
+}
+
+.nav-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.25s ease;
+}
+
+.nav-item:hover {
+  background: rgba(99, 102, 241, 0.05);
+  color: #4338ca;
+}
+
+.nav-item:hover .nav-icon {
+  transform: translateX(2px);
+}
+
+.nav-item.active {
+  background: rgba(99, 102, 241, 0.1);
+  color: #4338ca;
+  border-left-color: #4338ca;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #14b8a6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.user-branch {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.sidebar-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #ef4444;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  transition: all 0.25s ease;
+}
+
+.sidebar-logout-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+}
+
+.logout-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Main Content Area */
+.main-layout-content {
+  flex-grow: 1;
+  margin-left: 280px; /* Offset for sidebar width */
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: transparent;
+  transition: margin-left 0.3s ease;
+}
+
+/* Responsive adjustment */
+@media (max-width: 1024px) {
+  .glass-sidebar {
+    width: 80px;
+    padding: 2rem 0.5rem;
+    align-items: center;
+  }
+  .logo-text, .tenant-badge, .nav-label, .user-details, .sidebar-logout-btn span {
+    display: none;
+  }
+  .app-logo {
+    justify-content: center;
+  }
+  .nav-item {
+    justify-content: center;
+    padding: 0.85rem;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  .nav-item.active {
+    border-bottom-color: #4338ca;
+  }
+  .sidebar-logout-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: 10px;
+  }
+  .main-layout-content {
+    margin-left: 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .glass-sidebar {
+    display: none; /* Hide on mobile or implement a toggle drawer */
+  }
+  .main-layout-content {
+    margin-left: 0;
+  }
+}

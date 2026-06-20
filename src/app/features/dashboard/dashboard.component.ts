@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DashboardService, DashboardStats } from '../../core/services/dashboard.service';
@@ -32,9 +32,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   readonly tenant = this.authService.tenant;
   readonly branch = this.authService.branch;
 
-  stats: DashboardStats | null = null;
-  loading = true;
-  errorMessage = '';
+  stats = signal<DashboardStats | null>(null);
+  loading = signal<boolean>(true);
+  errorMessage = signal<string>('');
 
   ngOnInit(): void {
     this.fetchStats();
@@ -45,29 +45,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   fetchStats(): void {
-    this.loading = true;
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
     this.dashboardService.getStats().subscribe({
       next: (response) => {
         if (response.success) {
-          this.stats = response.data;
+          this.stats.set(response.data);
           // Set a tiny timeout to ensure canvas DOM elements are rendered
           setTimeout(() => this.initCharts(), 50);
         } else {
-          this.errorMessage = 'Failed to load dashboard metrics.';
+          this.errorMessage.set('Failed to load dashboard metrics.');
         }
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while communicating with the server.';
-        this.loading = false;
+        this.errorMessage.set('An error occurred while communicating with the server.');
+        this.loading.set(false);
         console.error(err);
       }
     });
   }
 
   initCharts(): void {
-    if (!this.stats) return;
+    const statsData = this.stats();
+    if (!statsData) return;
 
     this.destroyCharts();
 
@@ -101,10 +102,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.revenueChart = new Chart(revCtx, {
           type: 'line',
           data: {
-            labels: this.stats.trends.revenue.map(r => r.month),
+            labels: statsData.trends.revenue.map(r => r.month),
             datasets: [{
               label: 'Revenue ($)',
-              data: this.stats.trends.revenue.map(r => r.total),
+              data: statsData.trends.revenue.map(r => r.total),
               borderColor: '#6366f1',
               backgroundColor: 'rgba(99, 102, 241, 0.1)',
               fill: true,
@@ -125,10 +126,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.bookingsChart = new Chart(bookCtx, {
           type: 'bar',
           data: {
-            labels: this.stats.trends.bookings.map(b => b.month),
+            labels: statsData.trends.bookings.map(b => b.month),
             datasets: [{
               label: 'Reservations',
-              data: this.stats.trends.bookings.map(b => b.count),
+              data: statsData.trends.bookings.map(b => b.count),
               backgroundColor: '#14b8a6',
               borderRadius: 6,
               barThickness: 24
@@ -146,9 +147,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.statusChart = new Chart(statusCtx, {
           type: 'doughnut',
           data: {
-            labels: Object.keys(this.stats.status_distribution),
+            labels: Object.keys(statsData.status_distribution),
             datasets: [{
-              data: Object.values(this.stats.status_distribution),
+              data: Object.values(statsData.status_distribution),
               backgroundColor: [
                 '#10b981', // Available (Emerald)
                 '#f59e0b', // Reserved (Amber)
