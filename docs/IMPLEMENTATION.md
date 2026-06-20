@@ -272,3 +272,17 @@ export class FeatureService {
 | Offline support | No PWA or offline caching |
 | File uploads | Customer documents reference system not yet wired to actual file storage |
 | Real-time | No WebSocket/Pusher integration yet; dashboard stats require manual refresh |
+
+---
+
+## 📄 Software Requirements Specification (SRS)
+
+All original project requirements, roadmap, volumes, and MVP planning documents are stored in the project repository under:
+- [`docs/SRS_Chatgpt/`](file:///D:/rental-saas-web/docs/SRS_Chatgpt)
+
+These include:
+- **`All-volumes-complete-story.docx`**: Complete functional specifications and user story backlog.
+- **`Our MVP_Plan.docx`**: Core MVP requirements & pricing details.
+- **`MVP-ROADMAP.docx`**: Iteration/phase roadmap.
+- **`Vol1.docx` through `vol14-RoadMap.docx`**: Detailed feature volumes (categories, fleet, rentals, booking, invoicing, etc.).
+- **`credentials.txt`**: Seeded login credentials.

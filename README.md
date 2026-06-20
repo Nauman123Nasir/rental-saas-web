@@ -189,3 +189,12 @@ npm start
 | Frontend (Angular) | `http://localhost:4200` |
 | Backend API (Laravel) | `http://127.0.0.1:8000/api/v1` |
 | Database (MySQL/XAMPP) | `127.0.0.1:3306` |
+
+---
+
+## 📄 Software Requirements Specification (SRS)
+
+All original project requirements, roadmap, volumes, and MVP planning documents are stored in the project repository under:
+- [`docs/SRS_Chatgpt/`](file:///D:/rental-saas-web/docs/SRS_Chatgpt)
+
+These include functional specs (`All-volumes-complete-story.docx`), roadmap documents, feature volume breakdowns (`Vol1.docx` - `vol14-RoadMap.docx`), and seeded login credentials (`credentials.txt`).
