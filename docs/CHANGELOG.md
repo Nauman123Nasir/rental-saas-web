@@ -40,6 +40,12 @@ A chronological log of all features, fixes, and improvements built across the pr
 - Updated `RentalModel` interface to include nested `customer` and `asset` objects
 - Updated `ReservationModel` interface to include nested `customer` object
 
+### ✅ Reservation Creation Flow Upgrade
+- Refactored `reservation-form` to load customers and assets directly from their APIs.
+- Replaced the user-unfriendly raw numeric `customer_id` and `asset_id` text input fields with beautiful, interactive `<select>` dropdown lists showing names, emails, brands, models, and license plates.
+- Fixed an empty dropdown bug by correctly extracting the items list from `res.data.data` (paginated API response) and added `ChangeDetectorRef` to trigger updates in Angular's zoneless environment.
+- Re-labeled the dropdown and placeholders to use "Asset" rather than "Vehicle" to match the rest of the workspace's terminology.
+
 ### ✅ Global Styling Fixes
 - Added global `.btn-secondary` styles to `styles.css`
 - Scoped dark-themed form/button overrides under `.glass-panel` to prevent cross-page style leaks

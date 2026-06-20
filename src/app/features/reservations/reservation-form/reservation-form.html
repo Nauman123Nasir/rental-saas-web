@@ -47,17 +47,27 @@
           <h2 class="res-section-title">Customer &amp; Asset</h2>
           <div class="grid-2">
             <div class="form-group">
-              <label class="form-label">Customer ID *</label>
-              <input type="number" formControlName="customer_id" class="form-input" placeholder="e.g. 1">
+              <label class="form-label">Customer *</label>
+              <select formControlName="customer_id" class="form-select">
+                <option [value]="null">Select a Customer...</option>
+                <option *ngFor="let c of customers()" [value]="c.id">
+                  {{ c.first_name }} {{ c.last_name }} ({{ c.email }})
+                </option>
+              </select>
               <span *ngIf="form.get('customer_id')?.invalid && form.get('customer_id')?.touched" class="form-error">
-                Customer ID is required
+                Customer is required
               </span>
             </div>
             <div class="form-group">
-              <label class="form-label">Asset ID *</label>
-              <input type="number" formControlName="asset_id" class="form-input" placeholder="e.g. 5">
+              <label class="form-label">Asset *</label>
+              <select formControlName="asset_id" class="form-select">
+                <option [value]="null">Select an Asset...</option>
+                <option *ngFor="let a of assets()" [value]="a.id">
+                  {{ a.brand }} {{ a.model }} ({{ a.license_plate }} — {{ a.status }})
+                </option>
+              </select>
               <span *ngIf="form.get('asset_id')?.invalid && form.get('asset_id')?.touched" class="form-error">
-                Asset ID is required
+                Asset selection is required
               </span>
             </div>
           </div>
