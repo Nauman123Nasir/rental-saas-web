@@ -1,0 +1,143 @@
+<div class="list-container">
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="list-content">
+    <div class="header-section">
+      <div>
+        <h1 class="page-title">Fleet Directory</h1>
+        <p class="page-subtitle">Manage your vehicles, track availability, and update pricing.</p>
+      </div>
+      <button 
+        *hasPermission="'vehicles.create'"
+        routerLink="/vehicles/create" 
+        class="btn-primary"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Vehicle
+      </button>
+    </div>
+
+    <div class="glass-card table-card">
+      <div class="filters-row">
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search make, model, license plate..." 
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event); onSearch()"
+            class="filter-input"
+          >
+        </div>
+
+        <div class="filter-group">
+          <select 
+            [ngModel]="statusFilter()"
+            (ngModelChange)="statusFilter.set($event); onFilterChange()"
+            class="filter-select"
+          >
+            <option value="">All Statuses</option>
+            <option value="available">Available</option>
+            <option value="rented">Rented</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="retired">Retired</option>
+          </select>
+
+          <select 
+            [ngModel]="categoryFilter()"
+            (ngModelChange)="categoryFilter.set($event); onFilterChange()"
+            class="filter-select"
+          >
+            <option value="">All Categories</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Truck">Truck</option>
+            <option value="Van">Van</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage()" class="error-message">
+        {{ errorMessage() }}
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>License Plate</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Daily Rate</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading()">
+              <td colspan="6" class="text-center py-4">
+                <div class="spinner"></div>
+              </td>
+            </tr>
+            <tr *ngIf="!isLoading() && vehicles().length === 0">
+              <td colspan="6" class="text-center py-4 empty-state">
+                No vehicles found matching your criteria.
+              </td>
+            </tr>
+            <tr *ngFor="let v of vehicles()" class="table-row">
+              <td>
+                <div class="vehicle-info">
+                  <div class="vehicle-name">{{ v.year }} {{ v.make }} {{ v.model }}</div>
+                  <div class="vehicle-vin" *ngIf="v.vin">VIN: {{ v.vin }}</div>
+                </div>
+              </td>
+              <td><span class="text-mono">{{ v.license_plate }}</span></td>
+              <td>{{ v.category || 'N/A' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(v.status)">
+                  {{ v.status }}
+                </span>
+              </td>
+              <td class="rate-col">${{ v.daily_rate | number:'1.2-2' }}/day</td>
+              <td class="actions-cell">
+                <a [routerLink]="['/vehicles', v.id]" class="action-btn view-btn" title="View Details">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" *ngIf="totalPages() > 1">
+        <button 
+          class="page-btn" 
+          [disabled]="currentPage() === 1"
+          (click)="changePage(currentPage() - 1)"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button 
+          class="page-btn" 
+          [disabled]="currentPage() === totalPages()"
+          (click)="changePage(currentPage() + 1)"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

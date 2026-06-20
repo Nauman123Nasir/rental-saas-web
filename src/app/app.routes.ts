@@ -45,6 +45,26 @@ export const routes: Routes = [
     canActivate: [authGuard, permissionGuard('customers.update')]
   },
   {
+    path: 'vehicles',
+    loadComponent: () => import('./features/vehicles/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent),
+    canActivate: [authGuard, permissionGuard('vehicles.view')]
+  },
+  {
+    path: 'vehicles/create',
+    loadComponent: () => import('./features/vehicles/vehicle-form/vehicle-form.component').then(m => m.VehicleFormComponent),
+    canActivate: [authGuard, permissionGuard('vehicles.create')]
+  },
+  {
+    path: 'vehicles/:id',
+    loadComponent: () => import('./features/vehicles/vehicle-detail/vehicle-detail.component').then(m => m.VehicleDetailComponent),
+    canActivate: [authGuard, permissionGuard('vehicles.view')]
+  },
+  {
+    path: 'vehicles/:id/edit',
+    loadComponent: () => import('./features/vehicles/vehicle-form/vehicle-form.component').then(m => m.VehicleFormComponent),
+    canActivate: [authGuard, permissionGuard('vehicles.update')]
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
