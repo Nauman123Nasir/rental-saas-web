@@ -1,0 +1,18 @@
+.res-table-card {
+  overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.booking-id {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.875rem;
+}
+
+.date-cell {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}

@@ -1,0 +1,185 @@
+/* Invoice Detail CSS */
+
+.overflow-x-auto { overflow-x: auto; }
+
+.inv-detail-header-card {
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+/* Gradient Banner */
+.inv-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+}
+
+.inv-banner-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 0.25rem;
+}
+
+.inv-banner-no {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.inv-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inv-banner-status {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.inv-pay-btn {
+  background: #fff;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.inv-pay-btn:hover {
+  background: rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+}
+
+.inv-void-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+
+.inv-void-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* Meta grid */
+.inv-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+}
+
+@media (max-width: 768px) {
+  .inv-meta-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.inv-meta-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.inv-meta-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.inv-meta-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.125rem;
+}
+
+/* Section cards */
+.inv-section-card {
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.inv-section-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(248, 250, 252, 0.5);
+}
+
+.inv-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Line item styling */
+.line-desc {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.line-type-tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Totals box */
+.inv-totals {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  background: rgba(248, 250, 252, 0.5);
+  border-top: 1px solid var(--border-color);
+}
+
+.totals-box {
+  min-width: 280px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+}
+
+.total-row:last-child { border-bottom: none; }
+
+.total-grand {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  padding: 0.6rem 0;
+  border-top: 2px solid var(--border-color);
+  border-bottom: none;
+  margin-top: 0.25rem;
+}
+
+.total-balance {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding-top: 0.5rem;
+}
+
+.balance-due { color: var(--danger); }
+.balance-paid { color: var(--success); }
+.text-success { color: var(--success); }

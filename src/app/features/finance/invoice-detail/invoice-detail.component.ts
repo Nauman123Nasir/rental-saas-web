@@ -8,6 +8,7 @@ import { FinanceService, InvoiceModel } from '../../../core/services/finance.ser
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './invoice-detail.component.html',
+  styleUrls: ['./invoice-detail.component.css']
 })
 export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceModel | null = null;

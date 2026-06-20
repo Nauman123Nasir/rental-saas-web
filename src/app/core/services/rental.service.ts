@@ -11,6 +11,8 @@ export interface RentalModel {
   pickup_datetime_utc: string;
   expected_return_datetime_utc: string;
   status?: string;
+  customer?: any;
+  asset?: any;
 }
 
 @Injectable({

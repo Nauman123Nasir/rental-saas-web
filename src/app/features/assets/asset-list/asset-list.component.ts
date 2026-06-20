@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -15,15 +15,16 @@ import { HasPermissionDirective } from '../../../shared/directives/has-permissio
 export class AssetListComponent implements OnInit {
   assets = signal<any[]>([]);
   categories = signal<any[]>([]);
-  
-  searchTerm = signal('');
-  statusFilter = signal('');
-  categoryFilter = signal('');
+
+  // Plain properties for ngModel compatibility
+  searchTerm = '';
+  statusFilter = '';
+  categoryFilter = '';
 
   currentPage = signal(1);
   totalPages = signal(1);
   perPage = 10;
-  
+
   loading = signal(false);
 
   constructor(private assetService: AssetService) {}
@@ -43,18 +44,18 @@ export class AssetListComponent implements OnInit {
 
   loadAssets() {
     this.loading.set(true);
-    
+
     this.assetService.getAssets({
-      search: this.searchTerm(),
-      status: this.statusFilter(),
-      category_id: this.categoryFilter() ? parseInt(this.categoryFilter()) : undefined,
+      search: this.searchTerm,
+      status: this.statusFilter,
+      category_id: this.categoryFilter ? parseInt(this.categoryFilter) : undefined,
       page: this.currentPage(),
       per_page: this.perPage
     }).subscribe({
       next: (res) => {
-        this.assets.set(res.data.data);
-        this.currentPage.set(res.data.current_page);
-        this.totalPages.set(res.data.last_page);
+        this.assets.set(res.data?.data ?? res.data ?? []);
+        this.currentPage.set(res.data?.current_page ?? 1);
+        this.totalPages.set(res.data?.last_page ?? 1);
         this.loading.set(false);
       },
       error: (err) => {
@@ -88,5 +89,17 @@ export class AssetListComponent implements OnInit {
         }
       });
     }
+  }
+
+  getStatusClass(status: string): string {
+    const map: Record<string, string> = {
+      'Available':   'badge-green',
+      'Rented':      'badge-blue',
+      'Reserved':    'badge-amber',
+      'Maintenance': 'badge-red',
+      'Inactive':    'badge-gray',
+      'Retired':     'badge-gray',
+    };
+    return map[status] ?? 'badge-gray';
   }
 }

@@ -9,6 +9,7 @@ import { FinanceService, InvoiceModel } from '../../../core/services/finance.ser
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './payment-form.component.html',
+  styleUrls: ['./payment-form.component.css']
 })
 export class PaymentFormComponent implements OnInit {
   form!: FormGroup;

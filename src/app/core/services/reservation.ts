@@ -11,6 +11,7 @@ export interface ReservationModel {
   return_datetime_utc: string;
   status?: string;
   tenant_id?: number;
+  customer?: any;
 }
 
 @Injectable({

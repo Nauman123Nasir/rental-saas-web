@@ -1,57 +1,74 @@
-<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-8 font-sans">
-  <div class="max-w-6xl mx-auto">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
-      <div>
-        <h2 class="text-4xl font-extrabold text-gray-800 tracking-tight">Reservations</h2>
-        <p class="text-sm text-gray-500 mt-2">Manage customer bookings and schedules.</p>
-      </div>
-      <a routerLink="new" class="group relative px-6 py-3 font-semibold text-white transition-all duration-300 ease-in-out bg-indigo-600 rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 overflow-hidden">
-        <span class="relative z-10 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-          New Booking
-        </span>
-      </a>
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Reservations</h1>
+      <p class="page-subtitle">Manage customer bookings and schedules</p>
+    </div>
+    <a routerLink="new" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+      New Booking
+    </a>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner-ring"></div>
+    <span>Loading reservations...</span>
+  </div>
+
+  <!-- Table Card -->
+  <div *ngIf="!loading()" class="glass-card res-table-card">
+    <!-- Empty State -->
+    <div *ngIf="reservations().length === 0" class="empty-state">
+      <svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <p class="empty-state-title">No reservations found</p>
+      <p class="empty-state-text">Create a new booking to get started.</p>
     </div>
 
-    <!-- Data Grid -->
-    <div class="bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl overflow-hidden transition-all duration-300">
-      <table class="w-full text-left border-collapse">
+    <div *ngIf="reservations().length > 0" class="overflow-x-auto">
+      <table class="data-table">
         <thead>
-          <tr class="bg-gray-50/50 border-b border-gray-100">
-            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Booking ID</th>
-            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
-            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider">Pickup Date</th>
-            <th class="py-5 px-6 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+          <tr>
+            <th>Booking ID</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Pickup Date</th>
+            <th>Return Date</th>
+            <th style="text-align:right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50">
-          <tr *ngFor="let r of reservations" class="group hover:bg-indigo-50/30 transition-colors duration-200">
-            <td class="py-4 px-6">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                </div>
-                <p class="font-semibold text-gray-800">RES-{{ r.id }}</p>
-              </div>
+        <tbody>
+          <tr *ngFor="let r of reservations()">
+            <td>
+              <span class="booking-id">
+                {{ r.reservation_no || 'RES-' + r.id }}
+              </span>
             </td>
-            <td class="py-4 px-6">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+            <td>
+              <span *ngIf="r.customer">
+                {{ r.customer.type === 'Individual' ? (r.customer.first_name + ' ' + r.customer.last_name) : r.customer.company_name }}
+              </span>
+              <span *ngIf="!r.customer">—</span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(r.status || 'Draft')">
                 {{ r.status || 'Draft' }}
               </span>
             </td>
-            <td class="py-4 px-6">
-              <p class="text-sm text-gray-600 font-medium">{{ r.pickup_datetime_utc | date:'short' }}</p>
-            </td>
-            <td class="py-4 px-6 text-right">
-              <a [routerLink]="[r.id]" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
-                Details
+            <td class="date-cell">{{ r.pickup_datetime_utc | date:'mediumDate' }}</td>
+            <td class="date-cell">{{ r.return_datetime_utc | date:'mediumDate' }}</td>
+            <td style="text-align:right">
+              <a [routerLink]="[r.id]" class="btn btn-ghost btn-sm">
+                View Details
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
               </a>
-            </td>
-          </tr>
-          <tr *ngIf="reservations.length === 0">
-            <td colspan="4" class="py-12 text-center text-gray-400">
-              <p class="text-lg font-medium">No reservations found.</p>
             </td>
           </tr>
         </tbody>
