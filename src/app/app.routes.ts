@@ -67,6 +67,46 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'reservations',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/reservations/reservation-list/reservation-list').then(m => m.ReservationList)
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./features/reservations/reservation-form/reservation-form').then(m => m.ReservationForm)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./features/reservations/reservation-detail/reservation-detail').then(m => m.ReservationDetail)
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () => import('./features/reservations/reservation-form/reservation-form').then(m => m.ReservationForm)
+      }
+    ]
+  },
+  {
+    path: 'rentals',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/rentals/rental-list/rental-list.component').then(m => m.RentalListComponent)
+      },
+      {
+        path: 'checkout',
+        loadComponent: () => import('./features/rentals/rental-checkout/rental-checkout.component').then(m => m.RentalCheckoutComponent)
+      },
+      {
+        path: ':id/checkin',
+        loadComponent: () => import('./features/rentals/rental-checkin/rental-checkin.component').then(m => m.RentalCheckinComponent)
+      }
+    ]
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
