@@ -1,0 +1,170 @@
+<div class="max-w-5xl mx-auto pb-10">
+  <div class="flex items-center mb-6">
+    <a routerLink="/assets" class="text-gray-400 hover:text-white mr-4">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    <h1 class="text-2xl font-semibold text-white">Asset Details</h1>
+  </div>
+
+  <div *ngIf="loading()" class="text-center py-8 glass-panel">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
+  </div>
+
+  <div *ngIf="!loading() && asset()" class="space-y-6">
+    <!-- Header Card -->
+    <div class="glass-panel p-6 relative overflow-hidden">
+      <div class="absolute top-0 right-0 p-6">
+        <span class="px-3 py-1 rounded-full text-sm font-medium"
+          [ngClass]="{
+            'bg-green-500/20 text-green-400': asset().status === 'Available',
+            'bg-blue-500/20 text-blue-400': asset().status === 'Rented',
+            'bg-yellow-500/20 text-yellow-400': asset().status === 'Reserved',
+            'bg-orange-500/20 text-orange-400': asset().status === 'Maintenance',
+            'bg-red-500/20 text-red-400': asset().status === 'Retired' || asset().status === 'Inactive'
+          }">
+          {{ asset().status }}
+        </span>
+      </div>
+
+      <div class="flex items-start gap-6">
+        <div class="w-24 h-24 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+          <i class="fas fa-box text-4xl text-gray-400"></i>
+        </div>
+        
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h2 class="text-3xl font-bold text-white">{{ asset().brand }} {{ asset().model }} <span *ngIf="asset().year" class="text-gray-400 font-normal">({{ asset().year }})</span></h2>
+          </div>
+          <p class="text-gray-400 text-lg mb-4">{{ asset().asset_code }}</p>
+
+          <div class="flex gap-3">
+            <a [routerLink]="['/assets', asset().id, 'edit']" *hasPermission="'assets.update'" class="btn-primary py-1.5 px-4 text-sm">
+              <i class="fas fa-edit mr-2"></i> Edit
+            </a>
+            <button (click)="deleteAsset()" *hasPermission="'assets.delete'" class="btn-secondary py-1.5 px-4 text-sm text-red-400 hover:text-red-300">
+              <i class="fas fa-trash mr-2"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 border-b border-white/10">
+      <button (click)="setTab('specs')" 
+        class="px-6 py-3 text-sm font-medium transition-colors border-b-2"
+        [ngClass]="activeTab() === 'specs' ? 'text-white border-blue-500' : 'text-gray-400 border-transparent hover:text-white'">
+        Specifications
+      </button>
+      <button (click)="setTab('rates')" 
+        class="px-6 py-3 text-sm font-medium transition-colors border-b-2"
+        [ngClass]="activeTab() === 'rates' ? 'text-white border-blue-500' : 'text-gray-400 border-transparent hover:text-white'">
+        Rental Rates
+      </button>
+      <button (click)="setTab('maintenance')" 
+        class="px-6 py-3 text-sm font-medium transition-colors border-b-2"
+        [ngClass]="activeTab() === 'maintenance' ? 'text-white border-blue-500' : 'text-gray-400 border-transparent hover:text-white'">
+        Maintenance Blocks
+      </button>
+    </div>
+
+    <!-- Specs Tab -->
+    <div *ngIf="activeTab() === 'specs'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass-panel p-6">
+        <h3 class="text-lg font-medium text-white mb-4 border-b border-white/10 pb-2">Identification</h3>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm text-gray-400">Asset Code</dt>
+            <dd class="text-white font-medium">{{ asset().asset_code }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Category</dt>
+            <dd class="text-white font-medium">{{ asset().category?.name || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">VIN Number</dt>
+            <dd class="text-white font-medium">{{ asset().vin_number || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Serial Number</dt>
+            <dd class="text-white font-medium">{{ asset().serial_number || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Ownership Type</dt>
+            <dd class="text-white font-medium">{{ asset().ownership_type || 'N/A' }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="glass-panel p-6">
+        <h3 class="text-lg font-medium text-white mb-4 border-b border-white/10 pb-2">Technical Details</h3>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm text-gray-400">Brand & Model</dt>
+            <dd class="text-white font-medium">{{ asset().brand }} {{ asset().model }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Year</dt>
+            <dd class="text-white font-medium">{{ asset().year || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Fuel Type / Transmission</dt>
+            <dd class="text-white font-medium">{{ asset().fuel_type || 'N/A' }} / {{ asset().transmission || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-gray-400">Current Mileage / Hours</dt>
+            <dd class="text-white font-medium">{{ asset().current_mileage | number }} miles / {{ asset().current_hours | number }} hrs</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Rates Tab -->
+    <div *ngIf="activeTab() === 'rates'" class="glass-panel p-6">
+      <h3 class="text-lg font-medium text-white mb-6 border-b border-white/10 pb-2">Pricing Structure</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="bg-white/5 rounded-xl p-6 text-center border border-white/5">
+          <div class="text-gray-400 text-sm mb-1">Hourly</div>
+          <div class="text-3xl font-bold text-white">${{ asset().hourly_rate }}</div>
+        </div>
+        <div class="bg-white/5 rounded-xl p-6 text-center border border-white/5">
+          <div class="text-gray-400 text-sm mb-1">Daily</div>
+          <div class="text-3xl font-bold text-white">${{ asset().daily_rate }}</div>
+        </div>
+        <div class="bg-white/5 rounded-xl p-6 text-center border border-white/5">
+          <div class="text-gray-400 text-sm mb-1">Weekly</div>
+          <div class="text-3xl font-bold text-white">${{ asset().weekly_rate }}</div>
+        </div>
+        <div class="bg-white/5 rounded-xl p-6 text-center border border-white/5">
+          <div class="text-gray-400 text-sm mb-1">Monthly</div>
+          <div class="text-3xl font-bold text-white">${{ asset().monthly_rate }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maintenance Tab -->
+    <div *ngIf="activeTab() === 'maintenance'" class="glass-panel p-6">
+      <h3 class="text-lg font-medium text-white mb-6 border-b border-white/10 pb-2">Maintenance History (Blocks)</h3>
+      
+      <div *ngIf="!asset().maintenance_blocks || asset().maintenance_blocks.length === 0" class="text-center py-8 text-gray-400">
+        No maintenance logs found for this asset.
+      </div>
+
+      <div *ngIf="asset().maintenance_blocks?.length > 0" class="space-y-4">
+        <div *ngFor="let block of asset().maintenance_blocks" class="bg-white/5 rounded-lg p-5 border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex-1">
+            <h4 class="text-white font-medium mb-1">{{ block.reason || 'Routine Maintenance' }}</h4>
+            <div class="text-sm text-gray-400 flex items-center gap-4">
+              <span><i class="far fa-calendar-alt mr-2"></i>{{ block.start_datetime | date:'medium' }} - {{ block.end_datetime | date:'medium' }}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-400 mb-1">Cost</div>
+            <div class="text-xl font-bold text-red-400">${{ block.cost }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

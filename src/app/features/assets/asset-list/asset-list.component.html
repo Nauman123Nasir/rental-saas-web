@@ -1,0 +1,121 @@
+<div class="glass-panel p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-white">Asset Directory</h1>
+    <a routerLink="new" *hasPermission="'assets.create'" class="btn-primary">
+      <i class="fas fa-plus mr-2"></i> Add Asset
+    </a>
+  </div>
+
+  <div class="flex flex-wrap gap-4 mb-6">
+    <div class="flex-1 min-w-[200px]">
+      <div class="relative">
+        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="onSearch()"
+          placeholder="Search assets (code, brand, vin)..." 
+          class="form-input pl-10 w-full"
+        >
+      </div>
+    </div>
+    <div class="w-48">
+      <select [(ngModel)]="categoryFilter" (change)="onSearch()" class="form-input w-full">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</option>
+      </select>
+    </div>
+    <div class="w-48">
+      <select [(ngModel)]="statusFilter" (change)="onSearch()" class="form-input w-full">
+        <option value="">All Statuses</option>
+        <option value="Available">Available</option>
+        <option value="Reserved">Reserved</option>
+        <option value="Rented">Rented</option>
+        <option value="Maintenance">Maintenance</option>
+        <option value="Inactive">Inactive</option>
+        <option value="Retired">Retired</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="text-center py-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
+  </div>
+
+  <div *ngIf="!loading() && assets().length === 0" class="text-center py-8 text-gray-400">
+    No assets found.
+  </div>
+
+  <div *ngIf="!loading() && assets().length > 0" class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="text-gray-400 border-b border-white/10">
+          <th class="pb-3 font-medium">Asset Code</th>
+          <th class="pb-3 font-medium">Brand & Model</th>
+          <th class="pb-3 font-medium">Category</th>
+          <th class="pb-3 font-medium">VIN / Serial</th>
+          <th class="pb-3 font-medium">Status</th>
+          <th class="pb-3 font-medium">Rates (D/W/M)</th>
+          <th class="pb-3 font-medium text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asset of assets()" class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+          <td class="py-3 text-white font-medium">
+            <a [routerLink]="[asset.id]" class="hover:text-blue-400 transition-colors">{{ asset.asset_code }}</a>
+          </td>
+          <td class="py-3 text-gray-300">
+            {{ asset.brand }} {{ asset.model }} <span *ngIf="asset.year" class="text-sm text-gray-500">({{ asset.year }})</span>
+          </td>
+          <td class="py-3 text-gray-300">
+            <span class="px-2 py-1 bg-white/5 rounded text-xs">{{ asset.category?.name || 'N/A' }}</span>
+          </td>
+          <td class="py-3 text-gray-300 font-mono text-xs">
+            {{ asset.vin_number || asset.serial_number || 'N/A' }}
+          </td>
+          <td class="py-3">
+            <span class="px-2 py-1 rounded-full text-xs font-medium"
+              [ngClass]="{
+                'bg-green-500/20 text-green-400': asset.status === 'Available',
+                'bg-blue-500/20 text-blue-400': asset.status === 'Rented',
+                'bg-yellow-500/20 text-yellow-400': asset.status === 'Reserved',
+                'bg-orange-500/20 text-orange-400': asset.status === 'Maintenance',
+                'bg-red-500/20 text-red-400': asset.status === 'Retired' || asset.status === 'Inactive'
+              }">
+              {{ asset.status }}
+            </span>
+          </td>
+          <td class="py-3 text-gray-300 text-sm">
+            ${{ asset.daily_rate }} / ${{ asset.weekly_rate }} / ${{ asset.monthly_rate }}
+          </td>
+          <td class="py-3 text-right opacity-0 group-hover:opacity-100 transition-opacity">
+            <a [routerLink]="[asset.id, 'edit']" *hasPermission="'assets.update'" class="text-blue-400 hover:text-blue-300 mr-3" title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <button (click)="deleteAsset(asset.id)" *hasPermission="'assets.delete'" class="text-red-400 hover:text-red-300" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6 flex justify-between items-center text-sm text-gray-400">
+    <div>
+      Showing page {{ currentPage() }} of {{ totalPages() }}
+    </div>
+    <div class="flex gap-2">
+      <button 
+        [disabled]="currentPage() === 1" 
+        (click)="onPageChange(currentPage() - 1)"
+        class="px-3 py-1 rounded bg-white/5 hover:bg-white/10 disabled:opacity-50 transition-colors"
+      >Previous</button>
+      <button 
+        [disabled]="currentPage() === totalPages()" 
+        (click)="onPageChange(currentPage() + 1)"
+        class="px-3 py-1 rounded bg-white/5 hover:bg-white/10 disabled:opacity-50 transition-colors"
+      >Next</button>
+    </div>
+  </div>
+</div>
