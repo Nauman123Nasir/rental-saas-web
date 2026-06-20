@@ -1,0 +1,237 @@
+<div class="dashboard-container">
+  <!-- Glowing background elements -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="dashboard-content">
+    <!-- Header Section -->
+    <div class="section-header">
+      <div>
+        <h1 class="main-title">Customers Directory</h1>
+        <p class="subtitle">Manage customer database, verification files, and authorized drivers.</p>
+      </div>
+      <button 
+        *hasPermission="'customers.create'"
+        routerLink="/customers/create" 
+        class="btn-primary"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Customer
+      </button>
+    </div>
+
+    <!-- Alert Messages -->
+    <div *ngIf="successMessage()" class="alert-box success">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ successMessage() }}</span>
+    </div>
+
+    <div *ngIf="errorMessage()" class="alert-box error">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+
+    <!-- Filters Panel -->
+    <div class="glass-card filters-panel">
+      <div class="search-wrapper">
+        <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (ngModelChange)="onSearch()" 
+          placeholder="Search by name, email, code or phone..."
+          class="filter-input search-input"
+        />
+      </div>
+
+      <div class="filter-dropdowns">
+        <div class="select-wrapper">
+          <select [(ngModel)]="selectedType" (change)="onFilterChange()" class="filter-select">
+            <option value="">All Types</option>
+            <option value="Individual">Individual</option>
+            <option value="Business">Business</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper">
+          <select [(ngModel)]="selectedStatus" (change)="onFilterChange()" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="glass-card table-card">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th (click)="onSort('customer_code')" class="sortable">
+                Code
+                <span class="sort-indicator" *ngIf="sortBy() === 'customer_code'">{{ sortOrder() === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="onSort('first_name')" class="sortable">
+                Customer Name / Company
+                <span class="sort-indicator" *ngIf="sortBy() === 'first_name'">{{ sortOrder() === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="onSort('email')" class="sortable">
+                Contact Details
+                <span class="sort-indicator" *ngIf="sortBy() === 'email'">{{ sortOrder() === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th>Type</th>
+              <th (click)="onSort('status')" class="sortable">
+                Status
+                <span class="sort-indicator" *ngIf="sortBy() === 'status'">{{ sortOrder() === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="onSort('credit_limit')" class="sortable">
+                Credit Limit
+                <span class="sort-indicator" *ngIf="sortBy() === 'credit_limit'">{{ sortOrder() === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers()" class="table-row">
+              <td class="code-cell">{{ customer.customer_code }}</td>
+              <td>
+                <div class="name-cell">
+                  <span class="primary-text" *ngIf="customer.type === 'Individual'">{{ customer.first_name }} {{ customer.last_name }}</span>
+                  <span class="primary-text" *ngIf="customer.type === 'Business'">{{ customer.company_name }}</span>
+                  <span class="secondary-text" *ngIf="customer.type === 'Business'">Business Client</span>
+                  <span class="secondary-text" *ngIf="customer.type === 'Individual'">Individual Client</span>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  <span class="email">{{ customer.email }}</span>
+                  <span class="phone">{{ customer.phone }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="type-pill" [class.business]="customer.type === 'Business'">
+                  {{ customer.type }}
+                </span>
+              </td>
+              <td>
+                <span class="status-pill" [class]="customer.status">
+                  {{ customer.status }}
+                </span>
+              </td>
+              <td class="credit-cell">
+                ${{ customer.credit_limit | number:'1.2-2' }}
+              </td>
+              <td>
+                <div class="actions-wrapper">
+                  <button 
+                    [routerLink]="['/customers', customer.id]" 
+                    class="btn-action view" 
+                    title="View Details"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button 
+                    *hasPermission="'customers.update'"
+                    [routerLink]="['/customers', customer.id, 'edit']" 
+                    class="btn-action edit" 
+                    title="Edit Customer"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    *hasPermission="'customers.delete'"
+                    (click)="onDeleteCustomer(customer.id, customer.customer_code)" 
+                    class="btn-action delete" 
+                    title="Delete Customer"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="customers().length === 0 && !isLoading()">
+              <td colspan="7" class="empty-state-cell">
+                <div class="empty-state">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="empty-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <h3>No Customers Found</h3>
+                  <p>Try adjusting your search criteria or register a new customer profile.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Loading Spinner -->
+            <tr *ngIf="isLoading()">
+              <td colspan="7" class="loading-state-cell">
+                <div class="loading-state">
+                  <div class="spinner"></div>
+                  <span>Fetching records...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Panel -->
+      <div class="pagination-panel" *ngIf="totalPages() > 1">
+        <span class="pagination-info">
+          Page {{ currentPage() }} of {{ totalPages() }} ({{ totalItems() }} records)
+        </span>
+        <div class="pagination-buttons">
+          <button 
+            [disabled]="currentPage() === 1 || isLoading()" 
+            (click)="onPageChange(currentPage() - 1)" 
+            class="btn-page"
+          >
+            Previous
+          </button>
+          
+          <button 
+            *ngFor="let page of getPagesArray()" 
+            [class.active]="page === currentPage()" 
+            (click)="onPageChange(page)" 
+            class="btn-page page-number"
+            [disabled]="isLoading()"
+          >
+            {{ page }}
+          </button>
+
+          <button 
+            [disabled]="currentPage() === totalPages() || isLoading()" 
+            (click)="onPageChange(currentPage() + 1)" 
+            class="btn-page"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
