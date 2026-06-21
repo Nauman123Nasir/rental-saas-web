@@ -57,10 +57,19 @@ export class ReservationForm implements OnInit {
     this.form = this.fb.group({
       customer_id: [null, [Validators.required]],
       asset_id: [null, [Validators.required]],
-      pickup_datetime_utc: ['', [Validators.required]],
-      return_datetime_utc: ['', [Validators.required]],
+      pickup_date: [null, [Validators.required]],
+      pickup_time: ['09:00', [Validators.required]],
+      return_date: [null, [Validators.required]],
+      return_time: ['18:00', [Validators.required]],
       notes: [''],
     });
+  }
+
+  private fmtDate(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
   ngOnInit(): void {
@@ -98,10 +107,12 @@ export class ReservationForm implements OnInit {
 
     const val = this.form.value;
     const payload = {
-      ...val,
-      assets: [val.asset_id], // API expects assets array
+      customer_id: val.customer_id,
+      assets: [val.asset_id],
+      pickup_datetime_utc: `${this.fmtDate(val.pickup_date)}T${val.pickup_time}:00`,
+      return_datetime_utc: `${this.fmtDate(val.return_date)}T${val.return_time}:00`,
+      notes: val.notes,
     };
-    delete payload.asset_id;
 
     this.reservationService.createReservation(payload).subscribe({
       next: () => {

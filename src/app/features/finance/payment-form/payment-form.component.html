@@ -77,11 +77,18 @@
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Payment Date &amp; Time</mat-label>
-            <input matInput type="datetime-local" formControlName="payment_datetime_utc" />
-            <mat-icon matSuffix>schedule</mat-icon>
-          </mat-form-field>
+          <div class="datetime-pair">
+            <mat-form-field appearance="outline">
+              <mat-label>Payment Date</mat-label>
+              <input matInput [matDatepicker]="paymentDatePicker" formControlName="payment_date" placeholder="MM/DD/YYYY" />
+              <mat-datepicker-toggle matIconSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #paymentDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>Payment Time</mat-label>
+              <input matInput type="time" formControlName="payment_time" />
+            </mat-form-field>
+          </div>
 
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Reference No.</mat-label>

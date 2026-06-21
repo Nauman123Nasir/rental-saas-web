@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
@@ -29,6 +30,7 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
     MatCardModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatDatepickerModule,
     SkeletonComponent,
   ],
   templateUrl: './asset-form.component.html',
@@ -98,8 +100,10 @@ export class AssetFormComponent implements OnInit {
   addMaintenanceBlock() {
     this.maintenanceBlocks.push(this.fb.group({
       id: [null],
-      start_datetime: ['', Validators.required],
-      end_datetime: ['', Validators.required],
+      start_date: [null, Validators.required],
+      start_time: ['08:00', Validators.required],
+      end_date: [null, Validators.required],
+      end_time: ['17:00', Validators.required],
       reason: [''],
       cost: [0, Validators.min(0)]
     }));
@@ -138,10 +142,14 @@ export class AssetFormComponent implements OnInit {
 
         if (asset.maintenance_blocks && asset.maintenance_blocks.length > 0) {
           asset.maintenance_blocks.forEach((block: any) => {
+            const parseDate = (dt: string) => dt ? new Date(dt) : null;
+            const parseTime = (dt: string) => dt ? dt.substring(11, 16) : '08:00';
             this.maintenanceBlocks.push(this.fb.group({
               id: [block.id],
-              start_datetime: [block.start_datetime.substring(0, 16), Validators.required],
-              end_datetime: [block.end_datetime.substring(0, 16), Validators.required],
+              start_date: [parseDate(block.start_datetime), Validators.required],
+              start_time: [parseTime(block.start_datetime), Validators.required],
+              end_date: [parseDate(block.end_datetime), Validators.required],
+              end_time: [parseTime(block.end_datetime), Validators.required],
               reason: [block.reason],
               cost: [block.cost, Validators.min(0)]
             }));
@@ -164,7 +172,22 @@ export class AssetFormComponent implements OnInit {
 
     this.saving.set(true);
     const { asset_code, ...createPayload } = this.form.value;
-    const data = this.isEditMode() ? this.form.value : createPayload;
+    const rawData = this.isEditMode() ? this.form.value : createPayload;
+
+    const fmtDate = (d: Date) => {
+      const y = d.getFullYear(), mo = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${mo}-${day}`;
+    };
+    const data = {
+      ...rawData,
+      maintenance_blocks: (rawData.maintenance_blocks || []).map((b: any) => ({
+        id: b.id,
+        start_datetime: b.start_date ? `${fmtDate(b.start_date)}T${b.start_time}:00` : '',
+        end_datetime: b.end_date ? `${fmtDate(b.end_date)}T${b.end_time}:00` : '',
+        reason: b.reason,
+        cost: b.cost,
+      }))
+    };
 
     if (this.isEditMode()) {
       this.assetService.updateAsset(this.assetId()!, data).subscribe({

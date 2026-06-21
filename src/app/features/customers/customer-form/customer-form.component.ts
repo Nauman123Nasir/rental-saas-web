@@ -117,7 +117,7 @@ export class CustomerFormComponent implements OnInit {
       first_name: [driver?.first_name || '', [Validators.required, Validators.maxLength(255)]],
       last_name: [driver?.last_name || '', [Validators.required, Validators.maxLength(255)]],
       license_number: [driver?.license_number || '', [Validators.required, Validators.maxLength(100)]],
-      license_expiry: [driver ? this.formatDate(driver.license_expiry) : '', [Validators.required]]
+      license_expiry: [driver?.license_expiry ? new Date(driver.license_expiry) : null, [Validators.required]]
     });
   }
 
@@ -139,7 +139,7 @@ export class CustomerFormComponent implements OnInit {
       id: [doc?.id || null],
       document_type: [doc?.document_type || 'ID Card', [Validators.required, Validators.maxLength(100)]],
       document_number: [doc?.document_number || '', [Validators.required, Validators.maxLength(100)]],
-      expiry_date: [doc ? this.formatDate(doc.expiry_date) : '', [Validators.required]],
+      expiry_date: [doc?.expiry_date ? new Date(doc.expiry_date) : null, [Validators.required]],
       file_path: [doc?.file_path || '']
     });
   }
@@ -209,6 +209,18 @@ export class CustomerFormComponent implements OnInit {
     const { customer_code, ...createPayload } = raw;
     const payload = this.isEditMode() ? raw : createPayload;
 
+    // Format Date objects from mat-datepicker back to YYYY-MM-DD strings
+    if (payload.documents) {
+      payload.documents = payload.documents.map((d: any) => ({
+        ...d, expiry_date: d.expiry_date instanceof Date ? this.formatDate(d.expiry_date) : d.expiry_date
+      }));
+    }
+    if (payload.drivers) {
+      payload.drivers = payload.drivers.map((d: any) => ({
+        ...d, license_expiry: d.license_expiry instanceof Date ? this.formatDate(d.license_expiry) : d.license_expiry
+      }));
+    }
+
     if (this.isEditMode()) {
       this.customerService.updateCustomer(this.customerId()!, payload).subscribe({
         next: (res) => {
@@ -241,9 +253,10 @@ export class CustomerFormComponent implements OnInit {
   }
 
   // Helpers
-  private formatDate(dateStr: string): string {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
+  private formatDate(dateInput: Date | string | null): string {
+    if (!dateInput) return '';
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (isNaN(date.getTime())) return '';
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');

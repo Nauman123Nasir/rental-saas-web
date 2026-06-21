@@ -159,7 +159,9 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>Expiry Date</mat-label>
-                <input matInput type="date" formControlName="expiry_date" />
+                <input matInput [matDatepicker]="docExpiryPicker" formControlName="expiry_date" placeholder="MM/DD/YYYY" />
+                <mat-datepicker-toggle matIconSuffix [for]="docExpiryPicker"></mat-datepicker-toggle>
+                <mat-datepicker #docExpiryPicker></mat-datepicker>
                 <mat-error *ngIf="doc.get('expiry_date')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
             </div>
@@ -219,8 +221,10 @@
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Expiry Date</mat-label>
-                <input matInput type="date" formControlName="license_expiry" />
+                <mat-label>License Expiry</mat-label>
+                <input matInput [matDatepicker]="licExpiryPicker" formControlName="license_expiry" placeholder="MM/DD/YYYY" />
+                <mat-datepicker-toggle matIconSuffix [for]="licExpiryPicker"></mat-datepicker-toggle>
+                <mat-datepicker #licExpiryPicker></mat-datepicker>
                 <mat-error *ngIf="driver.get('license_expiry')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
             </div>

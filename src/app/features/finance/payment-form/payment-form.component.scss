@@ -109,6 +109,12 @@
   @media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
+.datetime-pair {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0 0.75rem;
+}
+
 .w-full {
   width: 100%;
 }

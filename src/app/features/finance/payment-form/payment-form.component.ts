@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FinanceService, InvoiceModel } from '../../../core/services/finance.service';
 
 @Component({
@@ -27,6 +28,7 @@ import { FinanceService, InvoiceModel } from '../../../core/services/finance.ser
     MatDividerModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatDatepickerModule,
   ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.scss',
@@ -60,7 +62,8 @@ export class PaymentFormComponent implements OnInit {
       invoice_id: [invoiceId, [Validators.required, Validators.min(1)]],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       payment_method: ['cash', Validators.required],
-      payment_datetime_utc: [new Date().toISOString().slice(0, 16)],
+      payment_date: [new Date()],
+      payment_time: [new Date().toTimeString().slice(0, 5)],
       reference_no: [''],
       notes: [''],
     });
@@ -99,7 +102,19 @@ export class PaymentFormComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.financeService.recordPayment(this.form.value).subscribe({
+    const val = this.form.value;
+    const d = val.payment_date as Date;
+    const fmtDate = (dt: Date) => {
+      const y = dt.getFullYear(), m = String(dt.getMonth()+1).padStart(2,'0'), day = String(dt.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    };
+    const payload = {
+      ...val,
+      payment_datetime_utc: `${fmtDate(d)}T${val.payment_time}:00`,
+    };
+    delete payload.payment_date;
+    delete payload.payment_time;
+    this.financeService.recordPayment(payload).subscribe({
       next: (res) => {
         this.isSubmitting = false;
         this.successMessage = `Payment ${res.payment.payment_no} recorded! Receipt: ${res.payment.receipt?.receipt_no}`;
