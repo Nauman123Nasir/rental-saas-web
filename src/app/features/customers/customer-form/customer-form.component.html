@@ -46,12 +46,20 @@
         <div class="form-grid">
 
           <!-- Customer Code -->
-          <mat-form-field appearance="outline">
-            <mat-label>Customer Code *</mat-label>
-            <input matInput formControlName="customer_code" placeholder="e.g. CUST-0092" [readonly]="isEditMode()" />
-            <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['required']">Customer code is required.</mat-error>
-            <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['pattern']">Use only alphanumeric characters, dashes, or underscores.</mat-error>
-          </mat-form-field>
+          <div class="code-field-wrap">
+            <mat-form-field appearance="outline" class="code-field">
+              <mat-label>Customer Code</mat-label>
+              <input matInput formControlName="customer_code" [readonly]="isEditMode()" />
+              <mat-hint *ngIf="!isEditMode()">Auto-generated — you can edit if needed</mat-hint>
+              <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['required']">Customer code is required.</mat-error>
+              <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['pattern']">Alphanumeric, dashes and underscores only.</mat-error>
+            </mat-form-field>
+            <button *ngIf="!isEditMode()" type="button" mat-icon-button class="btn-regen"
+              (click)="customerForm.patchValue({ customer_code: generateCustomerCode() })"
+              matTooltip="Generate a new code">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
 
           <!-- Type -->
           <mat-form-field appearance="outline">

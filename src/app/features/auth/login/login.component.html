@@ -1,49 +1,99 @@
 <div class="auth-screen">
-  <div class="auth-card card p-8">
 
-    <!-- Logo + Branding -->
-    <div class="flex flex-col items-center gap-3 mb-6 text-center">
-      <div class="logo-box">
-        <mat-icon>directions_car</mat-icon>
+  <!-- ── Left Brand Panel ── -->
+  <div class="auth-left">
+
+    <!-- Decorative background blobs -->
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+    <div class="deco deco-4"></div>
+
+    <div class="auth-left-content">
+
+      <!-- Logo -->
+      <div class="auth-logo-wrap">
+        <div class="auth-logo-box">
+          <mat-icon>directions_car</mat-icon>
+        </div>
+        <span class="auth-logo-name">FleetSaaS</span>
       </div>
-      <div>
-        <h1 class="page-title" style="font-size: 1.5rem;">FleetSaaS</h1>
-        <p class="page-subtitle">Sign in to your account</p>
-      </div>
+
+      <!-- Headline -->
+      <h2 class="auth-headline">Fleet management,<br>done right.</h2>
+      <p class="auth-tagline">Everything your rental business needs — from bookings to billing — in one place.</p>
+
+      <!-- Feature list -->
+      <ul class="auth-features">
+        <li class="auth-feature">
+          <div class="auth-feature-icon"><mat-icon>speed</mat-icon></div>
+          <span>Real-time fleet &amp; utilisation overview</span>
+        </li>
+        <li class="auth-feature">
+          <div class="auth-feature-icon"><mat-icon>event_available</mat-icon></div>
+          <span>Reservations &amp; rental lifecycle</span>
+        </li>
+        <li class="auth-feature">
+          <div class="auth-feature-icon"><mat-icon>receipt_long</mat-icon></div>
+          <span>Automated invoicing &amp; payments</span>
+        </li>
+        <li class="auth-feature">
+          <div class="auth-feature-icon"><mat-icon>shield</mat-icon></div>
+          <span>Role-based access control</span>
+        </li>
+      </ul>
+
     </div>
 
-    <!-- Error Alert -->
-    @if (errorMessage()) {
-      <div class="alert-error mb-5">
-        <mat-icon>error_outline</mat-icon>
-        <span>{{ errorMessage() }}</span>
+    <!-- Bottom badge -->
+    <p class="auth-left-footer">Trusted by rental operators worldwide</p>
+
+  </div>
+
+  <!-- ── Right Form Panel ── -->
+  <div class="auth-right">
+    <div class="auth-form-card">
+
+      <!-- Mobile-only logo -->
+      <div class="auth-mobile-logo">
+        <div class="auth-logo-box auth-logo-box--sm">
+          <mat-icon>directions_car</mat-icon>
+        </div>
+        <span class="auth-logo-name auth-logo-name--dark">FleetSaaS</span>
       </div>
-    }
 
-    <!-- Login Form -->
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4" novalidate>
+      <h1 class="auth-form-title">Welcome back</h1>
+      <p class="auth-form-sub">Sign in to your account to continue.</p>
 
-      <!-- Email -->
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <mat-icon matPrefix>alternate_email</mat-icon>
-        <input
-          matInput
-          type="email"
-          formControlName="email"
-          placeholder="admin@acmerental.com"
-          autocomplete="email"
-        />
-        @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']) {
-          <mat-error>Email is required.</mat-error>
-        } @else if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']) {
-          <mat-error>Enter a valid email address.</mat-error>
-        }
-      </mat-form-field>
+      <!-- Error Alert -->
+      @if (errorMessage()) {
+        <div class="alert-error auth-alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
 
-      <!-- Password -->
-      <div>
-        <mat-form-field appearance="outline">
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>Email Address</mat-label>
+          <mat-icon matPrefix>alternate_email</mat-icon>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="admin@acmerental.com"
+            autocomplete="email"
+          />
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']) {
+            <mat-error>Email is required.</mat-error>
+          } @else if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']) {
+            <mat-error>Enter a valid email address.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="auth-field">
           <mat-label>Password</mat-label>
           <mat-icon matPrefix>lock_outline</mat-icon>
           <input
@@ -57,26 +107,29 @@
             <mat-error>Password is required.</mat-error>
           }
         </mat-form-field>
-        <div class="flex justify-end -mt-3 mb-1">
+
+        <div class="auth-forgot-row">
           <a routerLink="/auth/forgot-password" class="forgot-link">Forgot password?</a>
         </div>
-      </div>
 
-      <!-- Submit -->
-      <button
-        mat-flat-button
-        type="submit"
-        class="btn-cta w-full"
-        [disabled]="isLoading()"
-      >
-        @if (isLoading()) {
-          <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
-        } @else {
-          Sign In
-        }
-      </button>
+        <button
+          mat-flat-button
+          type="submit"
+          class="auth-submit-btn"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+          } @else {
+            Sign In
+          }
+        </button>
 
-    </form>
+      </form>
 
+      <p class="auth-form-footer">&copy; 2025 FleetSaaS. All rights reserved.</p>
+
+    </div>
   </div>
+
 </div>

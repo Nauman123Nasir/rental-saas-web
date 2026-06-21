@@ -71,7 +71,6 @@ export class CustomerFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initial validation setup
     this.updateValidatorsBasedOnType('Individual');
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -79,7 +78,19 @@ export class CustomerFormComponent implements OnInit {
       this.isEditMode.set(true);
       this.customerId.set(+idParam);
       this.loadCustomerForEdit(+idParam);
+    } else {
+      // Auto-generate a customer code for new customers
+      this.customerForm.patchValue({ customer_code: this.generateCustomerCode() });
     }
+  }
+
+  generateCustomerCode(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let suffix = '';
+    for (let i = 0; i < 6; i++) {
+      suffix += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return `CUST-${suffix}`;
   }
 
   updateValidatorsBasedOnType(type: string): void {

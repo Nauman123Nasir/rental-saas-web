@@ -1,5 +1,37 @@
 // Rental List — component-scoped styles
 
+// ── Header actions row ────────────────────────────────────────────────────────
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// ── Check-in button ───────────────────────────────────────────────────────────
+
+.btn-checkin {
+  font-size: 13px !important;
+  height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
+  white-space: nowrap;
+}
+
+.actions-col-header { text-align: right; justify-content: flex-end !important; }
+.actions-col-cell   { justify-content: flex-end !important; }
+
+// ── Empty state actions ───────────────────────────────────────────────────────
+
+.empty-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
 // ── Page Layout ───────────────────────────────────────────────────────────────
 
 .rental-layout {
