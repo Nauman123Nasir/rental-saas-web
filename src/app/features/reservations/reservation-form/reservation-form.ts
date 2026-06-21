@@ -79,7 +79,7 @@ export class ReservationForm implements OnInit {
   }
 
   private loadAssets(): void {
-    this.assetService.getAssets({ per_page: 100 }).subscribe({
+    this.assetService.getAssets({ per_page: 100, status: 'Available' }).subscribe({
       next: (res) => {
         this.assets.set(res?.data?.data ?? res?.data ?? []);
         this.cdr.markForCheck();

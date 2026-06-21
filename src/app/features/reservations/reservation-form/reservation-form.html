@@ -63,7 +63,7 @@
               <mat-option [value]="null">Select an Asset...</mat-option>
               @for (a of assets(); track a.id) {
                 <mat-option [value]="a.id">
-                  {{ a.brand }} {{ a.model }} ({{ a.license_plate }} — {{ a.status }})
+                  {{ a.asset_code }}{{ a.model ? ' — ' + (a.brand ? a.brand + ' ' : '') + a.model : '' }}
                 </mat-option>
               }
             </mat-select>
