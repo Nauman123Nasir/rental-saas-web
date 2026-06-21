@@ -47,7 +47,7 @@ export class AssetFormComponent implements OnInit {
     private router: Router
   ) {
     this.form = this.fb.group({
-      asset_code: ['', Validators.required],
+      asset_code: [''],
       category_id: [null],
       name: [''],
       brand: [''],
@@ -161,7 +161,8 @@ export class AssetFormComponent implements OnInit {
     }
 
     this.saving.set(true);
-    const data = this.form.value;
+    const { asset_code, ...createPayload } = this.form.value;
+    const data = this.isEditMode() ? this.form.value : createPayload;
 
     if (this.isEditMode()) {
       this.assetService.updateAsset(this.assetId()!, data).subscribe({

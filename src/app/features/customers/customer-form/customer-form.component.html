@@ -45,21 +45,11 @@
       <div class="section-body">
         <div class="form-grid">
 
-          <!-- Customer Code -->
-          <div class="code-field-wrap">
-            <mat-form-field appearance="outline" class="code-field">
-              <mat-label>Customer Code</mat-label>
-              <input matInput formControlName="customer_code" [readonly]="isEditMode()" />
-              <mat-hint *ngIf="!isEditMode()">Auto-generated — you can edit if needed</mat-hint>
-              <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['required']">Customer code is required.</mat-error>
-              <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['pattern']">Alphanumeric, dashes and underscores only.</mat-error>
-            </mat-form-field>
-            <button *ngIf="!isEditMode()" type="button" mat-icon-button class="btn-regen"
-              (click)="customerForm.patchValue({ customer_code: generateCustomerCode() })"
-              matTooltip="Generate a new code">
-              <mat-icon>refresh</mat-icon>
-            </button>
-          </div>
+          <!-- Customer Code — only shown in edit mode (auto-generated on create) -->
+          <mat-form-field *ngIf="isEditMode()" appearance="outline">
+            <mat-label>Customer Code</mat-label>
+            <input matInput formControlName="customer_code" readonly />
+          </mat-form-field>
 
           <!-- Type -->
           <mat-form-field appearance="outline">

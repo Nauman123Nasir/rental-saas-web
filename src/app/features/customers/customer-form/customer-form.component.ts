@@ -51,7 +51,7 @@ export class CustomerFormComponent implements OnInit {
     private router: Router
   ) {
     this.customerForm = this.fb.group({
-      customer_code: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9\-_]+$/)]],
+      customer_code: [''],
       type: ['Individual', [Validators.required]],
       first_name: ['', []],
       last_name: ['', []],
@@ -78,19 +78,7 @@ export class CustomerFormComponent implements OnInit {
       this.isEditMode.set(true);
       this.customerId.set(+idParam);
       this.loadCustomerForEdit(+idParam);
-    } else {
-      // Auto-generate a customer code for new customers
-      this.customerForm.patchValue({ customer_code: this.generateCustomerCode() });
     }
-  }
-
-  generateCustomerCode(): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let suffix = '';
-    for (let i = 0; i < 6; i++) {
-      suffix += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return `CUST-${suffix}`;
   }
 
   updateValidatorsBasedOnType(type: string): void {
@@ -214,7 +202,10 @@ export class CustomerFormComponent implements OnInit {
     this.errorMessage.set('');
     this.successMessage.set('');
 
-    const payload = this.customerForm.value;
+    const raw = this.customerForm.value;
+    // customer_code is assigned by the backend on create; omit it from the payload
+    const { customer_code, ...createPayload } = raw;
+    const payload = this.isEditMode() ? raw : createPayload;
 
     if (this.isEditMode()) {
       this.customerService.updateCustomer(this.customerId()!, payload).subscribe({

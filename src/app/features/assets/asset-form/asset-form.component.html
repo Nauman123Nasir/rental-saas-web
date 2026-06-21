@@ -30,10 +30,9 @@
       <mat-card-content>
         <div class="form-grid-2">
 
-          <mat-form-field appearance="outline">
-            <mat-label>Asset Code *</mat-label>
-            <input matInput formControlName="asset_code" placeholder="e.g. AST-1001" />
-            <mat-error *ngIf="form.get('asset_code')?.invalid">Asset code is required</mat-error>
+          <mat-form-field *ngIf="isEditMode()" appearance="outline">
+            <mat-label>Asset Code</mat-label>
+            <input matInput formControlName="asset_code" readonly />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
