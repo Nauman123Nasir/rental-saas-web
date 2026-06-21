@@ -1,29 +1,21 @@
 <div class="page-container">
-  <div class="form-wrapper">
+  <div class="mx-auto max-w-2xl">
 
     <!-- Back Link -->
-    <a routerLink="/finance/invoices" class="back-link">
-      <mat-icon class="text-base">arrow_back</mat-icon>
+    <a routerLink="/finance/invoices" class="inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 mb-5 transition-colors">
+      <mat-icon class="text-base" style="font-size:16px; width:16px; height:16px;">arrow_back</mat-icon>
       Back to Invoices
     </a>
 
-    <mat-card class="form-card">
+    <!-- Page Title -->
+    <div class="mb-6">
+      <h1 class="page-title">Record Payment</h1>
+      <p class="page-subtitle">Apply a payment against an invoice and auto-generate a receipt.</p>
+    </div>
 
-      <!-- Header Banner -->
-      <div class="form-banner">
-        <div class="banner-icon">
-          <mat-icon>payments</mat-icon>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold text-slate-800">Record Payment</h1>
-          <p class="text-sm text-slate-500 mt-0.5">Apply a payment against an invoice and auto-generate a receipt.</p>
-        </div>
-      </div>
-
-      <mat-divider></mat-divider>
-
-      <!-- Invoice Preview -->
-      <div *ngIf="invoice" class="invoice-preview">
+    <!-- Invoice Preview -->
+    @if (invoice) {
+      <div class="card p-5 mb-5 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Invoice</p>
           <p class="font-bold text-slate-800">{{ invoice.invoice_no }}</p>
@@ -34,34 +26,45 @@
           <p class="text-xl font-bold text-red-600">{{ invoice.currency_code }} {{ invoice.balance_due | number:'1.2-2' }}</p>
         </div>
       </div>
+    }
 
-      <mat-card-content class="form-body">
+    <!-- Alerts -->
+    @if (successMessage) {
+      <div class="alert-success">
+        <mat-icon>check_circle</mat-icon>
+        {{ successMessage }}
+      </div>
+    }
 
-        <!-- Success Alert -->
-        <div *ngIf="successMessage" class="alert-success">
-          <mat-icon>check_circle</mat-icon>
-          {{ successMessage }}
-        </div>
+    @if (errorMessage) {
+      <div class="alert-error">
+        <mat-icon>error_outline</mat-icon>
+        {{ errorMessage }}
+      </div>
+    }
 
-        <!-- Error Alert -->
-        <div *ngIf="errorMessage" class="alert-error">
-          <mat-icon>error_outline</mat-icon>
-          {{ errorMessage }}
-        </div>
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="submit()">
 
-        <!-- Form -->
-        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
-
-          <!-- Invoice ID -->
+      <!-- Section: Invoice -->
+      <mat-card class="mb-4">
+        <mat-card-content class="p-6">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Invoice Reference</h2>
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Invoice ID</mat-label>
             <input matInput type="number" formControlName="invoice_id" placeholder="e.g. 42" />
             <mat-icon matSuffix>receipt</mat-icon>
             <mat-error *ngIf="f['invoice_id'].invalid">A valid Invoice ID is required.</mat-error>
           </mat-form-field>
+        </mat-card-content>
+      </mat-card>
 
-          <!-- Amount & Method -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Section: Payment Details -->
+      <mat-card class="mb-4">
+        <mat-card-content class="p-6">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Payment Details</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <mat-form-field appearance="outline">
               <mat-label>Amount</mat-label>
               <span matPrefix class="text-slate-400 mr-1">$</span>
@@ -77,7 +80,6 @@
             </mat-form-field>
           </div>
 
-          <!-- Date & Reference -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <mat-form-field appearance="outline">
               <mat-label>Payment Date &amp; Time</mat-label>
@@ -91,24 +93,33 @@
               <mat-icon matSuffix>tag</mat-icon>
             </mat-form-field>
           </div>
+        </mat-card-content>
+      </mat-card>
 
-          <!-- Notes -->
+      <!-- Section: Notes -->
+      <mat-card class="mb-6">
+        <mat-card-content class="p-6">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Notes</h2>
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Notes</mat-label>
             <textarea matInput formControlName="notes" rows="3" placeholder="Optional notes about this payment..."></textarea>
           </mat-form-field>
+        </mat-card-content>
+      </mat-card>
 
-          <!-- Actions -->
-          <div class="flex items-center justify-end gap-3 pt-2">
-            <a mat-stroked-button routerLink="/finance/invoices">Cancel</a>
-            <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting" class="flex items-center gap-2">
-              <mat-spinner *ngIf="isSubmitting" diameter="18" class="inline-spinner"></mat-spinner>
-              {{ isSubmitting ? 'Processing...' : 'Record Payment & Generate Receipt' }}
-            </button>
-          </div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-3">
+        <a mat-stroked-button routerLink="/finance/invoices" class="btn-outline">Cancel</a>
+        <button mat-flat-button class="btn-cta" type="submit" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <mat-spinner diameter="16"></mat-spinner>
+            Processing...
+          } @else {
+            Record Payment &amp; Generate Receipt
+          }
+        </button>
+      </div>
 
-        </form>
-      </mat-card-content>
-    </mat-card>
+    </form>
   </div>
 </div>

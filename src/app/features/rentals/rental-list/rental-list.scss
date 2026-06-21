@@ -1,63 +1,42 @@
-.rental-table-card {
-  overflow: hidden;
+// Rental List — component-scoped styles
+
+// ── Page Layout ───────────────────────────────────────────────────────────────
+
+.rental-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 1023px) { grid-template-columns: 1fr; }
+}
+
+.rental-sidebar {
+  @media (max-width: 1023px) { display: none; }
+}
+
+.fleet-health-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-
-  mat-card-content {
-    padding: 0;
-  }
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  position: sticky;
+  top: 1.5rem;
 }
 
-.rental-no {
-  font-weight: 700;
-  color: var(--mat-primary, #6366f1);
-  font-size: 0.875rem;
-}
 
-.year-tag {
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  font-size: 0.8rem;
-}
+// Most styling is handled by global design-system classes in styles.scss
 
-.date-cell {
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  font-size: 0.875rem;
-}
-
-.empty-icon {
-  font-size: 3.5rem;
-  width: 3.5rem;
-  height: 3.5rem;
-}
-
-.action-btn {
-  font-size: 0.8rem;
-}
-
-// Status chip colours
-.status-chip {
-  font-size: 0.75rem;
+// Ensure chip classes display inline (mat-chip-set wrapper not used here)
+[class^="chip-"] {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 600;
-  border-radius: 999px;
-  height: 24px;
-
-  &.badge-gray    { background: #f1f5f9; color: #475569; }
-  &.badge-blue    { background: #dbeafe; color: #1d4ed8; }
-  &.badge-green   { background: #dcfce7; color: #15803d; }
-  &.badge-indigo  { background: #e0e7ff; color: #4338ca; }
-  &.badge-red     { background: #fee2e2; color: #b91c1c; }
-  &.badge-amber   { background: #fef3c7; color: #b45309; }
-}
-
-// Mat-table tweaks
-.mat-mdc-header-cell {
-  font-size: 0.75rem;
-  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--mat-sys-on-surface-variant, #64748b);
-}
-
-.mat-mdc-row:hover {
-  background: #f8fafc;
-  transition: background 150ms ease;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }

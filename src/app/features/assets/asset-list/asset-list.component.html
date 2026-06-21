@@ -1,175 +1,173 @@
 <div class="page-container">
+
   <!-- Page Header -->
   <div class="page-header">
     <div>
-      <h1 class="page-title">Fleet Directory</h1>
-      <p class="page-subtitle">Manage your rental fleet assets</p>
+      <h1 class="page-title">Manage Assets</h1>
+      <p class="page-subtitle">Efficiently track, filter, and maintain your rental inventory.</p>
     </div>
-    <a routerLink="new" *hasPermission="'assets.create'" mat-raised-button color="primary" class="flex items-center gap-2">
+    <a routerLink="new" *hasPermission="'assets.create'" mat-flat-button class="btn-cta">
       <mat-icon>add</mat-icon>
       Add Asset
     </a>
   </div>
 
-  <!-- Filters Panel -->
-  <mat-card class="mb-6">
-    <mat-card-content>
-      <div class="flex flex-wrap gap-4 items-end pt-2">
-        <mat-form-field appearance="outline" class="flex-1 min-w-[200px]">
-          <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Code, brand, VIN..." />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-search">
+      <mat-label>Quick Search</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Code, brand, VIN..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="min-w-[180px]">
-          <mat-label>Category</mat-label>
-          <mat-select [(ngModel)]="categoryFilter" (selectionChange)="onSearch()">
-            <mat-option value="">All Categories</mat-option>
-            <mat-option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+    <mat-form-field appearance="outline" style="min-width:180px">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="categoryFilter" (selectionChange)="onSearch()">
+        <mat-option value="">All Categories</mat-option>
+        <mat-option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="min-w-[160px]">
-          <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="statusFilter" (selectionChange)="onSearch()">
-            <mat-option value="">All Statuses</mat-option>
-            <mat-option value="Available">Available</mat-option>
-            <mat-option value="Reserved">Reserved</mat-option>
-            <mat-option value="Rented">Rented</mat-option>
-            <mat-option value="Maintenance">Maintenance</mat-option>
-            <mat-option value="Inactive">Inactive</mat-option>
-            <mat-option value="Retired">Retired</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" (click)="onSearch()" class="mb-[1.1rem]">
-          <mat-icon>search</mat-icon>
-          Search
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Loading -->
-  <div *ngIf="loading()" class="flex items-center justify-center gap-3 py-12">
-    <mat-spinner diameter="32"></mat-spinner>
-    <span class="text-secondary">Loading assets...</span>
+    <mat-form-field appearance="outline" style="min-width:160px">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="statusFilter" (selectionChange)="onSearch()">
+        <mat-option value="">All Statuses</mat-option>
+        <mat-option value="Available">Available</mat-option>
+        <mat-option value="Reserved">Reserved</mat-option>
+        <mat-option value="Rented">Rented</mat-option>
+        <mat-option value="Maintenance">Maintenance</mat-option>
+        <mat-option value="Inactive">Inactive</mat-option>
+        <mat-option value="Retired">Retired</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
-  <!-- Table Card -->
-  <mat-card *ngIf="!loading()">
-    <mat-card-content class="p-0">
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-overlay">
+    <mat-spinner diameter="32"></mat-spinner>
+    <span>Loading assets...</span>
+  </div>
 
-      <!-- Empty State -->
-      <div *ngIf="assets().length === 0" class="empty-state">
-        <mat-icon class="empty-state-icon">inventory_2</mat-icon>
-        <p class="empty-state-title">No assets found</p>
-        <p class="empty-state-text">Try adjusting your filters or add a new asset.</p>
+  <!-- Table -->
+  <div *ngIf="!loading()" class="table-container">
+
+    <!-- Empty State -->
+    <div *ngIf="assets().length === 0" class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>inventory_2</mat-icon>
       </div>
+      <h3>No assets found</h3>
+      <p>Try adjusting your filters or add a new asset.</p>
+    </div>
 
-      <!-- Mat Table -->
-      <mat-table *ngIf="assets().length > 0" [dataSource]="assets()" class="w-full">
+    <!-- Mat Table -->
+    <mat-table *ngIf="assets().length > 0" [dataSource]="assets()">
 
-        <!-- Code Column -->
-        <ng-container matColumnDef="code">
-          <mat-header-cell *matHeaderCellDef>Asset Code</mat-header-cell>
-          <mat-cell *matCellDef="let a">
-            <a [routerLink]="[a.id]" class="asset-link">{{ a.asset_code }}</a>
-          </mat-cell>
-        </ng-container>
+      <!-- Asset Code Column -->
+      <ng-container matColumnDef="code">
+        <mat-header-cell *matHeaderCellDef>Asset Code</mat-header-cell>
+        <mat-cell *matCellDef="let a">
+          <a [routerLink]="[a.id]" class="table-link">{{ a.asset_code }}</a>
+        </mat-cell>
+      </ng-container>
 
-        <!-- Brand Column -->
-        <ng-container matColumnDef="brand">
-          <mat-header-cell *matHeaderCellDef>Brand &amp; Model</mat-header-cell>
-          <mat-cell *matCellDef="let a">
-            <span>{{ a.brand }} {{ a.model }}</span>
-            <span *ngIf="a.year" class="year-tag ml-1">({{ a.year }})</span>
-          </mat-cell>
-        </ng-container>
+      <!-- Vehicle Details Column -->
+      <ng-container matColumnDef="brand">
+        <mat-header-cell *matHeaderCellDef>Vehicle Details</mat-header-cell>
+        <mat-cell *matCellDef="let a" class="vehicle-cell">
+          <mat-icon class="vehicle-icon">directions_car</mat-icon>
+          <div class="vehicle-info">
+            <span class="vehicle-name">{{ a.brand }} {{ a.model }}</span>
+            <span *ngIf="a.year || a.color" class="vehicle-meta">
+              {{ a.year }}{{ a.year && a.color ? ' · ' : '' }}{{ a.color }}
+            </span>
+          </div>
+        </mat-cell>
+      </ng-container>
 
-        <!-- Category Column -->
-        <ng-container matColumnDef="category">
-          <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
-          <mat-cell *matCellDef="let a">
-            <mat-chip class="category-chip">{{ a.category?.name || 'N/A' }}</mat-chip>
-          </mat-cell>
-        </ng-container>
+      <!-- Category Column -->
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
+        <mat-cell *matCellDef="let a">
+          <span *ngIf="a.category?.name" [class]="'chip-' + (a.category.name | lowercase)">
+            {{ a.category.name }}
+          </span>
+          <span *ngIf="!a.category?.name" class="chip-inactive">N/A</span>
+        </mat-cell>
+      </ng-container>
 
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-          <mat-cell *matCellDef="let a">
-            <span class="status-badge" [ngClass]="getStatusClass(a.status)">{{ a.status }}</span>
-          </mat-cell>
-        </ng-container>
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+        <mat-cell *matCellDef="let a">
+          <span [class]="'chip-' + (a.status | lowercase)">{{ a.status }}</span>
+        </mat-cell>
+      </ng-container>
 
-        <!-- Year/VIN Column -->
-        <ng-container matColumnDef="year">
-          <mat-header-cell *matHeaderCellDef>VIN / Serial</mat-header-cell>
-          <mat-cell *matCellDef="let a" class="font-mono text-sm">
-            {{ a.vin_number || a.serial_number || 'N/A' }}
-          </mat-cell>
-        </ng-container>
+      <!-- VIN Column -->
+      <ng-container matColumnDef="year">
+        <mat-header-cell *matHeaderCellDef>VIN / Serial</mat-header-cell>
+        <mat-cell *matCellDef="let a" class="vin-cell">
+          {{ a.vin_number || a.serial_number || '—' }}
+        </mat-cell>
+      </ng-container>
 
-        <!-- Rate Column -->
-        <ng-container matColumnDef="rate">
-          <mat-header-cell *matHeaderCellDef>Rates (D/W/M)</mat-header-cell>
-          <mat-cell *matCellDef="let a" class="rates-text">
-            ${{ a.daily_rate }} / ${{ a.weekly_rate }} / ${{ a.monthly_rate }}
-          </mat-cell>
-        </ng-container>
+      <!-- Rates Column -->
+      <ng-container matColumnDef="rate">
+        <mat-header-cell *matHeaderCellDef>Rates</mat-header-cell>
+        <mat-cell *matCellDef="let a">
+          <div class="rates-stack">
+            <span>${{ a.daily_rate }}<span class="rate-period">/day</span></span>
+            <span>${{ a.weekly_rate }}<span class="rate-period">/wk</span></span>
+            <span>${{ a.monthly_rate }}<span class="rate-period">/mo</span></span>
+          </div>
+        </mat-cell>
+      </ng-container>
 
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="justify-end">Actions</mat-header-cell>
-          <mat-cell *matCellDef="let a" class="justify-end">
-            <div class="flex items-center gap-1">
-              <a
-                [routerLink]="[a.id, 'edit']"
-                *hasPermission="'assets.update'"
-                mat-icon-button
-                matTooltip="Edit"
-                color="primary">
-                <mat-icon>edit</mat-icon>
-              </a>
-              <button
-                (click)="deleteAsset(a.id)"
-                *hasPermission="'assets.delete'"
-                mat-icon-button
-                matTooltip="Delete"
-                color="warn">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </mat-cell>
-        </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef class="actions-header">Actions</mat-header-cell>
+        <mat-cell *matCellDef="let a" class="actions-cell">
+          <a [routerLink]="[a.id]" mat-icon-button matTooltip="View">
+            <mat-icon>visibility</mat-icon>
+          </a>
+          <a
+            [routerLink]="[a.id, 'edit']"
+            *hasPermission="'assets.update'"
+            mat-icon-button
+            matTooltip="Edit">
+            <mat-icon>edit</mat-icon>
+          </a>
+        </mat-cell>
+      </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      </mat-table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
 
-      <!-- Pagination -->
-      <div *ngIf="assets().length > 0" class="pagination-bar">
-        <span class="pagination-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-        <div class="flex gap-2">
-          <button
-            mat-stroked-button
-            [disabled]="currentPage() === 1"
-            (click)="onPageChange(currentPage() - 1)">
-            <mat-icon>chevron_left</mat-icon>
-            Previous
-          </button>
-          <button
-            mat-raised-button
-            color="primary"
-            [disabled]="currentPage() === totalPages()"
-            (click)="onPageChange(currentPage() + 1)">
-            Next
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
+    <!-- Pagination -->
+    <div *ngIf="assets().length > 0" class="table-footer">
+      <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <div class="pagination-actions">
+        <button
+          mat-stroked-button
+          class="btn-outline"
+          [disabled]="currentPage() === 1"
+          (click)="onPageChange(currentPage() - 1)">
+          <mat-icon>chevron_left</mat-icon>
+          Previous
+        </button>
+        <button
+          mat-flat-button
+          class="btn-cta"
+          [disabled]="currentPage() === totalPages()"
+          (click)="onPageChange(currentPage() + 1)">
+          Next
+          <mat-icon>chevron_right</mat-icon>
+        </button>
       </div>
+    </div>
 
-    </mat-card-content>
-  </mat-card>
+  </div>
+
 </div>

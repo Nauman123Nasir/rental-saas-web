@@ -80,6 +80,16 @@ export class CustomerDetailComponent implements OnInit {
     this.activeTab.set(tab);
   }
 
+  getDisplayName(): string {
+    const c = this.customer();
+    if (!c) return '?';
+    return c.type === 'Individual' ? (c.first_name ?? '') : (c.company_name ?? '');
+  }
+
+  getDriverInitial(driver: any): string {
+    return driver?.first_name ?? '';
+  }
+
   onDelete(): void {
     const cust = this.customer();
     if (!cust) return;

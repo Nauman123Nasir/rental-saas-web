@@ -1,93 +1,83 @@
-.back-btn {
-  margin-bottom: 1rem;
-  color: var(--mat-sys-on-surface-variant, #64748b);
+// Reservation Form — component-scoped overrides.
+// Global: .page-container, .page-header, .page-title, .page-subtitle,
+//         .btn-cta, .btn-outline, .alert-error, .alert-success in styles.scss.
+
+.form-page {
+  max-width: 960px;
 }
 
-.form-card-header {
+// ── Header back-button group ───────────────────────────────────────────────────
+.header-back-group {
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.75rem 2rem;
-  border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-  background: rgba(248, 250, 252, 0.5);
+  align-items: flex-start;
+  gap: 0.625rem;
 }
 
-.form-header-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 12px;
-  background: rgba(99, 102, 241, 0.12);
-  color: var(--mat-primary, #6366f1);
+// ── Form cards ────────────────────────────────────────────────────────────────
+.form-card {
+  margin-bottom: 1.5rem;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 0.75rem;
+
+    .mat-mdc-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #191c1e;
+      margin: 0;
+    }
+  }
+
+  mat-card-content {
+    padding: 1.25rem 1.5rem 1.5rem !important;
+  }
+}
+
+.form-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(70, 72, 212, 0.10);
+  color: #4648d4;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   mat-icon {
-    font-size: 1.4rem;
-    width: 1.4rem;
-    height: 1.4rem;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 
-.form-card-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--mat-sys-on-surface, #0f172a);
-  margin-bottom: 0.2rem;
-  margin-top: 0;
+// ── Form grids ────────────────────────────────────────────────────────────────
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.25rem;
+
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
 }
 
-.form-card-subtitle {
-  font-size: 0.85rem;
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  margin: 0;
+mat-form-field,
+.full-width {
+  width: 100%;
 }
 
-.form-section {
-  padding: 1.5rem 0;
-}
-
-.section-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  margin-bottom: 1.25rem;
-  margin-top: 0;
-}
-
-.alert-error,
-.alert-success {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.alert-error {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.alert-success {
-  background: #dcfce7;
-  color: #15803d;
-}
-
+// ── Form actions ──────────────────────────────────────────────────────────────
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.75rem;
-  padding: 1.5rem 0 2rem;
-  border-top: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-  margin-top: 0.5rem;
+  padding: 1rem 0 0.5rem;
 }
 
+// ── Inline spinner ────────────────────────────────────────────────────────────
 .inline-spinner {
   display: inline-block;
   margin-right: 6px;

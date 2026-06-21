@@ -36,24 +36,31 @@ export class AppLayoutComponent {
   readonly branch = this.authService.branch;
   readonly roles  = this.authService.roles;
 
-  readonly currentYear = new Date().getFullYear();
   isMobile = signal(window.innerWidth < 1024);
 
   @HostListener('window:resize')
-  onResize(): void {
-    this.isMobile.set(window.innerWidth < 1024);
+  onResize(): void { this.isMobile.set(window.innerWidth < 1024); }
+
+  get sidenavMode(): 'side' | 'over' { return this.isMobile() ? 'over' : 'side'; }
+  get sidenavOpened(): boolean        { return !this.isMobile(); }
+
+  /** Two-letter initials for avatars */
+  getInitials(name: string): string {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    return parts.length === 1
+      ? parts[0][0].toUpperCase()
+      : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  get sidenavMode(): 'side' | 'over' {
-    return this.isMobile() ? 'over' : 'side';
-  }
-
-  get sidenavOpened(): boolean {
-    return !this.isMobile();
-  }
-
+  /** Single letter for small avatar fallback */
   getInitial(name: string): string {
     return name ? name.charAt(0).toUpperCase() : '?';
+  }
+
+  /** Returns first letter of name lowercased for CSS avatar colour class */
+  getAvatarClass(name: string): string {
+    return name ? name.charAt(0).toLowerCase() : 'a';
   }
 
   onLogout(): void {

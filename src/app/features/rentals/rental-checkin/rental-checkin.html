@@ -2,118 +2,110 @@
   <div class="mx-auto max-w-2xl">
 
     <!-- Back link -->
-    <a routerLink="/rentals" mat-button class="back-btn mb-4">
+    <a routerLink="/rentals" mat-button class="btn-ghost mb-4 inline-flex items-center gap-1">
       <mat-icon>arrow_back</mat-icon>
       Back to Rentals
     </a>
 
     <!-- Loading -->
     @if (loading()) {
-      <div class="flex items-center justify-center gap-3 py-16">
+      <div class="loading-overlay">
         <mat-spinner diameter="36"></mat-spinner>
-        <span class="text-sm text-gray-500">Loading rental details...</span>
+        <span class="text-sm text-slate-500 ml-3">Loading rental details...</span>
       </div>
     }
 
     @if (!loading()) {
-      <mat-card class="overflow-hidden">
 
-        <!-- Card Header -->
-        <div class="form-card-header">
-          <div class="form-header-icon checkin-icon">
-            <mat-icon>task_alt</mat-icon>
-          </div>
-          <div>
-            <h1 class="form-card-title">Rental Check-in (Return)</h1>
-            <p class="form-card-subtitle">
-              @if (rental()) {
-                Rental <strong>{{ rental()?.rental_no || '#' + rentalId() }}</strong> —
-              }
-              Log the returning asset and complete return inspection.
-            </p>
-          </div>
+      <!-- Page Title -->
+      <div class="mb-6">
+        <h1 class="page-title">Rental Check-in</h1>
+        <p class="page-subtitle">
+          @if (rental()) {
+            Rental <strong>{{ rental()?.rental_no || '#' + rentalId() }}</strong> —
+          }
+          Log the returning asset and complete the return inspection.
+        </p>
+      </div>
+
+      <!-- Alerts -->
+      @if (error()) {
+        <div class="alert-error">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      @if (success()) {
+        <div class="alert-success">
+          <mat-icon>check_circle</mat-icon>
+          <span>Check-in completed successfully! Redirecting...</span>
+        </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- Section: Return Inspection -->
+        <mat-card class="mb-4">
+          <mat-card-content class="p-6">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Return Inspection</h2>
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Return Fuel Level (%)</mat-label>
+                <input matInput type="number" formControlName="fuel_level" placeholder="80" min="0" max="100">
+                <mat-icon matPrefix>local_gas_station</mat-icon>
+                @if (form.get('fuel_level')?.invalid && form.get('fuel_level')?.touched) {
+                  <mat-error>Enter a valid fuel level (0–100)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Return Odometer (km)</mat-label>
+                <input matInput type="number" formControlName="odometer_reading" placeholder="12850">
+                <mat-icon matPrefix>speed</mat-icon>
+                @if (form.get('odometer_reading')?.invalid && form.get('odometer_reading')?.touched) {
+                  <mat-error>Odometer reading is required</mat-error>
+                }
+              </mat-form-field>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Section: Notes -->
+        <mat-card class="mb-6">
+          <mat-card-content class="p-6">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Condition Report</h2>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Return Inspection Notes &amp; Damages</mat-label>
+              <textarea matInput formControlName="notes" rows="4"
+                placeholder="Report any new damages, issues, or general condition..."></textarea>
+              <mat-icon matPrefix>notes</mat-icon>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end gap-3">
+          <button type="button" mat-stroked-button class="btn-outline" (click)="cancel()" [disabled]="submitting()">
+            Cancel
+          </button>
+          <button type="submit" mat-flat-button class="btn-cta" [disabled]="submitting()">
+            @if (submitting()) {
+              <mat-spinner diameter="16"></mat-spinner>
+              Processing...
+            } @else {
+              <ng-container>
+                <mat-icon>task_alt</mat-icon>
+                Confirm Return
+              </ng-container>
+            }
+          </button>
         </div>
 
-        <mat-card-content class="px-8 pb-0">
-
-          <!-- Error Alert -->
-          @if (error()) {
-            <div class="alert-error mt-6">
-              <mat-icon class="text-base">error_outline</mat-icon>
-              <span>{{ error() }}</span>
-            </div>
-          }
-
-          <!-- Success Alert -->
-          @if (success()) {
-            <div class="alert-success mt-6">
-              <mat-icon class="text-base">check_circle</mat-icon>
-              <span>Check-in completed successfully! Redirecting...</span>
-            </div>
-          }
-
-          <!-- Form -->
-          <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-            <!-- Return Inspection -->
-            <div class="form-section">
-              <h2 class="section-title">Return Inspection</h2>
-              <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>Return Fuel Level (%)</mat-label>
-                  <input matInput type="number" formControlName="fuel_level" placeholder="80" min="0" max="100">
-                  <mat-icon matPrefix>local_gas_station</mat-icon>
-                  @if (form.get('fuel_level')?.invalid && form.get('fuel_level')?.touched) {
-                    <mat-error>Enter a valid fuel level (0–100)</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>Return Odometer (km)</mat-label>
-                  <input matInput type="number" formControlName="odometer_reading" placeholder="12850">
-                  <mat-icon matPrefix>speed</mat-icon>
-                  @if (form.get('odometer_reading')?.invalid && form.get('odometer_reading')?.touched) {
-                    <mat-error>Odometer reading is required</mat-error>
-                  }
-                </mat-form-field>
-
-              </div>
-            </div>
-
-            <mat-divider></mat-divider>
-
-            <!-- Notes -->
-            <div class="form-section">
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Return Inspection Notes &amp; Damages</mat-label>
-                <textarea matInput formControlName="notes" rows="4"
-                  placeholder="Report any new damages, issues, or general condition..."></textarea>
-                <mat-icon matPrefix>notes</mat-icon>
-              </mat-form-field>
-            </div>
-
-            <!-- Actions -->
-            <div class="form-actions">
-              <button type="button" mat-stroked-button (click)="cancel()" [disabled]="submitting()">
-                Cancel
-              </button>
-              <button type="submit" mat-raised-button color="accent" [disabled]="submitting()">
-                @if (submitting()) {
-                  <mat-spinner diameter="16" class="inline-spinner"></mat-spinner>
-                  Processing...
-                } @else {
-                  <ng-container>
-                    <mat-icon>task_alt</mat-icon>
-                    Confirm Return
-                  </ng-container>
-                }
-              </button>
-            </div>
-
-          </form>
-        </mat-card-content>
-      </mat-card>
+      </form>
     }
 
   </div>

@@ -1,69 +1,59 @@
-// Dashboard component — supplemental SCSS.
-// Most layout and spacing is handled by Tailwind utilities in the template.
-// Material theming tokens keep KPI icon colors consistent with MD3.
+// ── Page Grids ────────────────────────────────────────────────────────────────
 
-.dashboard-container {
-  padding: 1.5rem;
-  max-width: 1600px;
-  margin: 0 auto;
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 1023px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 479px)  { grid-template-columns: 1fr; }
 }
 
-// ── KPI cards ──────────────────────────────────────────────────────────────
+// 2fr left (charts) + 1fr right (doughnut / quick ops), alternating rows
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
 
-.kpi-card {
-  mat-card-content {
-    // Ensure padding is predictable across all KPI cards.
-    padding-inline: 1rem;
-  }
+  @media (max-width: 1023px) { grid-template-columns: 1fr; }
 }
 
-.kpi-icon-wrap {
+// ── Stat Card Icon Colours ─────────────────────────────────────────────────────
+// Extends the global .stat-card with a coloured icon badge above the label.
+
+.stat-icon-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 0.75rem;
-  flex-shrink: 0;
+  margin-bottom: 0.5rem;
 
   mat-icon {
-    font-size: 1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
+    font-size: 1.375rem;
+    width: 1.375rem;
+    height: 1.375rem;
   }
 
-  &.assets {
-    background-color: rgba(99, 102, 241, 0.12);
-    color: #6366f1;
-  }
-
-  &.available {
-    background-color: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-  }
-
-  &.active {
-    background-color: rgba(59, 130, 246, 0.12);
-    color: #3b82f6;
-  }
-
-  &.pending {
-    background-color: rgba(245, 158, 11, 0.12);
-    color: #f59e0b;
-  }
-
-  &.revenue {
-    background-color: rgba(139, 92, 246, 0.12);
-    color: #8b5cf6;
-  }
+  &.assets    { background: rgba(99,102,241,.12);  color: #6366f1; }
+  &.available { background: rgba(16,185,129,.12);  color: #10b981; }
+  &.active    { background: rgba(59,130,246,.12);  color: #3b82f6; }
+  &.pending   { background: rgba(245,158,11,.12);  color: #f59e0b; }
+  &.revenue   { background: rgba(139,92,246,.12);  color: #8b5cf6; }
 }
 
-// ── Chart cards ────────────────────────────────────────────────────────────
+// ── Chart Cards ───────────────────────────────────────────────────────────────
 
-.chart-content {
+.chart-card {
+  mat-card-header { padding: 1rem 1rem 0.5rem; }
+}
+
+.chart-wrap {
   position: relative;
   height: 280px;
-  padding-top: 1rem;
+  padding: 1rem 1rem 0.75rem !important;
 
   canvas {
     width: 100% !important;
@@ -71,59 +61,78 @@
   }
 }
 
-.doughnut-content {
-  height: 260px;
-}
+.doughnut-wrap { height: 270px; }
 
-// ── Quick action buttons ────────────────────────────────────────────────────
+// ── Quick Actions ─────────────────────────────────────────────────────────────
+
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 1rem !important;
+}
 
 .quick-action-btn {
-  width: 100%;
-  height: auto !important;
-  padding: 0.625rem 0.75rem !important;
-  border-radius: 0.5rem !important;
-  line-height: 1 !important;
-  white-space: normal !important;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
 
-  &.booking-action {
-    border-color: rgba(99, 102, 241, 0.4) !important;
-    color: #6366f1 !important;
+  .qa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
 
-    mat-icon { color: #6366f1; }
-    &:hover { background-color: rgba(99, 102, 241, 0.06) !important; }
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
   }
 
-  &.rental-action {
-    border-color: rgba(20, 184, 166, 0.4) !important;
-    color: #14b8a6 !important;
-
-    mat-icon { color: #14b8a6; }
-    &:hover { background-color: rgba(20, 184, 166, 0.06) !important; }
+  .qa-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
   }
 
-  &.payment-action {
-    border-color: rgba(139, 92, 246, 0.4) !important;
-    color: #8b5cf6 !important;
-
-    mat-icon { color: #8b5cf6; }
-    &:hover { background-color: rgba(139, 92, 246, 0.06) !important; }
+  .qa-sub {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin: 0;
   }
 
-  &.customer-action {
-    border-color: rgba(245, 158, 11, 0.4) !important;
-    color: #f59e0b !important;
-
-    mat-icon { color: #f59e0b; }
-    &:hover { background-color: rgba(245, 158, 11, 0.06) !important; }
+  &.indigo {
+    border-color: rgba(99,102,241,.2);
+    .qa-icon { background: rgba(99,102,241,.1); color: #6366f1; }
+    &:hover { background: rgba(99,102,241,.05); }
   }
-}
 
-// ── Error card accent ──────────────────────────────────────────────────────
+  &.teal {
+    border-color: rgba(20,184,166,.2);
+    .qa-icon { background: rgba(20,184,166,.1); color: #14b8a6; }
+    &:hover { background: rgba(20,184,166,.05); }
+  }
 
-.border-error {
-  border-color: var(--mat-sys-error, #ef4444) !important;
-}
+  &.violet {
+    border-color: rgba(139,92,246,.2);
+    .qa-icon { background: rgba(139,92,246,.1); color: #8b5cf6; }
+    &:hover { background: rgba(139,92,246,.05); }
+  }
 
-.text-error {
-  color: var(--mat-sys-error, #ef4444);
+  &.amber {
+    border-color: rgba(245,158,11,.2);
+    .qa-icon { background: rgba(245,158,11,.1); color: #f59e0b; }
+    &:hover { background: rgba(245,158,11,.05); }
+  }
 }

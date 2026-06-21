@@ -1,26 +1,32 @@
 <div class="page-container">
+
   <!-- Header -->
   <div class="page-header">
-    <a routerLink="/assets" mat-icon-button matTooltip="Back to Assets" class="mr-2">
-      <mat-icon>arrow_back</mat-icon>
-    </a>
-    <h1 class="page-title">Asset Details</h1>
+    <div class="header-back-group">
+      <a routerLink="/assets" mat-icon-button matTooltip="Back to Assets">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div>
+        <h1 class="page-title">Asset Details</h1>
+        <p class="page-subtitle">Full specification and rental rate overview.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="flex items-center justify-center gap-3 py-12">
+  <div *ngIf="loading()" class="loading-overlay">
     <mat-spinner diameter="32"></mat-spinner>
-    <span class="text-secondary">Loading asset...</span>
+    <span>Loading asset...</span>
   </div>
 
   <div *ngIf="!loading() && asset()">
 
     <!-- Hero Card -->
-    <mat-card class="mb-6">
+    <mat-card class="hero-card">
       <mat-card-content>
         <div class="asset-hero">
           <div class="asset-icon-box">
-            <mat-icon class="asset-hero-icon">inventory_2</mat-icon>
+            <mat-icon>directions_car</mat-icon>
           </div>
 
           <div class="asset-hero-info">
@@ -28,13 +34,14 @@
               {{ asset().brand }} {{ asset().model }}
               <span *ngIf="asset().year" class="asset-year">({{ asset().year }})</span>
             </h2>
-            <p class="asset-code-label">{{ asset().asset_code }}</p>
+            <p class="asset-code">{{ asset().asset_code }}</p>
+
             <div class="asset-actions-row">
               <a
                 [routerLink]="['/assets', asset().id, 'edit']"
                 *hasPermission="'assets.update'"
-                mat-raised-button
-                color="primary">
+                mat-flat-button
+                class="btn-cta">
                 <mat-icon>edit</mat-icon>
                 Edit Asset
               </a>
@@ -42,7 +49,7 @@
                 (click)="deleteAsset()"
                 *hasPermission="'assets.delete'"
                 mat-stroked-button
-                color="warn">
+                class="btn-outline btn-danger">
                 <mat-icon>delete</mat-icon>
                 Delete
               </button>
@@ -50,33 +57,27 @@
           </div>
 
           <div class="asset-status-area">
-            <span class="status-badge" [ngClass]="{
-              'badge-green':  asset().status === 'Available',
-              'badge-blue':   asset().status === 'Rented',
-              'badge-amber':  asset().status === 'Reserved',
-              'badge-red':    asset().status === 'Maintenance',
-              'badge-gray':   asset().status === 'Retired' || asset().status === 'Inactive'
-            }">{{ asset().status }}</span>
+            <span [class]="'chip-' + (asset().status | lowercase)">{{ asset().status }}</span>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <!-- Tabs -->
-    <mat-card>
+    <!-- Tabs Card -->
+    <mat-card class="tabs-card">
       <mat-card-content class="p-0">
-        <mat-tab-group animationDuration="200ms" class="asset-tabs">
+        <mat-tab-group animationDuration="200ms">
 
           <!-- Specifications Tab -->
           <mat-tab label="Specifications">
-            <div class="detail-grid p-6">
+            <div class="tab-content detail-grid">
 
               <div class="info-section">
-                <h3 class="info-section-title">Identification</h3>
-                <mat-divider class="mb-3"></mat-divider>
+                <h3 class="section-label">Identification</h3>
+                <mat-divider></mat-divider>
                 <div class="detail-row">
                   <span class="detail-label">Asset Code</span>
-                  <span class="detail-value">{{ asset().asset_code }}</span>
+                  <span class="detail-value mono">{{ asset().asset_code }}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Category</span>
@@ -84,11 +85,11 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">VIN Number</span>
-                  <span class="detail-value font-mono">{{ asset().vin_number || 'N/A' }}</span>
+                  <span class="detail-value mono">{{ asset().vin_number || 'N/A' }}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Serial Number</span>
-                  <span class="detail-value font-mono">{{ asset().serial_number || 'N/A' }}</span>
+                  <span class="detail-value mono">{{ asset().serial_number || 'N/A' }}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Ownership Type</span>
@@ -97,8 +98,8 @@
               </div>
 
               <div class="info-section">
-                <h3 class="info-section-title">Technical Details</h3>
-                <mat-divider class="mb-3"></mat-divider>
+                <h3 class="section-label">Technical Details</h3>
+                <mat-divider></mat-divider>
                 <div class="detail-row">
                   <span class="detail-label">Brand &amp; Model</span>
                   <span class="detail-value">{{ asset().brand }} {{ asset().model }}</span>
@@ -130,57 +131,55 @@
 
           <!-- Rental Rates Tab -->
           <mat-tab label="Rental Rates">
-            <div class="rates-grid p-6">
-              <mat-card class="rate-card">
-                <mat-card-content class="text-center">
-                  <div class="rate-label">Hourly</div>
-                  <div class="rate-value">${{ asset().hourly_rate }}</div>
-                </mat-card-content>
-              </mat-card>
-              <mat-card class="rate-card">
-                <mat-card-content class="text-center">
-                  <div class="rate-label">Daily</div>
-                  <div class="rate-value">${{ asset().daily_rate }}</div>
-                </mat-card-content>
-              </mat-card>
-              <mat-card class="rate-card">
-                <mat-card-content class="text-center">
-                  <div class="rate-label">Weekly</div>
-                  <div class="rate-value">${{ asset().weekly_rate }}</div>
-                </mat-card-content>
-              </mat-card>
-              <mat-card class="rate-card">
-                <mat-card-content class="text-center">
-                  <div class="rate-label">Monthly</div>
-                  <div class="rate-value">${{ asset().monthly_rate }}</div>
-                </mat-card-content>
-              </mat-card>
+            <div class="tab-content rates-grid">
+              <div class="stat-card">
+                <p class="stat-label">Hourly</p>
+                <p class="stat-value">${{ asset().hourly_rate }}</p>
+                <p class="stat-sub">per hour</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Daily</p>
+                <p class="stat-value">${{ asset().daily_rate }}</p>
+                <p class="stat-sub">per day</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Weekly</p>
+                <p class="stat-value">${{ asset().weekly_rate }}</p>
+                <p class="stat-sub">per week</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Monthly</p>
+                <p class="stat-value">${{ asset().monthly_rate }}</p>
+                <p class="stat-sub">per month</p>
+              </div>
             </div>
           </mat-tab>
 
           <!-- Maintenance Logs Tab -->
           <mat-tab label="Maintenance Logs">
-            <div class="p-6">
+            <div class="tab-content">
 
               <div
                 *ngIf="!asset().maintenance_blocks || asset().maintenance_blocks.length === 0"
                 class="empty-state">
-                <mat-icon class="empty-state-icon">build</mat-icon>
-                <p class="empty-state-title">No maintenance logs</p>
-                <p class="empty-state-text">No maintenance records found for this asset.</p>
+                <div class="empty-icon">
+                  <mat-icon>build</mat-icon>
+                </div>
+                <h3>No maintenance logs</h3>
+                <p>No maintenance records found for this asset.</p>
               </div>
 
               <div *ngFor="let block of asset().maintenance_blocks; let last=last">
                 <div class="maintenance-item">
                   <div class="maintenance-info">
-                    <h4 class="font-semibold">{{ block.reason || 'Routine Maintenance' }}</h4>
+                    <h4>{{ block.reason || 'Routine Maintenance' }}</h4>
                     <p class="maintenance-dates">
                       {{ block.start_datetime | date:'mediumDate' }} &rarr; {{ block.end_datetime | date:'mediumDate' }}
                     </p>
                   </div>
                   <div class="maintenance-cost">${{ block.cost }}</div>
                 </div>
-                <mat-divider *ngIf="!last" class="my-2"></mat-divider>
+                <mat-divider *ngIf="!last"></mat-divider>
               </div>
 
             </div>

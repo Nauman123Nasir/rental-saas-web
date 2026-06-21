@@ -1,108 +1,179 @@
 <div class="page-container">
+
   <!-- Page Header -->
   <div class="page-header">
     <div>
       <h1 class="page-title">Reservations</h1>
-      <p class="page-subtitle">Manage customer bookings and schedules</p>
+      <p class="page-subtitle">Manage customer bookings and schedules across the fleet.</p>
     </div>
-    <a routerLink="new" mat-raised-button color="primary">
+    <a routerLink="new" mat-flat-button class="btn-cta">
       <mat-icon>add</mat-icon>
       New Booking
     </a>
   </div>
 
+  <!-- Stat Cards Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <p class="stat-label">Total Bookings</p>
+      <p class="stat-value">{{ reservations().length }}</p>
+      <p class="stat-sub">all reservations</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Active</p>
+      <p class="stat-value">{{ reservations().length }}</p>
+      <p class="stat-sub">currently active</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Confirmed</p>
+      <p class="stat-value">—</p>
+      <p class="stat-sub">confirmed bookings</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Cancellations</p>
+      <p class="stat-value">—</p>
+      <p class="stat-sub">total cancelled</p>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-search">
+      <mat-label>Search bookings...</mat-label>
+      <input matInput placeholder="Booking ID, customer name..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <button mat-stroked-button class="btn-outline">
+      <mat-icon>filter_list</mat-icon>
+      Filters
+    </button>
+    <button mat-stroked-button class="btn-outline">
+      <mat-icon>download</mat-icon>
+      Export
+    </button>
+  </div>
+
   <!-- Loading -->
   @if (loading()) {
-    <div class="flex items-center justify-center gap-3 py-16">
-      <mat-spinner diameter="36"></mat-spinner>
-      <span class="text-sm text-gray-500">Loading reservations...</span>
+    <div class="loading-overlay">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span>Loading reservations...</span>
     </div>
   }
 
-  <!-- Table Card -->
+  <!-- Table -->
   @if (!loading()) {
-    <mat-card class="res-table-card">
-      <mat-card-content class="p-0">
+    <div class="table-container">
 
-        <!-- Empty State -->
-        @if (reservations().length === 0) {
-          <div class="flex flex-col items-center justify-center gap-3 py-20 text-center">
-            <mat-icon class="empty-icon text-gray-300">event_busy</mat-icon>
-            <p class="text-base font-semibold text-gray-600">No reservations found</p>
-            <p class="text-sm text-gray-400">Create a new booking to get started.</p>
+      <!-- Empty State -->
+      @if (reservations().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <mat-icon>event_busy</mat-icon>
           </div>
-        }
+          <h3>No reservations found</h3>
+          <p>Create a new booking to get started.</p>
+        </div>
+      }
 
-        <!-- Table -->
-        @if (reservations().length > 0) {
-          <div class="overflow-x-auto">
-            <table mat-table [dataSource]="reservations()" class="w-full">
+      <!-- Table -->
+      @if (reservations().length > 0) {
+        <table mat-table [dataSource]="reservations()">
 
-              <!-- Booking ID -->
-              <ng-container matColumnDef="reservation_no">
-                <th mat-header-cell *matHeaderCellDef>Booking ID</th>
-                <td mat-cell *matCellDef="let r">
-                  <span class="booking-id">{{ r.reservation_no || 'RES-' + r.id }}</span>
-                </td>
-              </ng-container>
+          <!-- Booking ID -->
+          <ng-container matColumnDef="reservation_no">
+            <th mat-header-cell *matHeaderCellDef>Booking ID</th>
+            <td mat-cell *matCellDef="let r">
+              <a [routerLink]="[r.id]" class="table-link booking-id">
+                {{ r.reservation_no || 'RES-' + r.id }}
+              </a>
+            </td>
+          </ng-container>
 
-              <!-- Customer -->
-              <ng-container matColumnDef="customer">
-                <th mat-header-cell *matHeaderCellDef>Customer</th>
-                <td mat-cell *matCellDef="let r">
-                  @if (r.customer) {
-                    <span>{{ r.customer.type === 'Individual' ? (r.customer.first_name + ' ' + r.customer.last_name) : r.customer.company_name }}</span>
-                  } @else {
-                    <span class="text-gray-400">—</span>
-                  }
-                </td>
-              </ng-container>
+          <!-- Customer -->
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef>Customer</th>
+            <td mat-cell *matCellDef="let r">
+              @if (r.customer) {
+                <div class="customer-cell">
+                  <span
+                    class="avatar-initials size-md"
+                    [ngClass]="'avatar-' + ((r.customer.first_name?.[0] || r.customer.company_name?.[0] || 'a') | lowercase)">
+                    {{ (r.customer.first_name?.[0] || r.customer.company_name?.[0] || '?') | uppercase }}
+                  </span>
+                  <div class="customer-info">
+                    <span class="customer-name">
+                      {{ r.customer.type === 'Individual'
+                          ? (r.customer.first_name + ' ' + r.customer.last_name)
+                          : r.customer.company_name }}
+                    </span>
+                    <span class="customer-type">{{ r.customer.type || 'Individual' }}</span>
+                  </div>
+                </div>
+              } @else {
+                <span class="text-muted">—</span>
+              }
+            </td>
+          </ng-container>
 
-              <!-- Status -->
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
-                <td mat-cell *matCellDef="let r">
-                  <mat-chip-set>
-                    <mat-chip [class]="'status-chip ' + getStatusClass(r.status || 'Draft')" disableRipple>
-                      {{ r.status || 'Draft' }}
-                    </mat-chip>
-                  </mat-chip-set>
-                </td>
-              </ng-container>
+          <!-- Status -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let r">
+              <span [class]="'chip-' + ((r.status || 'draft') | lowercase)">
+                {{ r.status || 'Draft' }}
+              </span>
+            </td>
+          </ng-container>
 
-              <!-- Pickup Date -->
-              <ng-container matColumnDef="pickup_date">
-                <th mat-header-cell *matHeaderCellDef>Pickup Date</th>
-                <td mat-cell *matCellDef="let r" class="date-cell">
-                  {{ r.pickup_datetime_utc | date:'mediumDate' }}
-                </td>
-              </ng-container>
+          <!-- Pickup Date -->
+          <ng-container matColumnDef="pickup_date">
+            <th mat-header-cell *matHeaderCellDef>Pickup Date</th>
+            <td mat-cell *matCellDef="let r" class="date-cell">
+              {{ r.pickup_datetime_utc | date:'mediumDate' }}
+            </td>
+          </ng-container>
 
-              <!-- Return Date -->
-              <ng-container matColumnDef="return_date">
-                <th mat-header-cell *matHeaderCellDef>Return Date</th>
-                <td mat-cell *matCellDef="let r" class="date-cell">
-                  {{ r.return_datetime_utc | date:'mediumDate' }}
-                </td>
-              </ng-container>
+          <!-- Return Date -->
+          <ng-container matColumnDef="return_date">
+            <th mat-header-cell *matHeaderCellDef>Return Date</th>
+            <td mat-cell *matCellDef="let r" class="date-cell">
+              {{ r.return_datetime_utc | date:'mediumDate' }}
+            </td>
+          </ng-container>
 
-              <!-- Actions -->
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
-                <td mat-cell *matCellDef="let r" class="text-right">
-                  <a [routerLink]="[r.id]" mat-stroked-button class="action-btn">
-                    View Details
-                    <mat-icon iconPositionEnd>chevron_right</mat-icon>
-                  </a>
-                </td>
-              </ng-container>
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+            <td mat-cell *matCellDef="let r" class="actions-cell">
+              <a [routerLink]="[r.id]" mat-button class="btn-ghost">
+                View Details
+                <mat-icon iconPositionEnd>chevron_right</mat-icon>
+              </a>
+            </td>
+          </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 transition-colors"></tr>
-            </table>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- Pagination footer -->
+        <div class="table-footer">
+          <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
+          <div class="pagination-actions">
+            <button mat-stroked-button class="btn-outline" [disabled]="currentPage() === 1">
+              <mat-icon>chevron_left</mat-icon>
+              Previous
+            </button>
+            <button mat-flat-button class="btn-cta" [disabled]="currentPage() === totalPages()">
+              Next
+              <mat-icon>chevron_right</mat-icon>
+            </button>
           </div>
-        }
-      </mat-card-content>
-    </mat-card>
+        </div>
+      }
+
+    </div>
   }
+
 </div>

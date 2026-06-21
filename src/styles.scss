@@ -1,5 +1,4 @@
-// ── Angular Material MD3 Theme ───────────────────────────────────────────────
-// @use must come before any other rules (SCSS requirement)
+// ── Angular Material (must be first @use) ────────────────────────────────────
 @use '@angular/material' as mat;
 
 @include mat.core();
@@ -11,157 +10,503 @@ $theme: mat.define-theme((
     tertiary: mat.$cyan-palette,
   ),
   typography: (
-    brand-family: 'Plus Jakarta Sans, sans-serif',
-    plain-family: 'Plus Jakarta Sans, sans-serif',
+    brand-family: '"Hanken Grotesk", sans-serif',
+    plain-family: '"Inter", sans-serif',
     bold-weight: 700,
     medium-weight: 600,
     regular-weight: 400,
   ),
-  density: (
-    scale: 0,
-  ),
+  density: (scale: 0),
 ));
 
-html {
-  @include mat.all-component-themes($theme);
-}
+html { @include mat.all-component-themes($theme); }
 
-// ── Global Reset / Base ───────────────────────────────────────────────────────
+// ── Design Tokens ─────────────────────────────────────────────────────────────
+$primary:        #1e293b;   // dark navy — primary CTA
+$secondary:      #4648d4;   // indigo — secondary actions / active states
+$surface:        #ffffff;
+$bg-page:        #f7f9fb;
+$on-surface:     #191c1e;
+$on-surface-var: #45474c;
+$muted:          #64748b;
+$border:         #e2e8f0;
+$border-strong:  #cbd5e1;
+
+$success-bg:     rgba(21,128,61,.10);
+$success-text:   #15803d;
+$warning-bg:     rgba(180,83,9,.10);
+$warning-text:   #b45309;
+$danger-bg:      rgba(185,28,28,.10);
+$danger-text:    #b91c1c;
+$info-bg:        rgba(37,99,235,.10);
+$info-text:      #2563eb;
+
+$radius-sm:  4px;
+$radius-md:  8px;
+$radius-lg:  12px;
+$radius-xl:  16px;
+$radius-2xl: 24px;
+
+// ── Base ──────────────────────────────────────────────────────────────────────
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: #f1f5f9;
-  color: #1e293b;
+  background: $bg-page;
+  color: $on-surface;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-// ── SCSS Design Tokens ───────────────────────────────────────────────────────
-$primary:       #4f46e5;
-$primary-hover: #4338ca;
-$primary-light: #6366f1;
-$accent:        #14b8a6;
-$danger:        #ef4444;
-$success:       #10b981;
-$warning:       #f59e0b;
-
-$text-primary:   #1e293b;
-$text-secondary: #64748b;
-$text-muted:     #94a3b8;
-$border-color:   #e2e8f0;
-$surface:        #ffffff;
-$bg-page:        #f1f5f9;
-
-$radius-sm: 6px;
-$radius-md: 10px;
-$radius-lg: 14px;
-$radius-xl: 18px;
-
-// ── Material Component Overrides ─────────────────────────────────────────────
-
-// Ensure Material uses our font
+// ── Material Font Override ────────────────────────────────────────────────────
 .mat-mdc-form-field,
 .mat-mdc-button,
 .mat-mdc-card,
 .mat-mdc-table,
-.mdc-list-item {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+.mdc-list-item,
+.mat-mdc-menu-item,
+.mat-mdc-tab,
+.mat-mdc-select {
+  font-family: 'Inter', sans-serif !important;
 }
 
-// Form field sizing
+// ── Material Form Fields ──────────────────────────────────────────────────────
 .mat-mdc-form-field {
   width: 100%;
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: $border !important;
+  }
+
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: $border-strong !important;
+  }
 }
 
-// Mat table striping
-.mat-mdc-row:hover .mat-mdc-cell {
-  background: rgba(79, 70, 229, 0.03);
+// ── Material Table ────────────────────────────────────────────────────────────
+.mat-mdc-table {
+  background: transparent !important;
+
+  .mat-mdc-header-row {
+    background: transparent !important;
+    height: 44px;
+  }
+
+  .mat-mdc-header-cell {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $muted !important;
+    border-bottom: 1px solid $border !important;
+  }
+
+  .mat-mdc-row {
+    height: 56px;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background 0.1s;
+
+    &:hover .mat-mdc-cell {
+      background: #f8fafc !important;
+    }
+
+    &:last-child { border-bottom: none !important; }
+  }
+
+  .mat-mdc-cell {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px;
+    color: $on-surface-var;
+    border-bottom: none !important;
+  }
 }
 
-// Sidenav background
+// ── Material Card ─────────────────────────────────────────────────────────────
+mat-card, .mat-mdc-card {
+  border-radius: $radius-lg !important;
+  border: 1px solid $border !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05) !important;
+}
+
+// ── Material Sidenav ──────────────────────────────────────────────────────────
 .mat-drawer {
-  background: #ffffff !important;
-  border-right: 1px solid $border-color;
+  background: $surface !important;
+  border-right: 1px solid $border !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,.06) !important;
 }
 
-// Snackbar success
-.snack-success .mdc-snackbar__surface {
-  background: #059669 !important;
+// ── Material Paginator ────────────────────────────────────────────────────────
+.mat-mdc-paginator {
+  background: transparent !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  color: $muted !important;
+}
+
+// ── Material Tabs ─────────────────────────────────────────────────────────────
+.mat-mdc-tab-header {
+  border-bottom: 1px solid $border;
+}
+
+// ── Material Snackbar ─────────────────────────────────────────────────────────
+.snack-success .mdc-snackbar__surface { background: #059669 !important; color: #fff !important; }
+.snack-error   .mdc-snackbar__surface { background: #dc2626 !important; color: #fff !important; }
+
+// ── Status / Type Chips ───────────────────────────────────────────────────────
+// Rectangular style — 4px radius, uppercase, compact
+%chip-base {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: $radius-sm;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.chip-active       { @extend %chip-base; background: $success-bg; color: $success-text; }
+.chip-inactive     { @extend %chip-base; background: #f1f5f9;     color: $muted; }
+.chip-suspended    { @extend %chip-base; background: $danger-bg;   color: $danger-text; }
+.chip-pending      { @extend %chip-base; background: $warning-bg;  color: $warning-text; }
+.chip-confirmed    { @extend %chip-base; background: $success-bg;  color: $success-text; }
+.chip-completed    { @extend %chip-base; background: $success-bg;  color: $success-text; }
+.chip-cancelled    { @extend %chip-base; background: $danger-bg;   color: $danger-text; }
+.chip-overdue      { @extend %chip-base; background: $danger-bg;   color: $danger-text; }
+.chip-paid         { @extend %chip-base; background: $success-bg;  color: $success-text; }
+.chip-void         { @extend %chip-base; background: $danger-bg;   color: $danger-text; }
+.chip-draft        { @extend %chip-base; background: #f1f5f9;      color: $muted; }
+.chip-individual   { @extend %chip-base; background: $info-bg;     color: $info-text; }
+.chip-corporate    { @extend %chip-base; background: #1e293b;      color: #fff; }
+.chip-system       { @extend %chip-base; background: $secondary;   color: #fff; }
+.chip-available    { @extend %chip-base; background: $success-bg;  color: $success-text; }
+.chip-rented       { @extend %chip-base; background: $info-bg;     color: $info-text; }
+.chip-maintenance  { @extend %chip-base; background: $warning-bg;  color: $warning-text; }
+.chip-reserved     { @extend %chip-base; background: rgba(124,58,237,.1); color: #7c3aed; }
+
+// ── Dot Status ────────────────────────────────────────────────────────────────
+.dot-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.active    { color: $success-text; &::before { background: $success-text; } }
+  &.inactive  { color: $muted;        &::before { background: $muted; } }
+  &.pending   { color: $warning-text; &::before { background: $warning-text; } }
+  &.rented    { color: $info-text;    &::before { background: $info-text; } }
+  &.maintenance { color: $warning-text; &::before { background: $warning-text; } }
+}
+
+// ── Avatar Initials ───────────────────────────────────────────────────────────
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  user-select: none;
+
+  &.size-sm { width: 28px; height: 28px; font-size: 11px; }
+  &.size-md { width: 36px; height: 36px; font-size: 13px; }
+  &.size-lg { width: 44px; height: 44px; font-size: 16px; }
+}
+
+// Colour cycle (by initials hash — use inline style="background: var(--avatar-bg)")
+.avatar-a, .avatar-b { background: #6366f1; }
+.avatar-c, .avatar-d { background: #0ea5e9; }
+.avatar-e, .avatar-f { background: #10b981; }
+.avatar-g, .avatar-h { background: #f59e0b; }
+.avatar-i, .avatar-j { background: #ef4444; }
+.avatar-k, .avatar-l { background: #8b5cf6; }
+.avatar-m, .avatar-n { background: #ec4899; }
+.avatar-o, .avatar-p { background: #14b8a6; }
+.avatar-q, .avatar-r { background: #f97316; }
+.avatar-s, .avatar-t { background: #6366f1; }
+.avatar-u, .avatar-v { background: #3b82f6; }
+.avatar-w, .avatar-x { background: #84cc16; }
+.avatar-y, .avatar-z { background: #a855f7; }
+
+// ── Global Button Helpers ─────────────────────────────────────────────────────
+// Use these on mat-flat-button / mat-stroked-button / mat-button
+
+// Dark navy CTA (primary page action)
+.btn-cta {
+  background: $primary !important;
   color: #fff !important;
+  border-radius: $radius-md !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+
+  .mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-// Snackbar error
-.snack-error .mdc-snackbar__surface {
-  background: #dc2626 !important;
+// Indigo action button
+.btn-indigo {
+  background: $secondary !important;
   color: #fff !important;
+  border-radius: $radius-md !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+
+  .mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-// Status chip colours (used across all list pages)
-.chip-active {
-  background: rgba(16, 185, 129, 0.12) !important;
-  color: #059669 !important;
+// Outline button
+.btn-outline {
+  background: $surface !important;
+  color: $on-surface !important;
+  border: 1px solid $border !important;
+  border-radius: $radius-md !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  height: 40px !important;
+  padding: 0 16px !important;
 }
 
-.chip-inactive {
-  background: rgba(100, 116, 139, 0.12) !important;
-  color: #475569 !important;
+// Ghost text button
+.btn-ghost {
+  color: $secondary !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 0 8px !important;
 }
 
-.chip-suspended {
-  background: rgba(239, 68, 68, 0.12) !important;
-  color: #dc2626 !important;
+// ── Card Variants ─────────────────────────────────────────────────────────────
+.card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
-.chip-pending,
-.chip-confirmed {
-  background: rgba(245, 158, 11, 0.12) !important;
-  color: #d97706 !important;
+.card-dark {
+  background: $primary;
+  border-radius: $radius-lg;
+  color: #fff;
 }
 
-.chip-completed,
-.chip-paid {
-  background: rgba(16, 185, 129, 0.12) !important;
-  color: #059669 !important;
+.stat-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $muted;
+    margin: 0 0 0.375rem;
+  }
+
+  .stat-value {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $on-surface;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: $muted;
+    margin: 0.375rem 0 0;
+  }
 }
 
-.chip-cancelled,
-.chip-void {
-  background: rgba(239, 68, 68, 0.12) !important;
-  color: #dc2626 !important;
-}
-
-// ── Page Layout Helper ───────────────────────────────────────────────────────
+// ── Page Layout ───────────────────────────────────────────────────────────────
 .page-container {
   padding: 2rem 2.5rem;
-  max-width: 1280px;
+  max-width: 1600px;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
-    padding: 1rem 1.25rem;
-  }
+  @media (max-width: 768px) { padding: 1rem 1.25rem; }
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .page-title {
+  font-family: 'Hanken Grotesk', sans-serif;
   font-size: 1.75rem;
-  font-weight: 800;
-  color: $text-primary;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: $on-surface;
+  letter-spacing: -0.02em;
   margin: 0;
+  line-height: 1.2;
 }
 
 .page-subtitle {
+  font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
-  color: $text-secondary;
+  color: $muted;
   margin: 0.25rem 0 0;
+  font-weight: 400;
+}
+
+// ── Filter Bar ────────────────────────────────────────────────────────────────
+.filter-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  margin-bottom: 1.25rem;
+
+  // Override global width:100% — fields inside a filter bar must shrink to content
+  .mat-mdc-form-field {
+    width: auto;
+  }
+
+  .filter-search {
+    flex: 1;
+    min-width: 220px;
+  }
+}
+
+// ── Table Container ───────────────────────────────────────────────────────────
+.table-container {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+
+  .table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid $border;
+    font-size: 13px;
+    color: $muted;
+  }
+}
+
+// ── Empty State ───────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: $muted;
+    }
+  }
+
+  h3 {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $on-surface;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: $muted;
+    margin: 0 0 1.5rem;
+    max-width: 360px;
+  }
+}
+
+// ── Alert Banners ─────────────────────────────────────────────────────────────
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: $radius-md;
+  color: $danger-text;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.alert-success {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: $radius-md;
+  color: $success-text;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+// ── Link style for table codes ────────────────────────────────────────────────
+.table-link {
+  color: $secondary;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 13px;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ── Loading Overlay ───────────────────────────────────────────────────────────
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
 }

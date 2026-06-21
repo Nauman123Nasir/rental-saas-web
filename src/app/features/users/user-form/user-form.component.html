@@ -1,132 +1,125 @@
 <div class="page-container">
-  <div class="form-wrapper">
+  <div class="max-w-3xl mx-auto">
 
-    <!-- Back Link & Header -->
-    <div class="form-page-header">
+    <!-- Back Link + Header -->
+    <div class="mb-6">
       <a routerLink="/users" class="back-link">
-        <mat-icon class="text-base">arrow_back</mat-icon>
+        <mat-icon class="text-base leading-none">arrow_back</mat-icon>
         Back to Users
       </a>
-      <div>
-        <h1 class="page-title">{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h1>
-        <p class="page-subtitle">
-          {{ isEditMode() ? 'Update staff account details and role assignments.' : 'Add a new staff member to your tenant.' }}
-        </p>
+      <div class="page-header mb-0">
+        <div>
+          <h1 class="page-title">{{ isEditMode() ? 'Edit User' : 'Add New User' }}</h1>
+          <p class="page-subtitle">
+            {{ isEditMode() ? 'Update staff account details and role assignments.' : 'Add a new staff member to your tenant.' }}
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Alerts -->
     <div *ngIf="successMessage()" class="alert-success">
       <mat-icon>check_circle</mat-icon>
-      {{ successMessage() }}
+      <span>{{ successMessage() }}</span>
     </div>
     <div *ngIf="errorMessage()" class="alert-error">
       <mat-icon>error_outline</mat-icon>
-      {{ errorMessage() }}
+      <span>{{ errorMessage() }}</span>
     </div>
 
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
 
-      <!-- Account Details Card -->
-      <mat-card class="form-card">
-        <mat-card-header>
-          <mat-card-title class="flex items-center gap-2 text-base">
-            <mat-icon color="primary">person</mat-icon>
-            Account Details
-          </mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content class="pt-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Basic Information -->
+      <div class="card p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <mat-icon class="text-indigo-500">person</mat-icon>
+          <h2 class="text-base font-semibold text-slate-800 m-0">Basic Information</h2>
+        </div>
 
-            <!-- Name -->
-            <mat-form-field appearance="outline">
-              <mat-label>Full Name</mat-label>
-              <input matInput type="text" formControlName="name" placeholder="e.g. John Smith" />
-              <mat-icon matSuffix>badge</mat-icon>
-              <mat-error *ngIf="hasError('name')">{{ getError('name') }}</mat-error>
-            </mat-form-field>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <!-- Email -->
-            <mat-form-field appearance="outline">
-              <mat-label>Email Address</mat-label>
-              <input matInput type="email" formControlName="email" placeholder="john@company.com" />
-              <mat-icon matSuffix>email</mat-icon>
-              <mat-error *ngIf="hasError('email')">{{ getError('email') }}</mat-error>
-            </mat-form-field>
+          <!-- Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput type="text" formControlName="name" placeholder="e.g. John Smith" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="hasError('name')">{{ getError('name') }}</mat-error>
+          </mat-form-field>
 
-            <!-- Password -->
-            <mat-form-field appearance="outline">
-              <mat-label>
-                Password
-                <span *ngIf="isEditMode()" class="text-slate-400 font-normal text-xs"> — leave blank to keep current</span>
-              </mat-label>
-              <input matInput type="password" formControlName="password"
-                [placeholder]="isEditMode() ? 'Leave blank to keep unchanged' : 'Min. 8 characters'" />
-              <mat-icon matSuffix>lock</mat-icon>
-              <mat-error *ngIf="hasError('password')">{{ getError('password') }}</mat-error>
-            </mat-form-field>
+          <!-- Email -->
+          <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="john@company.com" />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="hasError('email')">{{ getError('email') }}</mat-error>
+          </mat-form-field>
 
-            <!-- Status -->
-            <mat-form-field appearance="outline">
-              <mat-label>Status</mat-label>
-              <mat-select formControlName="status">
-                <mat-option value="active">Active</mat-option>
-                <mat-option value="inactive">Inactive</mat-option>
-                <mat-option value="suspended">Suspended</mat-option>
-              </mat-select>
-              <mat-error *ngIf="hasError('status')">{{ getError('status') }}</mat-error>
-            </mat-form-field>
+          <!-- Password -->
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Password
+              <span *ngIf="isEditMode()" class="text-slate-400 font-normal text-xs"> — leave blank to keep current</span>
+            </mat-label>
+            <input matInput type="password" formControlName="password"
+              [placeholder]="isEditMode() ? 'Leave blank to keep unchanged' : 'Min. 8 characters'" />
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="hasError('password')">{{ getError('password') }}</mat-error>
+          </mat-form-field>
 
-          </div>
-        </mat-card-content>
-      </mat-card>
+          <!-- Status -->
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
+              <mat-option value="suspended">Suspended</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('status')">{{ getError('status') }}</mat-error>
+          </mat-form-field>
 
-      <!-- Role Assignment Card -->
-      <mat-card class="form-card">
-        <mat-card-header>
-          <mat-card-title class="flex items-center gap-2 text-base">
-            <mat-icon color="primary">verified_user</mat-icon>
-            Role Assignment
-          </mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content class="pt-5">
-          <p class="text-sm text-slate-500 mb-4">
-            Select one or more roles to grant this user the associated permissions.
-          </p>
+        </div>
+      </div>
 
-          <div *ngIf="availableRoles().length > 0" class="roles-grid">
-            <div
-              *ngFor="let role of availableRoles()"
-              class="role-option"
-              [class.selected]="isRoleSelected(role.id)"
-              (click)="toggleRole(role.id)">
-              <mat-checkbox
-                [checked]="isRoleSelected(role.id)"
-                (click)="$event.stopPropagation()"
-                (change)="toggleRole(role.id)"
-                color="primary">
-              </mat-checkbox>
-              <div class="flex-1 min-w-0">
-                <p class="font-semibold text-sm text-slate-800">{{ role.name }}</p>
-                <p *ngIf="role.description" class="text-xs text-slate-500 mt-0.5 truncate">{{ role.description }}</p>
-                <p class="text-xs text-indigo-500 mt-0.5">{{ role.permissions?.length ?? 0 }} permissions</p>
-              </div>
+      <!-- Role Assignment -->
+      <div class="card p-6">
+        <div class="flex items-center gap-2 mb-2">
+          <mat-icon class="text-indigo-500">verified_user</mat-icon>
+          <h2 class="text-base font-semibold text-slate-800 m-0">Role Assignment</h2>
+        </div>
+        <p class="text-sm text-slate-500 mb-4">
+          Select one or more roles to grant this user the associated permissions.
+        </p>
+
+        <div *ngIf="availableRoles().length > 0" class="roles-grid">
+          <div
+            *ngFor="let role of availableRoles()"
+            class="role-option"
+            [class.selected]="isRoleSelected(role.id)"
+            (click)="toggleRole(role.id)">
+            <mat-checkbox
+              [checked]="isRoleSelected(role.id)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleRole(role.id)"
+              color="primary">
+            </mat-checkbox>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm text-slate-800 m-0">{{ role.name }}</p>
+              <p *ngIf="role.description" class="text-xs text-slate-500 mt-0.5 mb-0 truncate">{{ role.description }}</p>
+              <p class="text-xs text-indigo-500 mt-0.5 mb-0">{{ role.permissions?.length ?? 0 }} permissions</p>
             </div>
           </div>
+        </div>
 
-          <div *ngIf="availableRoles().length === 0" class="text-sm text-slate-500 py-4">
-            No roles available.
-            <a routerLink="/roles/create" class="text-indigo-600 font-semibold hover:underline ml-1">Create a role</a> first.
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <div *ngIf="availableRoles().length === 0" class="text-sm text-slate-500 py-4">
+          No roles available.
+          <a routerLink="/roles/create" class="text-indigo-600 font-semibold hover:underline ml-1">Create a role</a> first.
+        </div>
+      </div>
 
-      <!-- Actions -->
+      <!-- Form Actions -->
       <div class="flex items-center justify-end gap-3">
-        <a mat-stroked-button routerLink="/users">Cancel</a>
-        <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()" class="flex items-center gap-2">
+        <a mat-stroked-button routerLink="/users" class="btn-outline">Cancel</a>
+        <button mat-flat-button type="submit" [disabled]="isLoading()" class="btn-cta">
           <mat-spinner *ngIf="isLoading()" diameter="18" class="inline-spinner"></mat-spinner>
           {{ isLoading() ? (isEditMode() ? 'Saving...' : 'Creating...') : (isEditMode() ? 'Save Changes' : 'Create User') }}
         </button>

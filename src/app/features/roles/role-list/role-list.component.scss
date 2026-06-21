@@ -1,110 +1,27 @@
-// ── Role List ────────────────────────────────────────────────────────────────
-
-.page-header {
-  @apply flex items-center justify-between gap-4 mb-6 flex-wrap;
-}
-
-.page-title {
-  @apply text-2xl font-bold text-slate-800;
-}
-
-.page-subtitle {
-  @apply text-sm text-slate-500 mt-0.5;
-}
-
-.header-action-btn {
-  @apply flex-shrink-0;
-}
-
-// Alerts
-.alert-success {
-  @apply flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl px-4 py-3 text-sm mb-4;
-}
-
-.alert-error {
-  @apply flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4;
-}
-
-.loading-state {
-  @apply flex items-center justify-center py-20;
-}
-
-// Roles grid
-.roles-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5;
-}
+// ── Role List ─────────────────────────────────────────────────────────────────
 
 .role-card {
-  @apply shadow-sm transition-shadow hover:shadow-md;
+  transition: box-shadow 0.15s;
 
-  mat-card-content {
-    @apply pb-0;
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09) !important;
   }
 }
 
-.role-card-header {
-  @apply flex items-start gap-3 mb-2;
-}
-
-.role-icon-wrap {
-  @apply w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0;
+.role-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #ede9fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
   mat-icon {
-    @apply text-indigo-600;
+    color: #6366f1;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
-}
-
-.system-chip {
-  @apply bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0 rounded-full;
-  height: 20px !important;
-}
-
-// Stats row
-.role-stats {
-  @apply flex items-center gap-0 divide-x divide-slate-100;
-}
-
-.stat-item {
-  @apply flex flex-col items-center px-4 py-1 flex-1;
-}
-
-.stat-value {
-  @apply text-xl font-bold text-indigo-600;
-}
-
-.stat-label {
-  @apply text-xs text-slate-400 font-medium;
-}
-
-.perm-summary {
-  @apply text-xs text-slate-400 mt-3 truncate;
-}
-
-// Card actions
-.role-card-actions {
-  @apply px-3 pb-3 pt-0 gap-2;
-}
-
-// Empty state card
-.empty-card {
-  @apply col-span-full shadow-sm;
-}
-
-.empty-state {
-  @apply flex flex-col items-center justify-center py-16 text-center;
-}
-
-.empty-icon {
-  @apply text-5xl text-slate-300 mb-3;
-  font-size: 3rem !important;
-  width: 3rem !important;
-  height: 3rem !important;
-}
-
-.empty-title {
-  @apply text-base font-semibold text-slate-600 mb-1;
-}
-
-.empty-text {
-  @apply text-sm text-slate-400;
 }

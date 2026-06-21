@@ -1,14 +1,13 @@
 <div class="page-container">
 
   <!-- Loading Screen -->
-  <div *ngIf="isLoading() && !customer()" class="loader-center">
+  <div *ngIf="isLoading() && !customer()" class="loading-overlay">
     <mat-spinner diameter="48"></mat-spinner>
-    <span class="mt-3 text-sm text-slate-500">Retrieving details…</span>
   </div>
 
   <!-- Error (no customer loaded yet) -->
-  <div *ngIf="errorMessage() && !customer()" class="alert-card alert-error mt-4">
-    <mat-icon class="alert-icon">warning</mat-icon>
+  <div *ngIf="errorMessage() && !customer()" class="alert-error mt-4">
+    <mat-icon>warning</mat-icon>
     <span>{{ errorMessage() }}</span>
   </div>
 
@@ -22,77 +21,68 @@
     </a>
 
     <!-- Header Card -->
-    <mat-card class="header-card mt-4 mb-4">
-      <mat-card-content class="header-card-content">
+    <div class="card detail-header mt-4 mb-4">
 
-        <!-- Avatar + Info -->
-        <div class="header-main">
-          <div class="profile-avatar">
-            <mat-icon class="avatar-icon">person</mat-icon>
+      <!-- Avatar + Info -->
+      <div class="header-main">
+        <span
+          class="avatar-initials size-lg"
+          [ngClass]="'avatar-' + (getDisplayName() | lowercase | slice:0:1)"
+        >
+          {{ getDisplayName() | slice:0:1 | uppercase }}
+        </span>
+
+        <div class="header-info">
+          <div class="title-row">
+            <h1 class="page-title" *ngIf="customer().type === 'Individual'">{{ customer().first_name }} {{ customer().last_name }}</h1>
+            <h1 class="page-title" *ngIf="customer().type === 'Business'">{{ customer().company_name }}</h1>
+
+            <span [class]="'chip-' + (customer().status | lowercase)">{{ customer().status }}</span>
+            <span [class]="'chip-' + (customer().type | lowercase)">{{ customer().type }}</span>
           </div>
-          <div class="header-info">
-            <div class="title-row">
-              <h1 class="customer-name" *ngIf="customer().type === 'Individual'">{{ customer().first_name }} {{ customer().last_name }}</h1>
-              <h1 class="customer-name" *ngIf="customer().type === 'Business'">{{ customer().company_name }}</h1>
-
-              <span class="status-chip ml-3"
-                [class.chip-active]="customer().status === 'active'"
-                [class.chip-inactive]="customer().status === 'inactive'"
-                [class.chip-suspended]="customer().status === 'suspended'"
-              >
-                {{ customer().status }}
-              </span>
-
-              <span class="status-chip ml-2"
-                [class.chip-individual]="customer().type === 'Individual'"
-                [class.chip-business]="customer().type === 'Business'"
-              >
-                {{ customer().type }}
-              </span>
-            </div>
-            <p class="customer-code-line">Customer Account Code: <strong class="font-mono">{{ customer().customer_code }}</strong></p>
-          </div>
+          <p class="page-subtitle mt-1">
+            Customer Code: <strong class="font-mono text-slate-700">{{ customer().customer_code }}</strong>
+          </p>
         </div>
+      </div>
 
-        <!-- Action Buttons -->
-        <div class="header-actions">
-          <button
-            *hasPermission="'customers.update'"
-            mat-stroked-button
-            [routerLink]="['/customers', customer().id, 'edit']"
-            class="flex items-center gap-1"
-          >
-            <mat-icon>edit</mat-icon>
-            Edit Profile
-          </button>
-          <button
-            *hasPermission="'customers.delete'"
-            mat-flat-button
-            color="warn"
-            (click)="onDelete()"
-            class="flex items-center gap-1"
-          >
-            <mat-icon>delete</mat-icon>
-            Delete Account
-          </button>
-        </div>
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <button
+          *hasPermission="'customers.update'"
+          mat-stroked-button
+          class="btn-outline"
+          [routerLink]="['/customers', customer().id, 'edit']"
+        >
+          <mat-icon>edit</mat-icon>
+          Edit Profile
+        </button>
+        <button
+          *hasPermission="'customers.delete'"
+          mat-flat-button
+          color="warn"
+          (click)="onDelete()"
+        >
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
 
-      </mat-card-content>
-    </mat-card>
+    </div>
 
     <!-- Alert Messages -->
-    <div *ngIf="successMessage()" class="alert-card alert-success mb-4">
-      <mat-icon class="alert-icon">check_circle</mat-icon>
+    <div *ngIf="successMessage()" class="alert-success">
+      <mat-icon>check_circle</mat-icon>
       <span>{{ successMessage() }}</span>
     </div>
 
-    <div *ngIf="errorMessage()" class="alert-card alert-error mb-4">
-      <mat-icon class="alert-icon">warning</mat-icon>
+    <div *ngIf="errorMessage()" class="alert-error">
+      <mat-icon>warning</mat-icon>
       <span>{{ errorMessage() }}</span>
     </div>
 
     <!-- Tabs -->
-    <mat-tab-group animationDuration="150ms" class="detail-tabs">
+    <mat-tab-group animationDuration="150ms">
 
       <!-- Tab 1: Profile -->
       <mat-tab>
@@ -101,12 +91,11 @@
           Profile Overview
         </ng-template>
 
-        <mat-card class="detail-section-card mt-4">
-          <mat-card-header>
-            <mat-card-title>Account Details</mat-card-title>
-          </mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content class="pt-4">
+        <div class="card detail-section mt-4">
+          <div class="section-header">
+            <h2 class="section-title">Account Details</h2>
+          </div>
+          <div class="section-body">
             <div class="details-grid">
 
               <div class="detail-item">
@@ -117,19 +106,15 @@
               <div class="detail-item">
                 <span class="detail-label">Status</span>
                 <span class="detail-value">
-                  <span class="status-chip"
-                    [class.chip-active]="customer().status === 'active'"
-                    [class.chip-inactive]="customer().status === 'inactive'"
-                    [class.chip-suspended]="customer().status === 'suspended'"
-                  >
-                    {{ customer().status | titlecase }}
-                  </span>
+                  <span [class]="'chip-' + (customer().status | lowercase)">{{ customer().status | titlecase }}</span>
                 </span>
               </div>
 
               <div class="detail-item">
                 <span class="detail-label">Customer Type</span>
-                <span class="detail-value">{{ customer().type }}</span>
+                <span class="detail-value">
+                  <span [class]="'chip-' + (customer().type | lowercase)">{{ customer().type }}</span>
+                </span>
               </div>
 
               <div class="detail-item">
@@ -158,8 +143,8 @@
               </div>
 
             </div>
-          </mat-card-content>
-        </mat-card>
+          </div>
+        </div>
 
       </mat-tab>
 
@@ -168,54 +153,51 @@
         <ng-template mat-tab-label>
           <mat-icon class="tab-icon">drive_eta</mat-icon>
           Drivers
-          <span class="tab-count ml-2">{{ customer().drivers?.length || 0 }}</span>
+          <span class="tab-badge ml-2">{{ customer().drivers?.length || 0 }}</span>
         </ng-template>
 
         <div class="mt-4">
+
           <!-- Drivers Grid -->
-          <div class="cards-grid" *ngIf="customer().drivers?.length > 0">
-            <mat-card *ngFor="let driver of customer().drivers" class="sub-card">
-              <mat-card-content class="pt-4">
-                <div class="sub-card-header">
-                  <div class="sub-avatar">
-                    <mat-icon>badge</mat-icon>
-                  </div>
-                  <h3 class="sub-card-name">{{ driver.first_name }} {{ driver.last_name }}</h3>
+          <div class="sub-cards-grid" *ngIf="customer().drivers?.length > 0">
+            <div *ngFor="let driver of customer().drivers" class="card sub-card">
+              <div class="sub-card-header">
+                <span class="avatar-initials size-md avatar-b">
+                  {{ getDriverInitial(driver) | slice:0:1 | uppercase }}
+                </span>
+                <h3 class="sub-card-name">{{ driver.first_name }} {{ driver.last_name }}</h3>
+              </div>
+              <div class="sub-fields">
+                <div class="sub-field">
+                  <span class="sub-label">License Number</span>
+                  <span class="sub-value font-mono">{{ driver.license_number }}</span>
                 </div>
-                <mat-divider class="my-3"></mat-divider>
-                <div class="sub-fields">
-                  <div class="sub-field">
-                    <span class="sub-label">License Number</span>
-                    <span class="sub-value font-mono">{{ driver.license_number }}</span>
-                  </div>
-                  <div class="sub-field">
-                    <span class="sub-label">License Expiry</span>
-                    <span class="sub-value">{{ driver.license_expiry | date:'mediumDate' }}</span>
-                  </div>
+                <div class="sub-field">
+                  <span class="sub-label">License Expiry</span>
+                  <span class="sub-value">{{ driver.license_expiry | date:'mediumDate' }}</span>
                 </div>
-              </mat-card-content>
-            </mat-card>
+              </div>
+            </div>
           </div>
 
           <!-- Empty State -->
-          <mat-card *ngIf="!customer().drivers || customer().drivers.length === 0" class="empty-state-card">
-            <mat-card-content class="empty-state">
-              <mat-icon class="empty-icon">drive_eta</mat-icon>
-              <h3 class="mt-3 font-semibold text-slate-700">No Authorized Drivers</h3>
-              <p class="text-sm text-slate-400 mt-1">There are no active drivers linked to this customer account yet.</p>
-              <button
-                *hasPermission="'customers.update'"
-                mat-stroked-button
-                color="primary"
-                [routerLink]="['/customers', customer().id, 'edit']"
-                class="mt-4"
-              >
-                Register Driver
-              </button>
-            </mat-card-content>
-          </mat-card>
-        </div>
+          <div *ngIf="!customer().drivers || customer().drivers.length === 0" class="empty-state">
+            <div class="empty-icon">
+              <mat-icon>drive_eta</mat-icon>
+            </div>
+            <h3>No Authorized Drivers</h3>
+            <p>There are no active drivers linked to this customer account yet.</p>
+            <button
+              *hasPermission="'customers.update'"
+              mat-stroked-button
+              class="btn-outline"
+              [routerLink]="['/customers', customer().id, 'edit']"
+            >
+              Register Driver
+            </button>
+          </div>
 
+        </div>
       </mat-tab>
 
       <!-- Tab 3: Documents -->
@@ -223,54 +205,51 @@
         <ng-template mat-tab-label>
           <mat-icon class="tab-icon">description</mat-icon>
           Documents
-          <span class="tab-count ml-2">{{ customer().documents?.length || 0 }}</span>
+          <span class="tab-badge ml-2">{{ customer().documents?.length || 0 }}</span>
         </ng-template>
 
         <div class="mt-4">
+
           <!-- Documents Grid -->
-          <div class="cards-grid" *ngIf="customer().documents?.length > 0">
-            <mat-card *ngFor="let doc of customer().documents" class="sub-card">
-              <mat-card-content class="pt-4">
-                <div class="sub-card-header">
-                  <div class="sub-avatar doc-avatar">
-                    <mat-icon>article</mat-icon>
-                  </div>
-                  <span class="status-chip chip-individual ml-2">{{ doc.document_type }}</span>
+          <div class="sub-cards-grid" *ngIf="customer().documents?.length > 0">
+            <div *ngFor="let doc of customer().documents" class="card sub-card">
+              <div class="sub-card-header">
+                <span class="avatar-initials size-md avatar-o">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">article</mat-icon>
+                </span>
+                <span class="chip-individual">{{ doc.document_type }}</span>
+              </div>
+              <div class="sub-fields">
+                <div class="sub-field">
+                  <span class="sub-label">Document Number</span>
+                  <span class="sub-value font-mono">{{ doc.document_number }}</span>
                 </div>
-                <mat-divider class="my-3"></mat-divider>
-                <div class="sub-fields">
-                  <div class="sub-field">
-                    <span class="sub-label">Document Number</span>
-                    <span class="sub-value font-mono">{{ doc.document_number }}</span>
-                  </div>
-                  <div class="sub-field">
-                    <span class="sub-label">Expiry Date</span>
-                    <span class="sub-value">{{ doc.expiry_date | date:'mediumDate' }}</span>
-                  </div>
+                <div class="sub-field">
+                  <span class="sub-label">Expiry Date</span>
+                  <span class="sub-value">{{ doc.expiry_date | date:'mediumDate' }}</span>
                 </div>
-              </mat-card-content>
-            </mat-card>
+              </div>
+            </div>
           </div>
 
           <!-- Empty State -->
-          <mat-card *ngIf="!customer().documents || customer().documents.length === 0" class="empty-state-card">
-            <mat-card-content class="empty-state">
-              <mat-icon class="empty-icon">description</mat-icon>
-              <h3 class="mt-3 font-semibold text-slate-700">No Documents Uploaded</h3>
-              <p class="text-sm text-slate-400 mt-1">No identification records (passport, driving licenses) are associated with this profile.</p>
-              <button
-                *hasPermission="'customers.update'"
-                mat-stroked-button
-                color="primary"
-                [routerLink]="['/customers', customer().id, 'edit']"
-                class="mt-4"
-              >
-                Add Verification File
-              </button>
-            </mat-card-content>
-          </mat-card>
-        </div>
+          <div *ngIf="!customer().documents || customer().documents.length === 0" class="empty-state">
+            <div class="empty-icon">
+              <mat-icon>description</mat-icon>
+            </div>
+            <h3>No Documents Uploaded</h3>
+            <p>No identification records (passport, driving licences) are associated with this profile.</p>
+            <button
+              *hasPermission="'customers.update'"
+              mat-stroked-button
+              class="btn-outline"
+              [routerLink]="['/customers', customer().id, 'edit']"
+            >
+              Add Verification File
+            </button>
+          </div>
 
+        </div>
       </mat-tab>
 
     </mat-tab-group>

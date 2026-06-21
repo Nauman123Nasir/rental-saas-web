@@ -1,139 +1,148 @@
-<div class="page-container">
-  <div class="mx-auto max-w-2xl">
+<div class="page-container form-page">
 
-    <!-- Back link -->
-    <a routerLink="/reservations" mat-button class="back-btn mb-4">
-      <mat-icon>arrow_back</mat-icon>
-      Back to Reservations
-    </a>
-
-    <mat-card class="overflow-hidden">
-
-      <!-- Card Header -->
-      <div class="form-card-header">
-        <div class="form-header-icon">
-          <mat-icon>event</mat-icon>
-        </div>
-        <div>
-          <h1 class="form-card-title">New Reservation</h1>
-          <p class="form-card-subtitle">Book an asset for a customer and set up the rental schedule.</p>
-        </div>
+  <!-- Back link -->
+  <div class="page-header">
+    <div class="header-back-group">
+      <a routerLink="/reservations" mat-icon-button matTooltip="Back to Reservations">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div>
+        <h1 class="page-title">New Reservation</h1>
+        <p class="page-subtitle">Book an asset for a customer and set up the rental schedule.</p>
       </div>
+    </div>
+  </div>
 
-      <mat-card-content class="px-8 pb-0">
+  <!-- Alert Banners -->
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
+  }
 
-        <!-- Error Alert -->
-        @if (error()) {
-          <div class="alert-error mt-6">
-            <mat-icon class="text-base">error_outline</mat-icon>
-            <span>{{ error() }}</span>
-          </div>
-        }
+  @if (success()) {
+    <div class="alert-success">
+      <mat-icon>check_circle</mat-icon>
+      <span>Reservation created successfully! Redirecting...</span>
+    </div>
+  }
 
-        <!-- Success Alert -->
-        @if (success()) {
-          <div class="alert-success mt-6">
-            <mat-icon class="text-base">check_circle</mat-icon>
-            <span>Reservation created successfully! Redirecting...</span>
-          </div>
-        }
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <!-- Form -->
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Customer & Asset -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <div class="form-card-icon">
+          <mat-icon>people</mat-icon>
+        </div>
+        <mat-card-title>Customer &amp; Asset</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="form-grid-2">
 
-          <!-- Section: Customer & Asset -->
-          <div class="form-section">
-            <h2 class="section-title">Customer &amp; Asset</h2>
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Customer</mat-label>
-                <mat-select formControlName="customer_id">
-                  <mat-option [value]="null">Select a Customer...</mat-option>
-                  @for (c of customers(); track c.id) {
-                    <mat-option [value]="c.id">
-                      {{ c.first_name }} {{ c.last_name }} ({{ c.email }})
-                    </mat-option>
-                  }
-                </mat-select>
-                @if (form.get('customer_id')?.invalid && form.get('customer_id')?.touched) {
-                  <mat-error>Customer is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Asset</mat-label>
-                <mat-select formControlName="asset_id">
-                  <mat-option [value]="null">Select an Asset...</mat-option>
-                  @for (a of assets(); track a.id) {
-                    <mat-option [value]="a.id">
-                      {{ a.brand }} {{ a.model }} ({{ a.license_plate }} — {{ a.status }})
-                    </mat-option>
-                  }
-                </mat-select>
-                @if (form.get('asset_id')?.invalid && form.get('asset_id')?.touched) {
-                  <mat-error>Asset selection is required</mat-error>
-                }
-              </mat-form-field>
-
-            </div>
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <!-- Section: Schedule -->
-          <div class="form-section">
-            <h2 class="section-title">Schedule</h2>
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Pickup Date &amp; Time</mat-label>
-                <input matInput type="datetime-local" formControlName="pickup_datetime_utc">
-                @if (form.get('pickup_datetime_utc')?.invalid && form.get('pickup_datetime_utc')?.touched) {
-                  <mat-error>Pickup date is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Return Date &amp; Time</mat-label>
-                <input matInput type="datetime-local" formControlName="return_datetime_utc">
-                @if (form.get('return_datetime_utc')?.invalid && form.get('return_datetime_utc')?.touched) {
-                  <mat-error>Return date is required</mat-error>
-                }
-              </mat-form-field>
-
-            </div>
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <!-- Section: Notes -->
-          <div class="form-section">
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Notes (optional)</mat-label>
-              <textarea matInput formControlName="notes" rows="3"
-                placeholder="Any special instructions or notes..."></textarea>
-            </mat-form-field>
-          </div>
-
-          <!-- Actions -->
-          <div class="form-actions">
-            <button type="button" mat-stroked-button (click)="cancel()" [disabled]="submitting()">
-              Cancel
-            </button>
-            <button type="submit" mat-raised-button color="primary" [disabled]="submitting()">
-              @if (submitting()) {
-                <mat-spinner diameter="16" class="inline-spinner"></mat-spinner>
-                Saving...
-              } @else {
-                Save Booking
+          <mat-form-field appearance="outline">
+            <mat-label>Customer</mat-label>
+            <mat-select formControlName="customer_id">
+              <mat-option [value]="null">Select a Customer...</mat-option>
+              @for (c of customers(); track c.id) {
+                <mat-option [value]="c.id">
+                  {{ c.first_name }} {{ c.last_name }} ({{ c.email }})
+                </mat-option>
               }
-            </button>
-          </div>
+            </mat-select>
+            @if (form.get('customer_id')?.invalid && form.get('customer_id')?.touched) {
+              <mat-error>Customer is required</mat-error>
+            }
+          </mat-form-field>
 
-        </form>
+          <mat-form-field appearance="outline">
+            <mat-label>Asset</mat-label>
+            <mat-select formControlName="asset_id">
+              <mat-option [value]="null">Select an Asset...</mat-option>
+              @for (a of assets(); track a.id) {
+                <mat-option [value]="a.id">
+                  {{ a.brand }} {{ a.model }} ({{ a.license_plate }} — {{ a.status }})
+                </mat-option>
+              }
+            </mat-select>
+            @if (form.get('asset_id')?.invalid && form.get('asset_id')?.touched) {
+              <mat-error>Asset selection is required</mat-error>
+            }
+          </mat-form-field>
+
+        </div>
       </mat-card-content>
     </mat-card>
 
-  </div>
+    <!-- Schedule -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <div class="form-card-icon">
+          <mat-icon>event</mat-icon>
+        </div>
+        <mat-card-title>Schedule</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="form-grid-2">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Pickup Date &amp; Time</mat-label>
+            <input matInput type="datetime-local" formControlName="pickup_datetime_utc" />
+            @if (form.get('pickup_datetime_utc')?.invalid && form.get('pickup_datetime_utc')?.touched) {
+              <mat-error>Pickup date is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Return Date &amp; Time</mat-label>
+            <input matInput type="datetime-local" formControlName="return_datetime_utc" />
+            @if (form.get('return_datetime_utc')?.invalid && form.get('return_datetime_utc')?.touched) {
+              <mat-error>Return date is required</mat-error>
+            }
+          </mat-form-field>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Notes -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <div class="form-card-icon">
+          <mat-icon>notes</mat-icon>
+        </div>
+        <mat-card-title>Notes</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes (optional)</mat-label>
+          <textarea matInput formControlName="notes" rows="3"
+            placeholder="Any special instructions or notes..."></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button class="btn-outline" (click)="cancel()" [disabled]="submitting()">
+        Cancel
+      </button>
+      <button type="submit" mat-flat-button class="btn-cta" [disabled]="submitting()">
+        @if (submitting()) {
+          <mat-spinner diameter="16" class="inline-spinner"></mat-spinner>
+          Saving...
+        } @else {
+          <ng-container>
+            <mat-icon>save</mat-icon>
+            Save Booking
+          </ng-container>
+        }
+      </button>
+    </div>
+
+  </form>
 </div>

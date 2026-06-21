@@ -1,30 +1,29 @@
-// ── Asset Detail ─────────────────────────────────────────────────────────────
+// Asset Detail — component-scoped overrides.
+// Global: .page-container, .page-header, .page-title, .page-subtitle,
+//         .stat-card (.stat-label/.stat-value/.stat-sub), .empty-state,
+//         .btn-cta, .btn-outline, .chip-* in styles.scss.
 
-.page-container {
-  padding: 1.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.page-header {
+// ── Shared ────────────────────────────────────────────────────────────────────
+.loading-overlay {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
-.page-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--mat-sys-on-surface, #1c1b1f);
-}
-
-.mb-6 {
-  margin-bottom: 1.5rem;
+.header-back-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
 }
 
 // ── Hero card ─────────────────────────────────────────────────────────────────
+.hero-card {
+  margin-bottom: 1.5rem;
+}
 
 .asset-hero {
   display: flex;
@@ -37,18 +36,18 @@
   width: 72px;
   height: 72px;
   border-radius: 16px;
-  background: var(--mat-sys-primary-container, #eaddff);
+  background: #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
 
-.asset-hero-icon {
-  font-size: 2rem;
-  width: 2rem;
-  height: 2rem;
-  color: var(--mat-sys-primary, #6750a4);
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #64748b;
+  }
 }
 
 .asset-hero-info {
@@ -57,10 +56,11 @@
 }
 
 .asset-title {
+  font-family: 'Hanken Grotesk', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 0.25rem;
-  color: var(--mat-sys-on-surface, #1c1b1f);
+  color: #191c1e;
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
@@ -69,15 +69,15 @@
 
 .asset-year {
   font-weight: 500;
-  color: var(--mat-sys-on-surface-variant, #49454f);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
+  color: #64748b;
 }
 
-.asset-code-label {
-  margin: 0 0 0.75rem;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+.asset-code {
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
+  color: #64748b;
+  margin: 0 0 1rem;
 }
 
 .asset-actions-row {
@@ -86,55 +86,48 @@
   flex-wrap: wrap;
 }
 
+.btn-danger {
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
+}
+
 .asset-status-area {
   display: flex;
   align-items: flex-start;
   padding-top: 0.25rem;
 }
 
-// ── Status badges ─────────────────────────────────────────────────────────────
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+// ── Tabs card ─────────────────────────────────────────────────────────────────
+.tabs-card {
+  overflow: hidden;
 }
 
-.badge-green  { background: #dcfce7; color: #166534; }
-.badge-blue   { background: #dbeafe; color: #1e40af; }
-.badge-amber  { background: #fef3c7; color: #92400e; }
-.badge-red    { background: #fee2e2; color: #991b1b; }
-.badge-gray   { background: #f3f4f6; color: #374151; }
-
-// ── Tabs ─────────────────────────────────────────────────────────────────────
-
-.asset-tabs {
-  .mat-mdc-tab-body-wrapper {
-    padding: 0;
-  }
+.tab-content {
+  padding: 1.75rem;
 }
 
 // ── Detail grid ───────────────────────────────────────────────────────────────
-
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 2.5rem;
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
 }
 
-.info-section-title {
-  font-size: 0.9375rem;
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.section-label {
+  font-size: 11px;
   font-weight: 700;
-  color: var(--mat-sys-on-surface, #1c1b1f);
-  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  margin: 0 0 0.75rem;
 }
 
 .detail-row {
@@ -142,76 +135,46 @@
   align-items: baseline;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--mat-sys-outline-variant, #cac4d0);
+  border-bottom: 1px solid #f1f5f9;
   gap: 1rem;
 
-  &:last-child {
-    border-bottom: none;
-  }
+  &:last-child { border-bottom: none; }
 }
 
 .detail-label {
   font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
+  color: #64748b;
   flex-shrink: 0;
 }
 
 .detail-value {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--mat-sys-on-surface, #1c1b1f);
+  color: #191c1e;
   text-align: right;
-}
 
-.font-mono {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  &.mono {
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 12px;
+  }
 }
 
 // ── Rates grid ────────────────────────────────────────────────────────────────
-
 .rates-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 420px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.rate-card.mat-mdc-card {
-  border-radius: 12px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
-  background: var(--mat-sys-primary-container, #eaddff) !important;
-}
-
-.rate-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--mat-sys-on-primary-container, #21005d);
-  margin-bottom: 0.5rem;
-}
-
-.rate-value {
-  font-size: 1.625rem;
-  font-weight: 700;
-  color: var(--mat-sys-on-primary-container, #21005d);
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 420px) { grid-template-columns: 1fr; }
 }
 
 // ── Maintenance items ─────────────────────────────────────────────────────────
-
 .maintenance-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 0;
+  padding: 0.875rem 0;
   gap: 1rem;
 }
 
@@ -221,53 +184,21 @@
   h4 {
     margin: 0 0 0.2rem;
     font-size: 0.9375rem;
-    color: var(--mat-sys-on-surface, #1c1b1f);
+    font-weight: 600;
+    color: #191c1e;
   }
 }
 
 .maintenance-dates {
   margin: 0;
   font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
+  color: #64748b;
 }
 
 .maintenance-cost {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--mat-sys-primary, #6750a4);
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #4648d4;
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   white-space: nowrap;
-}
-
-// ── Empty state ───────────────────────────────────────────────────────────────
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  text-align: center;
-}
-
-.empty-state-icon {
-  font-size: 3rem;
-  width: 3rem;
-  height: 3rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
-  opacity: 0.4;
-  margin-bottom: 1rem;
-}
-
-.empty-state-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.25rem;
-  color: var(--mat-sys-on-surface, #1c1b1f);
-}
-
-.empty-state-text {
-  font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
-  margin: 0;
 }

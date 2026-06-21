@@ -1,65 +1,63 @@
-// ── Asset Form ───────────────────────────────────────────────────────────────
+// Asset Form — component-scoped overrides.
+// Global: .page-container, .page-header, .page-title, .page-subtitle,
+//         .btn-cta, .btn-outline, .alert-error, .alert-success in styles.scss.
 
-.page-container {
-  padding: 1.5rem;
+.form-page {
   max-width: 960px;
-  margin: 0 auto;
 }
 
-.page-header {
+// ── Header back-button group ───────────────────────────────────────────────────
+.header-back-group {
   display: flex;
   align-items: flex-start;
+  gap: 0.625rem;
+}
+
+// ── Loading ───────────────────────────────────────────────────────────────────
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 1.75rem;
-}
-
-.page-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 0.25rem;
-  color: var(--mat-sys-on-surface, #1c1b1f);
-}
-
-.page-subtitle {
-  margin: 0;
+  padding: 4rem 2rem;
   font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
+  color: #64748b;
 }
 
-// ── Form cards ───────────────────────────────────────────────────────────────
-
+// ── Form cards ────────────────────────────────────────────────────────────────
 .form-card {
   margin-bottom: 1.5rem;
-  border-radius: 12px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
 
   mat-card-header {
-    display: flex;
-    align-items: center;
     padding: 1rem 1.5rem 0.75rem;
-    justify-content: space-between;
 
     .mat-mdc-card-title {
       font-size: 1rem;
       font-weight: 700;
+      color: #191c1e;
     }
   }
 
   mat-card-content {
-    padding: 0 1.5rem 1.5rem !important;
+    padding: 1.25rem 1.5rem 1.5rem !important;
   }
 }
 
-// ── Grid helpers ─────────────────────────────────────────────────────────────
+// ── Maintenance card header ────────────────────────────────────────────────────
+.maintenance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem 0.75rem !important;
+}
 
+// ── Grid helpers ──────────────────────────────────────────────────────────────
 .form-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0 1.25rem;
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
 .form-grid-3 {
@@ -67,13 +65,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0 1.25rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 }
 
 .form-grid-4 {
@@ -81,36 +74,29 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 0 1.25rem;
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 }
 
 .col-span-2 {
   grid-column: 1 / -1;
 }
 
-// ── mat-form-field full width inside grids ───────────────────────────────────
-
 mat-form-field {
   width: 100%;
 }
 
-// ── Maintenance block ────────────────────────────────────────────────────────
-
+// ── Maintenance block ─────────────────────────────────────────────────────────
 .empty-blocks-text {
   font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant, #49454f);
+  color: #64748b;
   text-align: center;
   padding: 1.5rem 0;
 }
 
 .maintenance-block {
-  background: var(--mat-sys-surface-variant, #f7f2fa);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-bottom: 1rem;
@@ -123,12 +109,21 @@ mat-form-field {
   margin-bottom: 0.75rem;
 }
 
-// ── Form actions ─────────────────────────────────────────────────────────────
+.maintenance-block-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #191c1e;
+}
 
+.block-divider {
+  margin: 1rem 0;
+}
+
+// ── Form actions ──────────────────────────────────────────────────────────────
 .form-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 0;
+  padding: 1rem 0 0.5rem;
 }

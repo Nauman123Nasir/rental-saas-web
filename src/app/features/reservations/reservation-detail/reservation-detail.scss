@@ -1,81 +1,87 @@
-.back-btn {
-  margin-bottom: 1rem;
-  color: var(--mat-sys-on-surface-variant, #64748b);
-}
+// Reservation Detail — component-scoped overrides.
+// Global: .page-container, .page-header, .page-title, .page-subtitle,
+//         .empty-state, .btn-cta, .btn-outline, .chip-* in styles.scss.
 
-.detail-header {
+// ── Loading ───────────────────────────────────────────────────────────────────
+.loading-overlay {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 2rem;
-  border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-  background: rgba(248, 250, 252, 0.4);
-}
-
-.detail-no {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--mat-sys-on-surface, #0f172a);
-  margin-bottom: 0.25rem;
-}
-
-.detail-sub {
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
   font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  margin: 0;
+  color: #64748b;
+}
+
+// ── Header back group ─────────────────────────────────────────────────────────
+.header-back-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+// ── Tab content ───────────────────────────────────────────────────────────────
+.tab-content {
+  padding: 1.75rem;
+}
+
+// ── Detail grid ───────────────────────────────────────────────────────────────
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
 }
 
 .info-block {
-  background: rgba(248, 250, 252, 0.6);
-  border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.info-block-title {
-  font-size: 0.8rem;
+.section-label {
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--mat-sys-on-surface-variant, #64748b);
+  letter-spacing: 0.06em;
+  color: #64748b;
   margin: 0 0 0.75rem;
 }
 
 .detail-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 1rem;
+
+  &:last-child { border-bottom: none; }
 }
 
 .detail-label {
-  font-size: 0.82rem;
-  color: var(--mat-sys-on-surface-variant, #64748b);
+  font-size: 0.8125rem;
+  color: #64748b;
   font-weight: 500;
 }
 
 .detail-value {
-  font-size: 0.9rem;
-  color: var(--mat-sys-on-surface, #0f172a);
+  font-size: 0.875rem;
   font-weight: 600;
+  color: #191c1e;
+  text-align: right;
 }
 
-.empty-icon {
-  font-size: 3.5rem;
-  width: 3.5rem;
-  height: 3.5rem;
+// ── Detail actions row ────────────────────────────────────────────────────────
+.detail-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
-// Status chip colours
-.status-chip {
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 999px;
-  height: 28px;
-
-  &.Draft     { background: #f1f5f9; color: #475569; }
-  &.Confirmed { background: #dbeafe; color: #1d4ed8; }
-  &.Active    { background: #dcfce7; color: #15803d; }
-  &.Completed { background: #e0e7ff; color: #4338ca; }
-  &.Cancelled { background: #fee2e2; color: #b91c1c; }
+.btn-danger {
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
 }

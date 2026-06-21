@@ -9,7 +9,7 @@
     Back to {{ isEditMode() ? 'Details' : 'Directory' }}
   </a>
 
-  <!-- Title Header -->
+  <!-- Page Header -->
   <div class="page-header mt-4">
     <div>
       <h1 class="page-title">{{ isEditMode() ? 'Edit Customer Profile' : 'Register Customer' }}</h1>
@@ -18,18 +18,18 @@
   </div>
 
   <!-- Alerts -->
-  <div *ngIf="successMessage()" class="alert-card alert-success mb-4">
-    <mat-icon class="alert-icon">check_circle</mat-icon>
+  <div *ngIf="successMessage()" class="alert-success">
+    <mat-icon>check_circle</mat-icon>
     <span>{{ successMessage() }}</span>
   </div>
 
-  <div *ngIf="errorMessage()" class="alert-card alert-error mb-4">
-    <mat-icon class="alert-icon">warning</mat-icon>
+  <div *ngIf="errorMessage()" class="alert-error">
+    <mat-icon>warning</mat-icon>
     <span>{{ errorMessage() }}</span>
   </div>
 
   <!-- Loading overlay for edit mode fetch -->
-  <div *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value" class="loader-overlay">
+  <div *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value" class="form-loader">
     <mat-spinner diameter="48"></mat-spinner>
     <span class="mt-3 text-sm text-slate-500">Retrieving customer profile…</span>
   </div>
@@ -38,13 +38,11 @@
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
 
     <!-- Section 1: General Information -->
-    <mat-card class="form-section-card mb-5">
-      <mat-card-header>
-        <mat-card-title>General Information</mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content class="pt-5">
-
+    <div class="card form-section mb-5">
+      <div class="section-header">
+        <h2 class="section-title">General Information</h2>
+      </div>
+      <div class="section-body">
         <div class="form-grid">
 
           <!-- Customer Code -->
@@ -119,20 +117,19 @@
           </mat-form-field>
 
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
 
     <!-- Section 2: Verification Documents -->
-    <mat-card class="form-section-card mb-5">
-      <mat-card-header class="flex items-center justify-between">
-        <mat-card-title>Identity &amp; Verification Documents</mat-card-title>
-        <button type="button" mat-stroked-button color="primary" (click)="addDocument()" class="ml-auto">
+    <div class="card form-section mb-5">
+      <div class="section-header">
+        <h2 class="section-title">Identity &amp; Verification Documents</h2>
+        <button type="button" mat-stroked-button class="btn-outline" (click)="addDocument()">
           <mat-icon>add</mat-icon>
           Add Document
         </button>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content class="pt-5">
+      </div>
+      <div class="section-body">
 
         <div formArrayName="documents">
           <div
@@ -141,15 +138,13 @@
             class="array-item"
           >
             <div class="array-item-header">
-              <span class="array-item-title">Document #{{ idx + 1 }}</span>
+              <span class="array-item-label">Document #{{ idx + 1 }}</span>
               <button type="button" mat-icon-button color="warn" (click)="removeDocument(idx)" matTooltip="Remove Document">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
-            <mat-divider class="mb-4"></mat-divider>
 
             <div class="form-grid three-cols">
-              <!-- Doc Type -->
               <mat-form-field appearance="outline">
                 <mat-label>Document Type *</mat-label>
                 <mat-select formControlName="document_type">
@@ -161,14 +156,12 @@
                 <mat-error *ngIf="doc.get('document_type')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
-              <!-- Doc Number -->
               <mat-form-field appearance="outline">
                 <mat-label>Document Number *</mat-label>
                 <input matInput formControlName="document_number" placeholder="e.g. N1820129A" />
                 <mat-error *ngIf="doc.get('document_number')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
-              <!-- Expiry Date -->
               <mat-form-field appearance="outline">
                 <mat-label>Expiry Date *</mat-label>
                 <input matInput type="date" formControlName="expiry_date" />
@@ -180,24 +173,23 @@
 
         <!-- Empty State -->
         <div *ngIf="documents.length === 0" class="array-empty">
-          <mat-icon class="text-slate-300 text-5xl">description</mat-icon>
+          <mat-icon>description</mat-icon>
           <p class="mt-2 text-sm text-slate-400">No verification documents added yet. It is highly recommended to register at least one ID or Passport.</p>
         </div>
 
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
 
     <!-- Section 3: Authorized Drivers -->
-    <mat-card class="form-section-card mb-5">
-      <mat-card-header class="flex items-center justify-between">
-        <mat-card-title>Authorized Drivers</mat-card-title>
-        <button type="button" mat-stroked-button color="primary" (click)="addDriver()" class="ml-auto">
+    <div class="card form-section mb-5">
+      <div class="section-header">
+        <h2 class="section-title">Authorized Drivers</h2>
+        <button type="button" mat-stroked-button class="btn-outline" (click)="addDriver()">
           <mat-icon>add</mat-icon>
           Add Driver
         </button>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content class="pt-5">
+      </div>
+      <div class="section-body">
 
         <div formArrayName="drivers">
           <div
@@ -206,36 +198,31 @@
             class="array-item"
           >
             <div class="array-item-header">
-              <span class="array-item-title">Driver #{{ idx + 1 }}</span>
+              <span class="array-item-label">Driver #{{ idx + 1 }}</span>
               <button type="button" mat-icon-button color="warn" (click)="removeDriver(idx)" matTooltip="Remove Driver">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
-            <mat-divider class="mb-4"></mat-divider>
 
             <div class="form-grid four-cols">
-              <!-- First Name -->
               <mat-form-field appearance="outline">
                 <mat-label>First Name *</mat-label>
                 <input matInput formControlName="first_name" placeholder="Jane" />
                 <mat-error *ngIf="driver.get('first_name')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
-              <!-- Last Name -->
               <mat-form-field appearance="outline">
                 <mat-label>Last Name *</mat-label>
                 <input matInput formControlName="last_name" placeholder="Smith" />
                 <mat-error *ngIf="driver.get('last_name')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
-              <!-- License Number -->
               <mat-form-field appearance="outline">
                 <mat-label>License Number *</mat-label>
                 <input matInput formControlName="license_number" placeholder="DL-0921092" />
                 <mat-error *ngIf="driver.get('license_number')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
-              <!-- License Expiry -->
               <mat-form-field appearance="outline">
                 <mat-label>Expiry Date *</mat-label>
                 <input matInput type="date" formControlName="license_expiry" />
@@ -247,18 +234,19 @@
 
         <!-- Empty State -->
         <div *ngIf="drivers.length === 0" class="array-empty">
-          <mat-icon class="text-slate-300 text-5xl">drive_eta</mat-icon>
+          <mat-icon>drive_eta</mat-icon>
           <p class="mt-2 text-sm text-slate-400">No authorized drivers registered under this account. Click "Add Driver" to register one.</p>
         </div>
 
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
 
     <!-- Action Buttons -->
     <div class="form-actions">
       <button
         type="button"
         mat-stroked-button
+        class="btn-outline"
         [routerLink]="isEditMode() ? ['/customers', customerId()] : ['/customers']"
         [disabled]="isLoading()"
       >
@@ -267,11 +255,10 @@
       <button
         type="submit"
         mat-flat-button
-        color="primary"
+        class="btn-cta"
         [disabled]="isLoading() || customerForm.invalid"
-        class="min-w-[160px]"
       >
-        <mat-spinner *ngIf="isLoading()" diameter="20" class="inline-spinner"></mat-spinner>
+        <mat-spinner *ngIf="isLoading()" diameter="18" class="inline-spinner"></mat-spinner>
         <span *ngIf="!isLoading()">{{ isEditMode() ? 'Save Changes' : 'Register Customer' }}</span>
       </button>
     </div>

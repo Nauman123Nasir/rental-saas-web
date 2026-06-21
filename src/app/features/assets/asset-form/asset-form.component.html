@@ -1,19 +1,22 @@
-<div class="page-container">
+<div class="page-container form-page">
+
   <!-- Header -->
   <div class="page-header">
-    <a routerLink="/assets" mat-icon-button matTooltip="Back to Assets" class="mr-2">
-      <mat-icon>arrow_back</mat-icon>
-    </a>
-    <div>
-      <h1 class="page-title">{{ isEditMode() ? 'Edit Asset' : 'Add New Asset' }}</h1>
-      <p class="page-subtitle">{{ isEditMode() ? 'Update asset information' : 'Register a new asset to your fleet' }}</p>
+    <div class="header-back-group">
+      <a routerLink="/assets" mat-icon-button matTooltip="Back to Assets">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div>
+        <h1 class="page-title">{{ isEditMode() ? 'Edit Asset' : 'Add New Asset' }}</h1>
+        <p class="page-subtitle">{{ isEditMode() ? 'Update asset information' : 'Register a new asset to your fleet' }}</p>
+      </div>
     </div>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="flex items-center justify-center gap-3 py-12">
+  <div *ngIf="loading()" class="loading-overlay">
     <mat-spinner diameter="32"></mat-spinner>
-    <span class="text-secondary">Loading asset data...</span>
+    <span>Loading asset data...</span>
   </div>
 
   <form *ngIf="!loading()" [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -24,7 +27,7 @@
         <mat-card-title>Basic Information</mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <mat-card-content class="pt-4">
+      <mat-card-content>
         <div class="form-grid-2">
 
           <mat-form-field appearance="outline">
@@ -69,7 +72,7 @@
         <mat-card-title>Specifications</mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <mat-card-content class="pt-4">
+      <mat-card-content>
         <div class="form-grid-3">
 
           <mat-form-field appearance="outline">
@@ -127,7 +130,7 @@
         <mat-card-title>Rental Rates</mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <mat-card-content class="pt-4">
+      <mat-card-content>
         <div class="form-grid-4">
 
           <mat-form-field appearance="outline">
@@ -164,15 +167,15 @@
 
     <!-- Maintenance Logs -->
     <mat-card class="form-card">
-      <mat-card-header class="flex items-center justify-between">
+      <mat-card-header class="maintenance-header">
         <mat-card-title>Maintenance Logs</mat-card-title>
-        <button type="button" mat-stroked-button (click)="addMaintenanceBlock()" class="ml-auto">
+        <button type="button" mat-stroked-button class="btn-outline" (click)="addMaintenanceBlock()">
           <mat-icon>add</mat-icon>
           Add Log
         </button>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <mat-card-content class="pt-4">
+      <mat-card-content>
 
         <div formArrayName="maintenance_blocks">
           <p *ngIf="maintenanceBlocks.length === 0" class="empty-blocks-text">
@@ -185,7 +188,7 @@
             class="maintenance-block">
 
             <div class="maintenance-block-header">
-              <span class="font-medium text-sm">Log #{{ i + 1 }}</span>
+              <span class="maintenance-block-label">Log #{{ i + 1 }}</span>
               <button type="button" mat-icon-button color="warn" (click)="removeMaintenanceBlock(i)" matTooltip="Remove log">
                 <mat-icon>close</mat-icon>
               </button>
@@ -216,7 +219,7 @@
               </mat-form-field>
             </div>
 
-            <mat-divider *ngIf="i < maintenanceBlocks.length - 1" class="mt-4 mb-4"></mat-divider>
+            <mat-divider *ngIf="i < maintenanceBlocks.length - 1" class="block-divider"></mat-divider>
           </div>
         </div>
 
@@ -225,8 +228,8 @@
 
     <!-- Form Actions -->
     <div class="form-actions">
-      <a routerLink="/assets" mat-stroked-button>Cancel</a>
-      <button type="submit" mat-raised-button color="primary" [disabled]="saving()">
+      <a routerLink="/assets" mat-stroked-button class="btn-outline">Cancel</a>
+      <button type="submit" mat-flat-button class="btn-cta" [disabled]="saving()">
         <mat-icon *ngIf="saving()">hourglass_empty</mat-icon>
         <mat-icon *ngIf="!saving()">save</mat-icon>
         {{ saving() ? 'Saving...' : 'Save Asset' }}

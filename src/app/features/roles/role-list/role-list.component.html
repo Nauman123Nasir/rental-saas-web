@@ -6,7 +6,7 @@
       <h1 class="page-title">Roles &amp; Permissions</h1>
       <p class="page-subtitle">Define roles and configure which permissions each role grants to staff members.</p>
     </div>
-    <button *hasPermission="'roles.create'" mat-flat-button color="primary" routerLink="/roles/create" class="header-action-btn">
+    <button *hasPermission="'roles.create'" mat-flat-button routerLink="/roles/create" class="btn-indigo">
       <mat-icon>add</mat-icon>
       New Role
     </button>
@@ -23,50 +23,55 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading()" class="loading-state">
-    <mat-spinner diameter="40"></mat-spinner>
-    <span class="ml-3 text-slate-500 text-sm font-medium">Loading roles...</span>
+  <div *ngIf="isLoading()" class="loading-overlay">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span class="ml-3 text-sm text-slate-500 font-medium">Loading roles...</span>
   </div>
 
   <!-- Roles Grid -->
-  <div *ngIf="!isLoading()" class="roles-grid">
+  <div *ngIf="!isLoading()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-    <mat-card *ngFor="let role of roles()" class="role-card">
-      <mat-card-content>
-        <div class="role-card-header">
-          <div class="role-icon-wrap">
+    <div *ngFor="let role of roles()" class="card role-card">
+
+      <!-- Card Header -->
+      <div class="p-5 pb-4">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="role-icon-box">
             <mat-icon>verified_user</mat-icon>
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-bold text-slate-800 text-base">{{ role.name }}</h3>
-              <mat-chip *ngIf="role.is_system" class="system-chip">System</mat-chip>
+            <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+              <h3 class="font-bold text-slate-800 text-base m-0">{{ role.name }}</h3>
+              <span *ngIf="role.is_system" class="chip-system">System</span>
             </div>
-            <p class="text-sm text-slate-500 leading-snug">{{ role.description || 'No description provided.' }}</p>
+            <p class="text-sm text-slate-500 m-0 leading-snug">{{ role.description || 'No description provided.' }}</p>
           </div>
         </div>
 
-        <mat-divider class="my-3"></mat-divider>
-
-        <div class="role-stats">
-          <div class="stat-item">
-            <span class="stat-value">{{ role.users_count ?? 0 }}</span>
-            <span class="stat-label">Users</span>
+        <!-- Stats Row -->
+        <div class="flex items-center border border-slate-100 rounded-lg overflow-hidden mb-3">
+          <div class="flex flex-col items-center flex-1 py-2">
+            <span class="text-lg font-bold text-indigo-600">{{ role.users_count ?? 0 }}</span>
+            <span class="text-xs text-slate-400 font-medium">Users</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value">{{ role.permissions?.length ?? 0 }}</span>
-            <span class="stat-label">Permissions</span>
+          <div class="w-px h-10 bg-slate-100"></div>
+          <div class="flex flex-col items-center flex-1 py-2">
+            <span class="text-lg font-bold text-indigo-600">{{ role.permissions?.length ?? 0 }}</span>
+            <span class="text-xs text-slate-400 font-medium">Permissions</span>
           </div>
         </div>
 
-        <p class="perm-summary text-xs text-slate-400 mt-3 truncate">{{ getPermissionSummary(role) }}</p>
-      </mat-card-content>
+        <!-- Permission Summary -->
+        <p class="text-xs text-slate-400 truncate m-0">{{ getPermissionSummary(role) }}</p>
+      </div>
 
-      <mat-card-actions *ngIf="!role.is_system" class="role-card-actions" align="end">
+      <!-- Card Actions -->
+      <div class="px-5 pb-4 flex gap-2 justify-end border-t border-slate-100 pt-3"
+           *ngIf="!role.is_system">
         <button *hasPermission="'roles.update'"
-          mat-stroked-button color="primary"
-          [routerLink]="['/roles', role.id, 'edit']">
+          mat-stroked-button
+          [routerLink]="['/roles', role.id, 'edit']"
+          class="btn-outline">
           <mat-icon>edit</mat-icon> Edit
         </button>
         <button *hasPermission="'roles.delete'"
@@ -74,24 +79,28 @@
           (click)="onDeleteRole(role.id, role.name)">
           <mat-icon>delete</mat-icon> Delete
         </button>
-      </mat-card-actions>
+      </div>
 
-      <mat-card-actions *ngIf="role.is_system" align="end">
-        <span class="system-notice text-xs text-slate-400 flex items-center gap-1 px-3 py-2">
-          <mat-icon class="text-sm">lock</mat-icon>
+      <div class="px-5 pb-4 flex items-center justify-end border-t border-slate-100 pt-3"
+           *ngIf="role.is_system">
+        <span class="text-xs text-slate-400 flex items-center gap-1">
+          <mat-icon class="text-sm" style="font-size:14px;width:14px;height:14px;">lock</mat-icon>
           Protected system role
         </span>
-      </mat-card-actions>
-    </mat-card>
+      </div>
+
+    </div>
 
     <!-- Empty State -->
-    <mat-card *ngIf="roles().length === 0" class="empty-card">
-      <mat-card-content class="empty-state">
-        <mat-icon class="empty-icon">verified_user</mat-icon>
-        <h3 class="empty-title">No Roles Found</h3>
-        <p class="empty-text">Create your first custom role to assign permissions to staff members.</p>
-      </mat-card-content>
-    </mat-card>
+    <div *ngIf="roles().length === 0" class="card col-span-full">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <mat-icon>verified_user</mat-icon>
+        </div>
+        <h3>No Roles Found</h3>
+        <p>Create your first custom role to assign permissions to staff members.</p>
+      </div>
+    </div>
 
   </div>
 

@@ -70,6 +70,10 @@ export class CustomerListComponent implements OnInit {
   // Mat-table columns
   displayedColumns = ['code', 'name', 'contact', 'type', 'status', 'credit', 'actions'];
 
+  getDisplayName(c: any): string {
+    return c.type === 'Individual' ? (c.first_name ?? '') : (c.company_name ?? '');
+  }
+
   constructor(
     private customerService: CustomerService,
     public authService: AuthService,

@@ -1,31 +1,33 @@
 <mat-sidenav-container class="sidenav-container">
 
   <!-- ═══ Sidebar ═══ -->
-  <mat-sidenav
-    #sidenav
-    [mode]="sidenavMode"
-    [opened]="sidenavOpened"
-    class="app-sidenav"
-  >
+  <mat-sidenav #sidenav [mode]="sidenavMode" [opened]="sidenavOpened" class="app-sidenav">
+
     <!-- Logo -->
     <div class="sidenav-logo">
-      <mat-icon class="logo-icon">directions_car</mat-icon>
-      <span class="logo-text">FleetSaaS</span>
+      <div class="logo-icon-box">
+        <mat-icon>directions_car</mat-icon>
+      </div>
+      <div class="logo-text-col">
+        <p class="logo-name">FleetSaaS</p>
+        <p class="logo-sub">Management Console</p>
+      </div>
     </div>
 
-    <mat-divider />
-
-    <!-- Tenant badge -->
-    <div class="tenant-pill" *ngIf="tenant()">
-      <mat-icon class="tenant-icon">business</mat-icon>
-      <span>{{ tenant()?.name }}</span>
-    </div>
+    <!-- Tenant Selector -->
+    @if (tenant()) {
+      <div class="tenant-selector">
+        <div class="tenant-icon">
+          <mat-icon>grid_view</mat-icon>
+        </div>
+        <span class="tenant-name">{{ tenant()?.name }}</span>
+      </div>
+    }
 
     <!-- Navigation -->
-    <mat-nav-list class="nav-list">
-
+    <nav class="nav-section">
       <a mat-list-item routerLink="/dashboard" routerLinkActive="nav-active"
-         [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+         [routerLinkActiveOptions]="{exact:true}" class="nav-item">
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <span matListItemTitle>Dashboard</span>
       </a>
@@ -60,7 +62,7 @@
         <span matListItemTitle>Finance</span>
       </a>
 
-      <mat-divider class="my-2" />
+      <mat-divider class="nav-divider" />
 
       <a mat-list-item *hasPermission="'users.view'"
          routerLink="/users" routerLinkActive="nav-active" class="nav-item">
@@ -73,39 +75,62 @@
         <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
         <span matListItemTitle>Roles</span>
       </a>
+    </nav>
 
-    </mat-nav-list>
+    <!-- Spacer pushes user to bottom -->
+    <div class="nav-spacer"></div>
+
+    <!-- Bottom User Profile -->
+    @if (user()) {
+      <div class="sidenav-user">
+        <div class="user-avatar-circle" [ngClass]="'avatar-' + getAvatarClass(user()?.name || '')">
+          {{ getInitials(user()?.name || '') }}
+        </div>
+        <div class="user-info-col">
+          <p class="user-name">{{ user()?.name }}</p>
+          <p class="user-role">{{ roles()[0] || 'Staff' }}</p>
+        </div>
+        <button mat-icon-button class="user-logout-btn" (click)="onLogout()" matTooltip="Sign Out">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    }
+
   </mat-sidenav>
 
-  <!-- ═══ Main Content ═══ -->
+  <!-- ═══ Main Area ═══ -->
   <mat-sidenav-content class="sidenav-content">
 
-    <!-- Top App Bar -->
+    <!-- Toolbar -->
     <mat-toolbar class="app-toolbar" color="primary">
-      <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle sidebar">
+      <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle sidebar" class="menu-btn">
         <mat-icon>menu</mat-icon>
       </button>
 
       <span class="toolbar-spacer"></span>
 
-      <!-- Notification bell -->
-      <button mat-icon-button matTooltip="Notifications">
+      <button mat-icon-button class="toolbar-icon-btn" matTooltip="Notifications">
         <mat-icon>notifications_outlined</mat-icon>
       </button>
 
-      <!-- Profile Menu -->
-      <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-btn">
-        <div class="avatar-circle">{{ getInitial(user()?.name || '') }}</div>
-        <span class="profile-name">{{ user()?.name }}</span>
-        <mat-icon>arrow_drop_down</mat-icon>
+      <button mat-button [matMenuTriggerFor]="profileMenu" class="toolbar-user-btn">
+        <div class="toolbar-user-info">
+          <span class="toolbar-user-name">{{ user()?.name }}</span>
+          <span class="toolbar-user-role">{{ roles()[0] || 'Staff' | uppercase }}</span>
+        </div>
+        <div class="toolbar-avatar" [ngClass]="'avatar-' + getAvatarClass(user()?.name || '')">
+          {{ getInitials(user()?.name || '') }}
+        </div>
       </button>
 
-      <mat-menu #profileMenu="matMenu" xPosition="before" class="profile-menu">
-        <div class="menu-header" (click)="$event.stopPropagation()">
-          <div class="menu-avatar">{{ getInitial(user()?.name || '') }}</div>
+      <mat-menu #profileMenu="matMenu" xPosition="before" class="profile-menu-panel">
+        <div class="profile-menu-header" (click)="$event.stopPropagation()">
+          <div class="menu-avatar" [ngClass]="'avatar-' + getAvatarClass(user()?.name || '')">
+            {{ getInitials(user()?.name || '') }}
+          </div>
           <div>
-            <p class="menu-name">{{ user()?.name }}</p>
-            <p class="menu-email">{{ user()?.email }}</p>
+            <p class="menu-user-name">{{ user()?.name }}</p>
+            <p class="menu-user-email">{{ user()?.email }}</p>
           </div>
         </div>
         <mat-divider />
@@ -122,7 +147,7 @@
           <span>{{ roles()[0] || 'Staff' }}</span>
         </button>
         <mat-divider />
-        <button mat-menu-item (click)="onLogout()" class="logout-item">
+        <button mat-menu-item (click)="onLogout()" class="logout-menu-item">
           <mat-icon>logout</mat-icon>
           <span>Sign Out</span>
         </button>

@@ -2,94 +2,97 @@
 
   <!-- Loading -->
   @if (loading()) {
-    <div class="flex items-center justify-center gap-3 py-16">
-      <mat-spinner diameter="36"></mat-spinner>
-      <span class="text-sm text-gray-500">Loading reservation...</span>
+    <div class="loading-overlay">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span>Loading reservation...</span>
     </div>
   }
 
   @if (!loading() && reservation()) {
-    <!-- Back link -->
-    <a routerLink="/reservations" mat-button class="back-btn mb-4">
-      <mat-icon>arrow_back</mat-icon>
-      Back to Reservations
-    </a>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-back-group">
+        <a routerLink="/reservations" mat-icon-button matTooltip="Back to Reservations">
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        <div>
+          <h1 class="page-title">{{ reservation()?.reservation_no || 'RES-' + reservation()?.id }}</h1>
+          <p class="page-subtitle">Review the full booking details below.</p>
+        </div>
+      </div>
+      <span [class]="'chip-' + ((reservation()?.status || 'draft') | lowercase)">
+        {{ reservation()?.status || 'Draft' }}
+      </span>
+    </div>
 
     <!-- Detail Card -->
-    <mat-card class="overflow-hidden">
+    <mat-card>
+      <mat-card-content>
+        <mat-tab-group animationDuration="200ms">
 
-      <!-- Header -->
-      <div class="detail-header">
-        <div>
-          <div class="detail-no">{{ reservation()?.reservation_no || 'RES-' + reservation()?.id }}</div>
-          <p class="detail-sub">Review the full booking details below.</p>
-        </div>
-        <mat-chip-set>
-          <mat-chip [class]="'status-chip ' + (reservation()?.status || 'Draft')" disableRipple>
-            {{ reservation()?.status || 'Draft' }}
-          </mat-chip>
-        </mat-chip-set>
-      </div>
+          <!-- Overview Tab -->
+          <mat-tab label="Overview">
+            <div class="tab-content detail-grid">
 
-      <mat-card-content class="p-8">
-        <!-- Detail Grid -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8">
+              <!-- Customer & Asset -->
+              <div class="info-block">
+                <h3 class="section-label">Customer &amp; Asset</h3>
+                <mat-divider></mat-divider>
+                <div class="detail-row">
+                  <span class="detail-label">Customer ID</span>
+                  <span class="detail-value">{{ reservation()?.customer_id }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Tenant ID</span>
+                  <span class="detail-value">{{ reservation()?.tenant_id || '—' }}</span>
+                </div>
+              </div>
 
-          <!-- Customer & Asset -->
-          <div class="info-block">
-            <h3 class="info-block-title">Customer &amp; Asset</h3>
-            <mat-divider class="mb-3"></mat-divider>
-            <div class="detail-row">
-              <span class="detail-label">Customer ID</span>
-              <span class="detail-value">{{ reservation()?.customer_id }}</span>
+              <!-- Schedule -->
+              <div class="info-block">
+                <h3 class="section-label">Schedule</h3>
+                <mat-divider></mat-divider>
+                <div class="detail-row">
+                  <span class="detail-label">Pickup (UTC)</span>
+                  <span class="detail-value">{{ reservation()?.pickup_datetime_utc | date:'medium' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Return (UTC)</span>
+                  <span class="detail-value">{{ reservation()?.return_datetime_utc | date:'medium' }}</span>
+                </div>
+              </div>
+
             </div>
-            <mat-divider></mat-divider>
-            <div class="detail-row">
-              <span class="detail-label">Tenant ID</span>
-              <span class="detail-value">{{ reservation()?.tenant_id || '—' }}</span>
-            </div>
-          </div>
+          </mat-tab>
 
-          <!-- Schedule -->
-          <div class="info-block">
-            <h3 class="info-block-title">Schedule</h3>
-            <mat-divider class="mb-3"></mat-divider>
-            <div class="detail-row">
-              <span class="detail-label">Pickup (UTC)</span>
-              <span class="detail-value">{{ reservation()?.pickup_datetime_utc | date:'medium' }}</span>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="detail-row">
-              <span class="detail-label">Return (UTC)</span>
-              <span class="detail-value">{{ reservation()?.return_datetime_utc | date:'medium' }}</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Actions -->
-        <mat-divider class="mb-6"></mat-divider>
-        <div class="flex gap-3">
-          <a [routerLink]="['/reservations', reservation()?.id, 'edit']" mat-raised-button color="primary">
-            <mat-icon>edit</mat-icon>
-            Edit Booking
-          </a>
-          <button mat-stroked-button color="warn">
-            <mat-icon>cancel</mat-icon>
-            Cancel Booking
-          </button>
-        </div>
-
+        </mat-tab-group>
       </mat-card-content>
     </mat-card>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+      <a [routerLink]="['/reservations', reservation()?.id, 'edit']" mat-flat-button class="btn-cta">
+        <mat-icon>edit</mat-icon>
+        Edit Booking
+      </a>
+      <button mat-stroked-button class="btn-outline btn-danger">
+        <mat-icon>cancel</mat-icon>
+        Cancel Booking
+      </button>
+    </div>
+
   }
 
   <!-- Not Found -->
   @if (!loading() && !reservation()) {
-    <div class="flex flex-col items-center justify-center gap-3 py-20 text-center">
-      <mat-icon class="empty-icon text-gray-300">sentiment_dissatisfied</mat-icon>
-      <p class="text-base font-semibold text-gray-600">Reservation not found</p>
-      <a routerLink="/reservations" mat-raised-button color="primary" class="mt-4">Back to List</a>
+    <div class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+      </div>
+      <h3>Reservation not found</h3>
+      <p>The booking you are looking for does not exist or has been removed.</p>
+      <a routerLink="/reservations" mat-flat-button class="btn-cta">Back to List</a>
     </div>
   }
 

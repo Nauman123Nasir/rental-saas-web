@@ -1,34 +1,59 @@
-:host {
-  display: block;
-}
+// ── Login ─────────────────────────────────────────────────────────────────────
 
-.auth-wrapper {
+:host { display: block; }
+
+.auth-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+  background: #f7f9fb;
   padding: 2rem;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
-  border-radius: 16px !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+}
 
-  mat-card-content {
-    padding: 0 !important;
+// Dark navy logo box
+.logo-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    color: #fff;
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
   }
 }
 
-// Make mat-form-field fill container width
-mat-form-field {
-  width: 100%;
+.forgot-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4648d4;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
 }
 
-// Spinner centering inside button
-button mat-spinner {
+.inline-spinner {
   display: inline-flex;
   margin: 0 auto;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+// Ensure full-width button height
+.btn-cta.w-full {
+  width: 100% !important;
+  height: 44px !important;
+  font-size: 15px !important;
 }

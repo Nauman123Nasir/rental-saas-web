@@ -1,58 +1,82 @@
-.res-table-card {
-  overflow: hidden;
-  border-radius: 12px;
+// Reservation List — component-scoped overrides.
+// Global: .page-container, .page-header, .page-title, .page-subtitle,
+//         .stat-card, .filter-bar, .filter-search, .table-container,
+//         .table-footer, .empty-state, .table-link, .btn-cta, .btn-outline,
+//         .btn-ghost, .avatar-initials, .avatar-*, .chip-* in styles.scss.
 
-  mat-card-content {
-    padding: 0;
-  }
+// ── Stats row ─────────────────────────────────────────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 }
 
+// ── Loading ───────────────────────────────────────────────────────────────────
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+// ── Booking ID cell ───────────────────────────────────────────────────────────
 .booking-id {
-  font-weight: 700;
-  color: var(--mat-primary, #6366f1);
-  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 13px;
 }
 
-.date-cell {
-  color: var(--mat-sys-on-surface-variant, #64748b);
-  font-size: 0.875rem;
+// ── Customer cell ─────────────────────────────────────────────────────────────
+.customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
 }
 
-.empty-icon {
-  font-size: 3.5rem;
-  width: 3.5rem;
-  height: 3.5rem;
+.customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
-.action-btn {
-  font-size: 0.8rem;
-}
-
-// Status chip colours
-.status-chip {
-  font-size: 0.75rem;
+.customer-name {
   font-weight: 600;
-  border-radius: 999px;
-  height: 24px;
-
-  &.badge-gray    { background: #f1f5f9; color: #475569; }
-  &.badge-blue    { background: #dbeafe; color: #1d4ed8; }
-  &.badge-green   { background: #dcfce7; color: #15803d; }
-  &.badge-indigo  { background: #e0e7ff; color: #4338ca; }
-  &.badge-red     { background: #fee2e2; color: #b91c1c; }
-  &.badge-amber   { background: #fef3c7; color: #b45309; }
+  font-size: 14px;
+  color: #191c1e;
 }
 
-// Mat-table tweaks
-.mat-mdc-header-cell {
-  font-size: 0.75rem;
-  font-weight: 700;
+.customer-type {
+  font-size: 11px;
+  color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--mat-sys-on-surface-variant, #64748b);
+  letter-spacing: 0.04em;
 }
 
-.mat-mdc-row:hover {
-  background: #f8fafc;
-  transition: background 150ms ease;
+.text-muted {
+  color: #94a3b8;
+}
+
+// ── Date cell ─────────────────────────────────────────────────────────────────
+.date-cell {
+  color: #64748b;
+  font-size: 13px;
+}
+
+// ── Actions column ────────────────────────────────────────────────────────────
+.actions-header,
+.actions-cell {
+  justify-content: flex-end !important;
+  padding-right: 0.5rem !important;
+}
+
+// ── Pagination row ────────────────────────────────────────────────────────────
+.pagination-actions {
+  display: flex;
+  gap: 0.5rem;
 }
