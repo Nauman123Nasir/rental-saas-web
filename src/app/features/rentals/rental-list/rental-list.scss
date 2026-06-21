@@ -25,6 +25,76 @@
   top: 1.5rem;
 }
 
+.fh-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin: 0 0 0.875rem 0;
+}
+
+.fh-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+
+  &--bordered {
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+.fh-row-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fh-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--green  { background: #10b981; }
+  &--orange { background: #f59e0b; }
+}
+
+.fh-row-title {
+  font-size: 0.875rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.fh-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  font-family: 'Hanken Grotesk', sans-serif;
+
+  &--orange { color: #f59e0b; }
+}
+
+.fh-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #4648d4;
+  text-decoration: none;
+
+  &:hover { color: #3730a3; }
+}
+
+.fh-link-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
 
 // Most styling is handled by global design-system classes in styles.scss
 

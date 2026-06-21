@@ -1,29 +1,29 @@
 <div class="page-container">
-  <div class="mx-auto max-w-2xl">
+  <div class="payment-wrap">
 
     <!-- Back Link -->
-    <a routerLink="/finance/invoices" class="inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 mb-5 transition-colors">
-      <mat-icon class="text-base" style="font-size:16px; width:16px; height:16px;">arrow_back</mat-icon>
+    <a routerLink="/finance/invoices" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
       Back to Invoices
     </a>
 
     <!-- Page Title -->
-    <div class="mb-6">
+    <div class="payment-header">
       <h1 class="page-title">Record Payment</h1>
       <p class="page-subtitle">Apply a payment against an invoice and auto-generate a receipt.</p>
     </div>
 
-    <!-- Invoice Preview -->
+    <!-- Invoice Preview Banner -->
     @if (invoice) {
-      <div class="card p-5 mb-5 flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Invoice</p>
-          <p class="font-bold text-slate-800">{{ invoice.invoice_no }}</p>
-          <p class="text-sm text-slate-500">{{ invoice.customer?.first_name }} {{ invoice.customer?.last_name }}</p>
+      <div class="invoice-banner">
+        <div class="invoice-banner-left">
+          <p class="banner-label">Invoice</p>
+          <p class="banner-value">{{ invoice.invoice_no }}</p>
+          <p class="banner-sub">{{ invoice.customer?.first_name }} {{ invoice.customer?.last_name }}</p>
         </div>
-        <div class="text-right">
-          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Balance Due</p>
-          <p class="text-xl font-bold text-red-600">{{ invoice.currency_code }} {{ invoice.balance_due | number:'1.2-2' }}</p>
+        <div class="invoice-banner-right">
+          <p class="banner-label">Balance Due</p>
+          <p class="banner-amount">{{ invoice.currency_code }} {{ invoice.balance_due | number:'1.2-2' }}</p>
         </div>
       </div>
     }
@@ -35,7 +35,6 @@
         {{ successMessage }}
       </div>
     }
-
     @if (errorMessage) {
       <div class="alert-error">
         <mat-icon>error_outline</mat-icon>
@@ -46,74 +45,70 @@
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="submit()">
 
-      <!-- Section: Invoice -->
-      <mat-card class="mb-4">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Invoice Reference</h2>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Invoice ID</mat-label>
-            <input matInput type="number" formControlName="invoice_id" placeholder="e.g. 42" />
-            <mat-icon matSuffix>receipt</mat-icon>
-            <mat-error *ngIf="f['invoice_id'].invalid">A valid Invoice ID is required.</mat-error>
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
+      <!-- Section: Invoice Reference -->
+      <div class="form-section">
+        <h2 class="section-heading">Invoice Reference</h2>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Invoice ID</mat-label>
+          <input matInput type="number" formControlName="invoice_id" placeholder="e.g. 42" />
+          <mat-icon matSuffix>receipt</mat-icon>
+          <mat-error *ngIf="f['invoice_id'].invalid">A valid Invoice ID is required.</mat-error>
+        </mat-form-field>
+      </div>
 
       <!-- Section: Payment Details -->
-      <mat-card class="mb-4">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Payment Details</h2>
+      <div class="form-section">
+        <h2 class="section-heading">Payment Details</h2>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Amount</mat-label>
-              <span matPrefix class="text-slate-400 mr-1">$</span>
-              <input matInput type="number" step="0.01" formControlName="amount" placeholder="0.00" />
-              <mat-error *ngIf="f['amount'].invalid">A positive amount is required.</mat-error>
-            </mat-form-field>
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Amount</mat-label>
+            <span matPrefix class="amount-prefix">$&nbsp;</span>
+            <input matInput type="number" step="0.01" formControlName="amount" placeholder="0.00" />
+            <mat-error *ngIf="f['amount'].invalid">A positive amount is required.</mat-error>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Payment Method</mat-label>
-              <mat-select formControlName="payment_method">
-                <mat-option *ngFor="let m of paymentMethods" [value]="m.value">{{ m.label }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Payment Method</mat-label>
+            <mat-select formControlName="payment_method">
+              <mat-option *ngFor="let m of paymentMethods" [value]="m.value">{{ m.label }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Payment Date &amp; Time</mat-label>
-              <input matInput type="datetime-local" formControlName="payment_datetime_utc" />
-              <mat-icon matSuffix>schedule</mat-icon>
-            </mat-form-field>
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Payment Date &amp; Time</mat-label>
+            <input matInput type="datetime-local" formControlName="payment_datetime_utc" />
+            <mat-icon matSuffix>schedule</mat-icon>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Reference No.</mat-label>
-              <input matInput type="text" formControlName="reference_no" placeholder="Cheque no., TXN ID..." />
-              <mat-icon matSuffix>tag</mat-icon>
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Reference No.</mat-label>
+            <input matInput type="text" formControlName="reference_no" placeholder="Cheque no., TXN ID..." />
+            <mat-icon matSuffix>tag</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
 
       <!-- Section: Notes -->
-      <mat-card class="mb-6">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Notes</h2>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Notes</mat-label>
-            <textarea matInput formControlName="notes" rows="3" placeholder="Optional notes about this payment..."></textarea>
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
+      <div class="form-section">
+        <h2 class="section-heading">Notes</h2>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Notes</mat-label>
+          <textarea matInput formControlName="notes" rows="3" placeholder="Optional notes about this payment..."></textarea>
+        </mat-form-field>
+      </div>
 
       <!-- Actions -->
-      <div class="flex items-center justify-end gap-3">
+      <div class="form-actions">
         <a mat-stroked-button routerLink="/finance/invoices" class="btn-outline">Cancel</a>
         <button mat-flat-button class="btn-cta" type="submit" [disabled]="isSubmitting">
           @if (isSubmitting) {
-            <mat-spinner diameter="16"></mat-spinner>
-            Processing...
+            <ng-container>
+              <mat-spinner diameter="16"></mat-spinner>
+              Processing...
+            </ng-container>
           } @else {
             Record Payment &amp; Generate Receipt
           }

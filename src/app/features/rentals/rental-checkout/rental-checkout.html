@@ -1,14 +1,14 @@
 <div class="page-container">
-  <div class="mx-auto max-w-2xl">
+  <div class="checkout-wrap">
 
     <!-- Back link -->
-    <a routerLink="/rentals" mat-button class="btn-ghost mb-4 inline-flex items-center gap-1">
+    <a routerLink="/rentals" mat-button class="btn-ghost back-link">
       <mat-icon>arrow_back</mat-icon>
       Back to Rentals
     </a>
 
     <!-- Page Title -->
-    <div class="mb-6">
+    <div class="checkout-header">
       <h1 class="page-title">Rental Checkout</h1>
       <p class="page-subtitle">Convert a confirmed reservation into an active rental by completing the pickup inspection.</p>
     </div>
@@ -32,70 +32,66 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <!-- Section: Reservation -->
-      <mat-card class="mb-4">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Reservation</h2>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Reservation ID</mat-label>
-            <input matInput type="number" formControlName="reservation_id" placeholder="e.g. 42">
-            <mat-icon matPrefix>tag</mat-icon>
-            @if (form.get('reservation_id')?.invalid && form.get('reservation_id')?.touched) {
-              <mat-error>Reservation ID is required</mat-error>
-            }
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
+      <div class="form-section">
+        <h2 class="section-heading">Reservation</h2>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Reservation ID</mat-label>
+          <input matInput type="number" formControlName="reservation_id" placeholder="e.g. 42">
+          <mat-icon matPrefix>tag</mat-icon>
+          @if (form.get('reservation_id')?.invalid && form.get('reservation_id')?.touched) {
+            <mat-error>Reservation ID is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
 
       <!-- Section: Pickup Inspection -->
-      <mat-card class="mb-4">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Pickup Inspection</h2>
-          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div class="form-section">
+        <h2 class="section-heading">Pickup Inspection</h2>
+        <div class="two-col-grid">
 
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Fuel Level (%)</mat-label>
-              <input matInput type="number" formControlName="fuel_level" placeholder="100" min="0" max="100">
-              <mat-icon matPrefix>local_gas_station</mat-icon>
-              @if (form.get('fuel_level')?.invalid && form.get('fuel_level')?.touched) {
-                <mat-error>Enter a valid fuel level (0–100)</mat-error>
-              }
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Fuel Level (%)</mat-label>
+            <input matInput type="number" formControlName="fuel_level" placeholder="100" min="0" max="100">
+            <mat-icon matPrefix>local_gas_station</mat-icon>
+            @if (form.get('fuel_level')?.invalid && form.get('fuel_level')?.touched) {
+              <mat-error>Enter a valid fuel level (0–100)</mat-error>
+            }
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Odometer Reading (km)</mat-label>
-              <input matInput type="number" formControlName="odometer_reading" placeholder="12500">
-              <mat-icon matPrefix>speed</mat-icon>
-              @if (form.get('odometer_reading')?.invalid && form.get('odometer_reading')?.touched) {
-                <mat-error>Odometer reading is required</mat-error>
-              }
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Odometer Reading (km)</mat-label>
+            <input matInput type="number" formControlName="odometer_reading" placeholder="12500">
+            <mat-icon matPrefix>speed</mat-icon>
+            @if (form.get('odometer_reading')?.invalid && form.get('odometer_reading')?.touched) {
+              <mat-error>Odometer reading is required</mat-error>
+            }
+          </mat-form-field>
 
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
 
       <!-- Section: Notes -->
-      <mat-card class="mb-6">
-        <mat-card-content class="p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Notes</h2>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Pickup Inspection Notes</mat-label>
-            <textarea matInput formControlName="notes" rows="4"
-              placeholder="Note any pre-existing scratches, damages, or special conditions..."></textarea>
-            <mat-icon matPrefix>notes</mat-icon>
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
+      <div class="form-section">
+        <h2 class="section-heading">Notes</h2>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Pickup Inspection Notes</mat-label>
+          <textarea matInput formControlName="notes" rows="4"
+            placeholder="Note any pre-existing scratches, damages, or special conditions..."></textarea>
+          <mat-icon matPrefix>notes</mat-icon>
+        </mat-form-field>
+      </div>
 
       <!-- Actions -->
-      <div class="flex items-center justify-end gap-3">
+      <div class="form-actions">
         <button type="button" mat-stroked-button class="btn-outline" (click)="cancel()" [disabled]="submitting()">
           Cancel
         </button>
         <button type="submit" mat-flat-button class="btn-cta" [disabled]="submitting()">
           @if (submitting()) {
-            <mat-spinner diameter="16"></mat-spinner>
-            Processing...
+            <ng-container>
+              <mat-spinner diameter="16"></mat-spinner>
+              Processing...
+            </ng-container>
           } @else {
             Complete Checkout
           }

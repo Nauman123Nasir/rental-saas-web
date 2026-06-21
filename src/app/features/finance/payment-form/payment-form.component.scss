@@ -1,5 +1,132 @@
-// Payment Form — component-scoped styles
-// Core styling handled by global design system in styles.scss
+// Payment Form
+
+.payment-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4648d4;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover { text-decoration: underline; }
+}
+
+.payment-header {
+  margin-bottom: 1.5rem;
+}
+
+// ── Invoice Banner ─────────────────────────────────────────────────────────────
+
+.invoice-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 480px) { flex-direction: column; align-items: flex-start; }
+}
+
+.banner-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin: 0 0 4px;
+}
+
+.banner-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.banner-sub {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+.invoice-banner-right {
+  text-align: right;
+
+  @media (max-width: 480px) { text-align: left; }
+}
+
+.banner-amount {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #dc2626;
+  margin: 0;
+}
+
+// ── Form Sections ──────────────────────────────────────────────────────────────
+
+.form-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin: 0 0 1.25rem 0;
+}
+
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  &:last-child { margin-bottom: 0; }
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.w-full {
+  width: 100%;
+}
+
+.amount-prefix {
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+// ── Actions Row ────────────────────────────────────────────────────────────────
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+}
 
 mat-spinner {
   display: inline-block;

@@ -21,8 +21,10 @@
 }
 
 // Avatar + name wrapper
-::ng-deep .mat-mdc-cell .flex {
+.cust-cell {
   display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 

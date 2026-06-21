@@ -110,7 +110,7 @@
           </mat-icon>
         </mat-header-cell>
         <mat-cell *matCellDef="let c">
-          <div class="flex items-center gap-3">
+          <div class="cust-cell">
             <span
               class="avatar-initials size-md"
               [ngClass]="'avatar-' + (getDisplayName(c) | lowercase | slice:0:1)"

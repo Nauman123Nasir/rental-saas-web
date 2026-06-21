@@ -1,6 +1,65 @@
-// Rental Checkout — component-scoped styles
-// Core styling handled by global design system in styles.scss
+// Rental Checkout
 
+.checkout-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.checkout-header {
+  margin-bottom: 1.5rem;
+}
+
+// ── Form sections ─────────────────────────────────────────────────────────────
+
+.form-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin: 0 0 1.25rem 0;
+}
+
+// Two-column grid for side-by-side fields
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// Ensure form fields fill their grid cell
+.w-full {
+  width: 100%;
+}
+
+// ── Actions row ───────────────────────────────────────────────────────────────
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+}
+
+// Spinner inside submit button
 mat-spinner {
   display: inline-block;
   vertical-align: middle;

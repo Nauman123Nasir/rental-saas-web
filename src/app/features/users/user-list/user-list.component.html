@@ -23,10 +23,10 @@
   </div>
 
   <!-- Filters + Stats Row -->
-  <div class="flex gap-5 items-start mb-5 flex-wrap">
+  <div class="users-top-row">
 
     <!-- Filter Bar -->
-    <div class="filter-bar flex-1 min-w-0">
+    <div class="filter-bar users-filter">
       <mat-form-field appearance="outline" class="filter-search">
         <mat-label>Search users</mat-label>
         <mat-icon matPrefix>search</mat-icon>
@@ -37,7 +37,7 @@
           placeholder="Search by name or email..." />
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="min-w-36">
+      <mat-form-field appearance="outline" class="filter-select">
         <mat-label>Status</mat-label>
         <mat-select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); onFilterChange()">
           <mat-option value="">All Statuses</mat-option>
@@ -47,7 +47,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="min-w-36">
+      <mat-form-field appearance="outline" class="filter-select">
         <mat-label>Roles</mat-label>
         <mat-select [ngModel]="selectedRoleId()" (ngModelChange)="selectedRoleId.set($event); onFilterChange()">
           <mat-option value="">All Roles</mat-option>
@@ -86,15 +86,15 @@
         <ng-container matColumnDef="user">
           <th mat-header-cell *matHeaderCellDef>User</th>
           <td mat-cell *matCellDef="let user">
-            <div class="flex items-center gap-3">
+            <div class="user-cell">
               <span
                 class="avatar-initials size-md"
                 [ngClass]="'avatar-' + getInitial(user.name).toLowerCase()">
                 {{ getInitial(user.name) }}
               </span>
-              <div>
-                <p class="font-semibold text-sm text-slate-800 m-0">{{ user.name }}</p>
-                <p class="text-xs text-slate-400 m-0">{{ user.employee_id || user.email }}</p>
+              <div class="user-cell-info">
+                <p class="user-cell-name">{{ user.name }}</p>
+                <p class="user-cell-sub">{{ user.employee_id || user.email }}</p>
               </div>
             </div>
           </td>
@@ -110,7 +110,7 @@
         <ng-container matColumnDef="roles">
           <th mat-header-cell *matHeaderCellDef>Roles</th>
           <td mat-cell *matCellDef="let user">
-            <div class="flex flex-wrap gap-1" *ngIf="user.roles?.length; else noRole">
+            <div class="roles-wrap" *ngIf="user.roles?.length; else noRole">
               <span *ngFor="let role of user.roles" class="chip-system">{{ role.name }}</span>
             </div>
             <ng-template #noRole>
@@ -138,8 +138,8 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
-          <td mat-cell *matCellDef="let user" class="text-right">
-            <div class="flex items-center justify-end gap-1">
+          <td mat-cell *matCellDef="let user">
+            <div class="actions-row">
               <button *hasPermission="'users.update'"
                 mat-icon-button
                 [routerLink]="['/users', user.id, 'edit']"
@@ -206,24 +206,28 @@
   </div>
 
   <!-- Bottom Row: Role Permissions + Activity Logs -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+  <div class="info-cards-grid">
 
-    <!-- Role Permissions Card -->
-    <div class="card p-5 flex gap-4 items-start">
-      <mat-icon class="text-indigo-400 mt-0.5">shield</mat-icon>
-      <div>
-        <p class="font-semibold text-slate-800 m-0">Role Permissions</p>
-        <p class="text-sm text-slate-500 mt-1 mb-0">Customize what each role can access and perform.</p>
+    <a routerLink="/roles" class="info-card">
+      <div class="info-card-icon-wrap">
+        <mat-icon>shield</mat-icon>
       </div>
-    </div>
+      <div class="info-card-body">
+        <p class="info-card-title">Role Permissions</p>
+        <p class="info-card-sub">Customize what each role can access and perform.</p>
+      </div>
+      <mat-icon class="info-card-arrow">chevron_right</mat-icon>
+    </a>
 
-    <!-- Activity Logs Card -->
-    <div class="card p-5 flex gap-4 items-start">
-      <mat-icon class="text-indigo-400 mt-0.5">history</mat-icon>
-      <div>
-        <p class="font-semibold text-slate-800 m-0">Activity Logs</p>
-        <p class="text-sm text-slate-500 mt-1 mb-0">Track user actions and system events across your tenant.</p>
+    <div class="info-card">
+      <div class="info-card-icon-wrap info-card-icon-wrap--slate">
+        <mat-icon>history</mat-icon>
       </div>
+      <div class="info-card-body">
+        <p class="info-card-title">Activity Logs</p>
+        <p class="info-card-sub">Track user actions and system events across your tenant.</p>
+      </div>
+      <mat-icon class="info-card-arrow">chevron_right</mat-icon>
     </div>
 
   </div>

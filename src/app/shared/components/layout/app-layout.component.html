@@ -14,87 +14,60 @@
       </div>
     </div>
 
-    <!-- Tenant Selector -->
-    @if (tenant()) {
-      <div class="tenant-selector">
-        <div class="tenant-icon">
-          <mat-icon>grid_view</mat-icon>
-        </div>
-        <span class="tenant-name">{{ tenant()?.name }}</span>
-      </div>
-    }
-
     <!-- Navigation -->
     <nav class="nav-section">
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="nav-active"
+      <a routerLink="/dashboard" routerLinkActive="nav-active"
          [routerLinkActiveOptions]="{exact:true}" class="nav-item">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span class="nav-label">Dashboard</span>
       </a>
 
-      <a mat-list-item *hasPermission="'customers.view'"
+      <a *hasPermission="'customers.view'"
          routerLink="/customers" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>people</mat-icon>
-        <span matListItemTitle>Customers</span>
+        <mat-icon class="nav-icon">people</mat-icon>
+        <span class="nav-label">Customers</span>
       </a>
 
-      <a mat-list-item *hasPermission="'assets.view'"
+      <a *hasPermission="'assets.view'"
          routerLink="/assets" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>directions_car</mat-icon>
-        <span matListItemTitle>Fleet</span>
+        <mat-icon class="nav-icon">directions_car</mat-icon>
+        <span class="nav-label">Fleet</span>
       </a>
 
-      <a mat-list-item *hasPermission="'reservations.view'"
+      <a *hasPermission="'reservations.view'"
          routerLink="/reservations" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>event_available</mat-icon>
-        <span matListItemTitle>Reservations</span>
+        <mat-icon class="nav-icon">event_available</mat-icon>
+        <span class="nav-label">Reservations</span>
       </a>
 
-      <a mat-list-item *hasPermission="'rentals.view'"
+      <a *hasPermission="'rentals.view'"
          routerLink="/rentals" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>assignment</mat-icon>
-        <span matListItemTitle>Rentals</span>
+        <mat-icon class="nav-icon">assignment</mat-icon>
+        <span class="nav-label">Rentals</span>
       </a>
 
-      <a mat-list-item *hasPermission="'finance.view'"
+      <a *hasPermission="'finance.view'"
          routerLink="/finance" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>receipt_long</mat-icon>
-        <span matListItemTitle>Finance</span>
+        <mat-icon class="nav-icon">receipt_long</mat-icon>
+        <span class="nav-label">Finance</span>
       </a>
 
-      <mat-divider class="nav-divider" />
+      <div class="nav-divider"></div>
 
-      <a mat-list-item *hasPermission="'users.view'"
+      <a *hasPermission="'users.view'"
          routerLink="/users" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>manage_accounts</mat-icon>
-        <span matListItemTitle>Users</span>
+        <mat-icon class="nav-icon">manage_accounts</mat-icon>
+        <span class="nav-label">Users</span>
       </a>
 
-      <a mat-list-item *hasPermission="'roles.view'"
+      <a *hasPermission="'roles.view'"
          routerLink="/roles" routerLinkActive="nav-active" class="nav-item">
-        <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
-        <span matListItemTitle>Roles</span>
+        <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
+        <span class="nav-label">Roles</span>
       </a>
     </nav>
 
-    <!-- Spacer pushes user to bottom -->
     <div class="nav-spacer"></div>
-
-    <!-- Bottom User Profile -->
-    @if (user()) {
-      <div class="sidenav-user">
-        <div class="user-avatar-circle" [ngClass]="'avatar-' + getAvatarClass(user()?.name || '')">
-          {{ getInitials(user()?.name || '') }}
-        </div>
-        <div class="user-info-col">
-          <p class="user-name">{{ user()?.name }}</p>
-          <p class="user-role">{{ roles()[0] || 'Staff' }}</p>
-        </div>
-        <button mat-icon-button class="user-logout-btn" (click)="onLogout()" matTooltip="Sign Out">
-          <mat-icon>logout</mat-icon>
-        </button>
-      </div>
-    }
 
   </mat-sidenav>
 
@@ -114,13 +87,14 @@
       </button>
 
       <button mat-button [matMenuTriggerFor]="profileMenu" class="toolbar-user-btn">
-        <div class="toolbar-user-info">
-          <span class="toolbar-user-name">{{ user()?.name }}</span>
-          <span class="toolbar-user-role">{{ roles()[0] || 'Staff' | uppercase }}</span>
-        </div>
         <div class="toolbar-avatar" [ngClass]="'avatar-' + getAvatarClass(user()?.name || '')">
           {{ getInitials(user()?.name || '') }}
         </div>
+        <div class="toolbar-user-info">
+          <span class="toolbar-user-name">{{ user()?.name }}</span>
+          <span class="toolbar-user-role">{{ roles()[0] || 'Staff' }}</span>
+        </div>
+        <mat-icon class="toolbar-chevron">expand_more</mat-icon>
       </button>
 
       <mat-menu #profileMenu="matMenu" xPosition="before" class="profile-menu-panel">
