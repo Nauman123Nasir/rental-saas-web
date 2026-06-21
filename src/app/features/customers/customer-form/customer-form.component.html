@@ -53,7 +53,7 @@
 
           <!-- Type -->
           <mat-form-field appearance="outline">
-            <mat-label>Customer Type *</mat-label>
+            <mat-label>Customer Type</mat-label>
             <mat-select formControlName="type">
               <mat-option value="Individual">Individual</mat-option>
               <mat-option value="Business">Business</mat-option>
@@ -62,28 +62,28 @@
 
           <!-- First Name (Individual) -->
           <mat-form-field appearance="outline" *ngIf="customerForm.get('type')?.value === 'Individual'">
-            <mat-label>First Name *</mat-label>
+            <mat-label>First Name</mat-label>
             <input matInput formControlName="first_name" placeholder="John" />
             <mat-error *ngIf="customerForm.get('first_name')?.errors?.['required']">First name is required.</mat-error>
           </mat-form-field>
 
           <!-- Last Name (Individual) -->
           <mat-form-field appearance="outline" *ngIf="customerForm.get('type')?.value === 'Individual'">
-            <mat-label>Last Name *</mat-label>
+            <mat-label>Last Name</mat-label>
             <input matInput formControlName="last_name" placeholder="Doe" />
             <mat-error *ngIf="customerForm.get('last_name')?.errors?.['required']">Last name is required.</mat-error>
           </mat-form-field>
 
           <!-- Company Name (Business) -->
           <mat-form-field appearance="outline" class="col-span-2" *ngIf="customerForm.get('type')?.value === 'Business'">
-            <mat-label>Company Name *</mat-label>
+            <mat-label>Company Name</mat-label>
             <input matInput formControlName="company_name" placeholder="e.g. Acme Corporation Ltd." />
             <mat-error *ngIf="customerForm.get('company_name')?.errors?.['required']">Company name is required.</mat-error>
           </mat-form-field>
 
           <!-- Email -->
           <mat-form-field appearance="outline">
-            <mat-label>Email Address *</mat-label>
+            <mat-label>Email Address</mat-label>
             <input matInput type="email" formControlName="email" placeholder="john.doe@company.com" />
             <mat-error *ngIf="customerForm.get('email')?.errors?.['required']">Email is required.</mat-error>
             <mat-error *ngIf="customerForm.get('email')?.errors?.['email']">Enter a valid email address.</mat-error>
@@ -91,14 +91,14 @@
 
           <!-- Phone -->
           <mat-form-field appearance="outline">
-            <mat-label>Phone Number *</mat-label>
+            <mat-label>Phone Number</mat-label>
             <input matInput formControlName="phone" placeholder="+1 (555) 019-9281" />
             <mat-error *ngIf="customerForm.get('phone')?.errors?.['required']">Phone number is required.</mat-error>
           </mat-form-field>
 
           <!-- Status -->
           <mat-form-field appearance="outline">
-            <mat-label>Account Status *</mat-label>
+            <mat-label>Account Status</mat-label>
             <mat-select formControlName="status">
               <mat-option value="active">Active</mat-option>
               <mat-option value="inactive">Inactive</mat-option>
@@ -108,7 +108,7 @@
 
           <!-- Credit Limit -->
           <mat-form-field appearance="outline">
-            <mat-label>Credit Limit ($) *</mat-label>
+            <mat-label>Credit Limit ($)</mat-label>
             <input matInput type="number" formControlName="credit_limit" min="0" />
             <mat-error *ngIf="customerForm.get('credit_limit')?.errors?.['required']">Credit limit is required.</mat-error>
             <mat-error *ngIf="customerForm.get('credit_limit')?.errors?.['min']">Limit cannot be less than 0.</mat-error>
@@ -144,7 +144,7 @@
 
             <div class="form-grid three-cols">
               <mat-form-field appearance="outline">
-                <mat-label>Document Type *</mat-label>
+                <mat-label>Document Type</mat-label>
                 <mat-select formControlName="document_type">
                   <mat-option value="ID Card">National ID Card</mat-option>
                   <mat-option value="Passport">Passport</mat-option>
@@ -155,13 +155,13 @@
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Document Number *</mat-label>
+                <mat-label>Document Number</mat-label>
                 <input matInput formControlName="document_number" placeholder="e.g. N1820129A" />
                 <mat-error *ngIf="doc.get('document_number')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Expiry Date *</mat-label>
+                <mat-label>Expiry Date</mat-label>
                 <input matInput type="date" formControlName="expiry_date" />
                 <mat-error *ngIf="doc.get('expiry_date')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
@@ -204,25 +204,25 @@
 
             <div class="form-grid four-cols">
               <mat-form-field appearance="outline">
-                <mat-label>First Name *</mat-label>
+                <mat-label>First Name</mat-label>
                 <input matInput formControlName="first_name" placeholder="Jane" />
                 <mat-error *ngIf="driver.get('first_name')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Last Name *</mat-label>
+                <mat-label>Last Name</mat-label>
                 <input matInput formControlName="last_name" placeholder="Smith" />
                 <mat-error *ngIf="driver.get('last_name')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>License Number *</mat-label>
+                <mat-label>License Number</mat-label>
                 <input matInput formControlName="license_number" placeholder="DL-0921092" />
                 <mat-error *ngIf="driver.get('license_number')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Expiry Date *</mat-label>
+                <mat-label>Expiry Date</mat-label>
                 <input matInput type="date" formControlName="license_expiry" />
                 <mat-error *ngIf="driver.get('license_expiry')?.errors?.['required']">Required.</mat-error>
               </mat-form-field>
