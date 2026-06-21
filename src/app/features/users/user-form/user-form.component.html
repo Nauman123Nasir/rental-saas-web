@@ -1,0 +1,148 @@
+<div class="form-page-container">
+  <div class="form-page-content">
+
+    <!-- Header -->
+    <div class="form-page-header">
+      <a routerLink="/users" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="back-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back to Users
+      </a>
+      <div>
+        <h1 class="form-title">{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h1>
+        <p class="form-subtitle">{{ isEditMode() ? 'Update staff account details and role assignments.' : 'Add a new staff member to your tenant.' }}</p>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div *ngIf="successMessage()" class="alert-box success">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      {{ successMessage() }}
+    </div>
+    <div *ngIf="errorMessage()" class="alert-box error">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      {{ errorMessage() }}
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form-layout">
+
+      <!-- Account Details Card -->
+      <div class="glass-card form-card">
+        <div class="card-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Account Details
+        </div>
+
+        <div class="form-grid">
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label">Full Name <span class="required">*</span></label>
+            <input
+              type="text"
+              formControlName="name"
+              class="form-input"
+              [class.invalid]="hasError('name')"
+              placeholder="e.g. John Smith"
+            />
+            <span class="field-error" *ngIf="hasError('name')">{{ getError('name') }}</span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">Email Address <span class="required">*</span></label>
+            <input
+              type="email"
+              formControlName="email"
+              class="form-input"
+              [class.invalid]="hasError('email')"
+              placeholder="john@company.com"
+            />
+            <span class="field-error" *ngIf="hasError('email')">{{ getError('email') }}</span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label">
+              Password
+              <span class="required" *ngIf="!isEditMode()">*</span>
+              <span class="optional-hint" *ngIf="isEditMode()">— leave blank to keep current</span>
+            </label>
+            <input
+              type="password"
+              formControlName="password"
+              class="form-input"
+              [class.invalid]="hasError('password')"
+              placeholder="{{ isEditMode() ? 'Leave blank to keep unchanged' : 'Min. 8 characters' }}"
+            />
+            <span class="field-error" *ngIf="hasError('password')">{{ getError('password') }}</span>
+          </div>
+
+          <!-- Status -->
+          <div class="form-group">
+            <label class="form-label">Status <span class="required">*</span></label>
+            <div class="select-wrapper">
+              <select formControlName="status" class="form-select">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role Assignment Card -->
+      <div class="glass-card form-card">
+        <div class="card-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Role Assignment
+        </div>
+
+        <p class="section-hint">Select one or more roles to grant this user the associated permissions.</p>
+
+        <div class="roles-grid" *ngIf="availableRoles().length > 0">
+          <label
+            *ngFor="let role of availableRoles()"
+            class="role-option"
+            [class.selected]="isRoleSelected(role.id)"
+            (click)="toggleRole(role.id)"
+          >
+            <div class="role-checkbox">
+              <svg *ngIf="isRoleSelected(role.id)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="check-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="role-option-info">
+              <span class="role-option-name">{{ role.name }}</span>
+              <span class="role-option-desc" *ngIf="role.description">{{ role.description }}</span>
+              <span class="role-perm-count">{{ role.permissions?.length ?? 0 }} permissions</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="empty-roles" *ngIf="availableRoles().length === 0">
+          <p>No roles available. <a routerLink="/roles/create" class="link">Create a role</a> first.</p>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <a routerLink="/users" class="btn-cancel">Cancel</a>
+        <button type="submit" class="btn-submit" [disabled]="isLoading()">
+          <div class="btn-spinner" *ngIf="isLoading()"></div>
+          {{ isLoading() ? (isEditMode() ? 'Saving...' : 'Creating...') : (isEditMode() ? 'Save Changes' : 'Create User') }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

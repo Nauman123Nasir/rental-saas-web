@@ -1,0 +1,127 @@
+<div class="form-page-container">
+  <div class="form-page-content">
+
+    <!-- Header -->
+    <div class="form-page-header">
+      <a routerLink="/roles" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="back-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back to Roles
+      </a>
+      <div>
+        <h1 class="form-title">{{ isEditMode() ? 'Edit Role' : 'Create New Role' }}</h1>
+        <p class="form-subtitle">{{ isEditMode() ? 'Modify the role name and its permission set.' : 'Define a new role and assign the permissions it grants.' }}</p>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div *ngIf="successMessage()" class="alert-box success">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      {{ successMessage() }}
+    </div>
+    <div *ngIf="errorMessage()" class="alert-box error">
+      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      {{ errorMessage() }}
+    </div>
+
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="form-layout">
+
+      <!-- Role Info Card -->
+      <div class="glass-card form-card">
+        <div class="card-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+          </svg>
+          Role Information
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Role Name <span class="required">*</span></label>
+            <input
+              type="text"
+              formControlName="name"
+              class="form-input"
+              [class.invalid]="hasError('name')"
+              placeholder="e.g. Branch Manager"
+            />
+            <span class="field-error" *ngIf="hasError('name')">Role name is required.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <input
+              type="text"
+              formControlName="description"
+              class="form-input"
+              placeholder="Brief description of what this role does"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Permissions Matrix Card -->
+      <div class="glass-card form-card">
+        <div class="card-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Permissions
+          <span class="perm-count-badge">{{ selectedPermissionIds().length }} selected</span>
+        </div>
+
+        <div class="permissions-loading" *ngIf="permissionGroups().length === 0 && isLoading()">
+          <div class="spinner"></div>
+          <span>Loading permissions...</span>
+        </div>
+
+        <div class="permission-matrix" *ngIf="permissionGroups().length > 0">
+          <div *ngFor="let group of permissionGroups()" class="module-group">
+            <div class="module-header">
+              <label class="module-toggle" (click)="toggleModule(group)">
+                <div class="module-checkbox" [class.checked]="isModuleFullySelected(group)">
+                  <svg *ngIf="isModuleFullySelected(group)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="check-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <span class="module-name">{{ group.module }}</span>
+              </label>
+              <span class="module-badge">{{ group.permissions.length }} actions</span>
+            </div>
+
+            <div class="permissions-row">
+              <label
+                *ngFor="let perm of group.permissions"
+                class="perm-option"
+                [class.selected]="isPermissionSelected(perm.id)"
+                (click)="togglePermission(perm.id)"
+              >
+                <div class="perm-checkbox" [class.checked]="isPermissionSelected(perm.id)">
+                  <svg *ngIf="isPermissionSelected(perm.id)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="check-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <span class="perm-action">{{ perm.action }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <a routerLink="/roles" class="btn-cancel">Cancel</a>
+        <button type="submit" class="btn-submit" [disabled]="isLoading()">
+          <div class="btn-spinner" *ngIf="isLoading()"></div>
+          {{ isLoading() ? (isEditMode() ? 'Saving...' : 'Creating...') : (isEditMode() ? 'Save Changes' : 'Create Role') }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

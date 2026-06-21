@@ -134,6 +134,46 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'users',
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/users/user-list/user-list.component').then(m => m.UserListComponent),
+            canActivate: [permissionGuard('users.view')]
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/users/user-form/user-form.component').then(m => m.UserFormComponent),
+            canActivate: [permissionGuard('users.create')]
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () => import('./features/users/user-form/user-form.component').then(m => m.UserFormComponent),
+            canActivate: [permissionGuard('users.update')]
+          }
+        ]
+      },
+      {
+        path: 'roles',
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/roles/role-list/role-list.component').then(m => m.RoleListComponent),
+            canActivate: [permissionGuard('roles.view')]
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/roles/role-form/role-form.component').then(m => m.RoleFormComponent),
+            canActivate: [permissionGuard('roles.create')]
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () => import('./features/roles/role-form/role-form.component').then(m => m.RoleFormComponent),
+            canActivate: [permissionGuard('roles.update')]
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
