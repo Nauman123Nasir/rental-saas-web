@@ -117,9 +117,11 @@
         <mat-header-cell *matHeaderCellDef>Rates</mat-header-cell>
         <mat-cell *matCellDef="let a">
           <div class="rates-stack">
-            <span>${{ a.daily_rate }}<span class="rate-period">/day</span></span>
-            <span>${{ a.weekly_rate }}<span class="rate-period">/wk</span></span>
-            <span>${{ a.monthly_rate }}<span class="rate-period">/mo</span></span>
+            <span *ngIf="a.hourly_rate  > 0">${{ a.hourly_rate  }}<span class="rate-period">/hr</span></span>
+            <span *ngIf="a.daily_rate   > 0">${{ a.daily_rate   }}<span class="rate-period">/day</span></span>
+            <span *ngIf="a.weekly_rate  > 0">${{ a.weekly_rate  }}<span class="rate-period">/wk</span></span>
+            <span *ngIf="a.monthly_rate > 0">${{ a.monthly_rate }}<span class="rate-period">/mo</span></span>
+            <span *ngIf="!a.hourly_rate && !a.daily_rate && !a.weekly_rate && !a.monthly_rate" class="rate-none">—</span>
           </div>
         </mat-cell>
       </ng-container>
