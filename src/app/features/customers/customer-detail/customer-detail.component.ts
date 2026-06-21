@@ -5,12 +5,33 @@ import { CustomerService } from '../../../core/services/customer.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    RouterLink,
+    HasPermissionDirective,
+    MatCardModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+  ],
   templateUrl: './customer-detail.component.html',
-  styleUrl: './customer-detail.component.css'
+  styleUrl: './customer-detail.component.scss'
 })
 export class CustomerDetailComponent implements OnInit {
   customer = signal<any>(null);

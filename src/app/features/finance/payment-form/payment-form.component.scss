@@ -1,0 +1,50 @@
+// ── Payment Form ─────────────────────────────────────────────────────────────
+
+.form-wrapper {
+  @apply max-w-2xl mx-auto;
+}
+
+.back-link {
+  @apply inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 mb-5 transition-colors;
+}
+
+.form-card {
+  @apply overflow-hidden shadow-sm;
+}
+
+// Banner
+.form-banner {
+  @apply flex items-center gap-4 px-6 py-5 bg-gradient-to-r from-indigo-50 to-slate-50 border-b border-slate-100;
+}
+
+.banner-icon {
+  @apply w-11 h-11 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0;
+
+  mat-icon {
+    @apply text-white;
+  }
+}
+
+// Invoice preview bar
+.invoice-preview {
+  @apply flex items-center justify-between gap-4 mx-6 my-4 px-5 py-4 bg-indigo-50/60 border border-indigo-100 rounded-xl;
+}
+
+.form-body {
+  @apply px-6 pb-6 pt-4;
+}
+
+// Alerts
+.alert-success {
+  @apply flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl px-4 py-3 text-sm mb-4;
+}
+
+.alert-error {
+  @apply flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4;
+}
+
+.inline-spinner {
+  @apply inline-block;
+  width: 18px !important;
+  height: 18px !important;
+}

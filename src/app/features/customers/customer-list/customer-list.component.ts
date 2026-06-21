@@ -6,23 +6,53 @@ import { CustomerService } from '../../../core/services/customer.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    HasPermissionDirective,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatTooltipModule,
+  ],
   templateUrl: './customer-list.component.html',
-  styleUrl: './customer-list.component.css'
+  styleUrl: './customer-list.component.scss'
 })
 export class CustomerListComponent implements OnInit {
   // Lists
   customers = signal<any[]>([]);
-  
+
   // Pagination & Metadata
   totalItems = signal<number>(0);
   currentPage = signal<number>(1);
   perPage = signal<number>(10);
   totalPages = signal<number>(1);
-  
+
   // Loading & Errors
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
@@ -32,10 +62,13 @@ export class CustomerListComponent implements OnInit {
   searchQuery = signal<string>('');
   selectedType = signal<string>('');
   selectedStatus = signal<string>('');
-  
+
   // Sorting
   sortBy = signal<string>('created_at');
   sortOrder = signal<string>('desc');
+
+  // Mat-table columns
+  displayedColumns = ['code', 'name', 'contact', 'type', 'status', 'credit', 'actions'];
 
   constructor(
     private customerService: CustomerService,
@@ -99,9 +132,9 @@ export class CustomerListComponent implements OnInit {
     this.loadCustomers();
   }
 
-  onPageChange(page: number): void {
-    if (page < 1 || page > this.totalPages()) return;
-    this.currentPage.set(page);
+  onPageChange(event: PageEvent): void {
+    this.perPage.set(event.pageSize);
+    this.currentPage.set(event.pageIndex + 1);
     this.loadCustomers();
   }
 

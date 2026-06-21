@@ -1,0 +1,134 @@
+// ── Asset Form ───────────────────────────────────────────────────────────────
+
+.page-container {
+  padding: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  color: var(--mat-sys-on-surface, #1c1b1f);
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #49454f);
+}
+
+// ── Form cards ───────────────────────────────────────────────────────────────
+
+.form-card {
+  margin-bottom: 1.5rem;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem 0.75rem;
+    justify-content: space-between;
+
+    .mat-mdc-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+  }
+
+  mat-card-content {
+    padding: 0 1.5rem 1.5rem !important;
+  }
+}
+
+// ── Grid helpers ─────────────────────────────────────────────────────────────
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.25rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 1.25rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col-span-2 {
+  grid-column: 1 / -1;
+}
+
+// ── mat-form-field full width inside grids ───────────────────────────────────
+
+mat-form-field {
+  width: 100%;
+}
+
+// ── Maintenance block ────────────────────────────────────────────────────────
+
+.empty-blocks-text {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #49454f);
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.maintenance-block {
+  background: var(--mat-sys-surface-variant, #f7f2fa);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.maintenance-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+// ── Form actions ─────────────────────────────────────────────────────────────
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}

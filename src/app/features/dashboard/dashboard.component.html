@@ -1,161 +1,206 @@
 <div class="dashboard-container">
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
 
-  <!-- Header Section -->
-  <header class="dashboard-header">
-    <div class="header-left">
-      <h1>Operational Dashboard</h1>
-      <p class="subtitle">Real-time metrics, bookings status, and financial health trends</p>
-    </div>
+  <!-- Header -->
+  <header class="mb-6">
+    <h1 class="text-2xl font-semibold text-on-surface">Operational Dashboard</h1>
+    <p class="text-sm text-on-surface-variant mt-1">
+      Real-time metrics, bookings status, and financial health trends
+    </p>
   </header>
 
   <!-- Error Alert -->
-  <div *ngIf="errorMessage()" class="error-alert">
-    <span>{{ errorMessage() }}</span>
-    <button (click)="fetchStats()" class="btn-retry">Retry</button>
-  </div>
+  @if (errorMessage()) {
+    <mat-card appearance="outlined" class="mb-6 border-error">
+      <mat-card-content class="flex items-center justify-between gap-4 py-3">
+        <div class="flex items-center gap-2 text-error">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+        <button mat-stroked-button color="warn" (click)="fetchStats()">
+          <mat-icon>refresh</mat-icon>
+          Retry
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="loading-container">
-    <div class="spinner"></div>
-    <p>Assembling metrics dashboard...</p>
-  </div>
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center gap-4 py-24">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p class="text-on-surface-variant text-sm">Assembling metrics dashboard…</p>
+    </div>
+  }
 
   <!-- Dashboard Content -->
-  <main *ngIf="!loading() && stats()" class="dashboard-content">
-    
-    <!-- KPI Counters Grid -->
-    <section class="kpi-grid">
-      <!-- KPI: Total Assets -->
-      <div class="kpi-card glass-panel">
-        <div class="kpi-icon-wrapper assets-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
-        </div>
-        <div class="kpi-info">
-          <span class="kpi-label">Total Assets</span>
-          <span class="kpi-value">{{ stats()?.kpis?.total_assets }}</span>
-        </div>
-      </div>
+  @if (!loading() && stats()) {
 
-      <!-- KPI: Available Assets -->
-      <div class="kpi-card glass-panel">
-        <div class="kpi-icon-wrapper available-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="kpi-info">
-          <span class="kpi-label">Available Fleet</span>
-          <span class="kpi-value">{{ stats()?.kpis?.available_assets }}</span>
-        </div>
-      </div>
+    <!-- KPI Cards Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
 
-      <!-- KPI: Active Rentals -->
-      <div class="kpi-card glass-panel">
-        <div class="kpi-icon-wrapper active-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-          </svg>
-        </div>
-        <div class="kpi-info">
-          <span class="kpi-label">Active Rentals</span>
-          <span class="kpi-value">{{ stats()?.kpis?.active_rentals }}</span>
-        </div>
-      </div>
+      <!-- Total Assets -->
+      <mat-card class="kpi-card">
+        <mat-card-content class="flex items-center gap-4 py-4">
+          <div class="kpi-icon-wrap assets">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-on-surface-variant uppercase tracking-wide">Total Assets</span>
+            <span class="text-2xl font-bold text-on-surface">{{ stats()?.kpis?.total_assets }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- KPI: Pending Reservations -->
-      <div class="kpi-card glass-panel">
-        <div class="kpi-icon-wrapper pending-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="kpi-info">
-          <span class="kpi-label">Pending Bookings</span>
-          <span class="kpi-value">{{ stats()?.kpis?.pending_reservations }}</span>
-        </div>
-      </div>
+      <!-- Available Fleet -->
+      <mat-card class="kpi-card">
+        <mat-card-content class="flex items-center gap-4 py-4">
+          <div class="kpi-icon-wrap available">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-on-surface-variant uppercase tracking-wide">Available Fleet</span>
+            <span class="text-2xl font-bold text-on-surface">{{ stats()?.kpis?.available_assets }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- KPI: Today's Revenue -->
-      <div class="kpi-card glass-panel">
-        <div class="kpi-icon-wrapper revenue-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="kpi-info">
-          <span class="kpi-label">Today's Revenue</span>
-          <span class="kpi-value">${{ stats()?.kpis?.today_revenue | number:'1.2-2' }}</span>
-        </div>
-      </div>
+      <!-- Active Rentals -->
+      <mat-card class="kpi-card">
+        <mat-card-content class="flex items-center gap-4 py-4">
+          <div class="kpi-icon-wrap active">
+            <mat-icon>swap_horiz</mat-icon>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-on-surface-variant uppercase tracking-wide">Active Rentals</span>
+            <span class="text-2xl font-bold text-on-surface">{{ stats()?.kpis?.active_rentals }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Pending Bookings -->
+      <mat-card class="kpi-card">
+        <mat-card-content class="flex items-center gap-4 py-4">
+          <div class="kpi-icon-wrap pending">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-on-surface-variant uppercase tracking-wide">Pending Bookings</span>
+            <span class="text-2xl font-bold text-on-surface">{{ stats()?.kpis?.pending_reservations }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Today's Revenue -->
+      <mat-card class="kpi-card">
+        <mat-card-content class="flex items-center gap-4 py-4">
+          <div class="kpi-icon-wrap revenue">
+            <mat-icon>monetization_on</mat-icon>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-on-surface-variant uppercase tracking-wide">Today's Revenue</span>
+            <span class="text-2xl font-bold text-on-surface">${{ stats()?.kpis?.today_revenue | number:'1.2-2' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
     </section>
 
-    <!-- Main Visual Insights Section -->
-    <div class="insights-grid">
-      
-      <!-- Chart: Revenue Trend -->
-      <div class="chart-card glass-panel span-two">
-        <div class="chart-header">
-          <h3>Monthly Revenue Trend</h3>
-          <span class="chart-subtitle">Gross income collected (Last 6 Months)</span>
-        </div>
-        <div class="chart-body">
+    <!-- Charts & Quick Actions Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+      <!-- Revenue Trend (spans 2 cols) -->
+      <mat-card class="lg:col-span-2">
+        <mat-card-header>
+          <mat-card-title>Monthly Revenue Trend</mat-card-title>
+          <mat-card-subtitle>Gross income collected (Last 6 Months)</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="chart-content">
           <canvas #revenueChart></canvas>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- Chart: Fleet Status Distribution -->
-      <div class="chart-card glass-panel">
-        <div class="chart-header">
-          <h3>Fleet Status</h3>
-          <span class="chart-subtitle">Current asset availability share</span>
-        </div>
-        <div class="chart-body doughnut-body">
+      <!-- Fleet Status Doughnut -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Fleet Status</mat-card-title>
+          <mat-card-subtitle>Current asset availability share</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="chart-content doughnut-content">
           <canvas #statusChart></canvas>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- Chart: Bookings count -->
-      <div class="chart-card glass-panel span-two">
-        <div class="chart-header">
-          <h3>Reservation Bookings Volume</h3>
-          <span class="chart-subtitle">Total bookings registered (Last 6 Months)</span>
-        </div>
-        <div class="chart-body">
+      <!-- Bookings Volume (spans 2 cols) -->
+      <mat-card class="lg:col-span-2">
+        <mat-card-header>
+          <mat-card-title>Reservation Bookings Volume</mat-card-title>
+          <mat-card-subtitle>Total bookings registered (Last 6 Months)</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="chart-content">
           <canvas #bookingsChart></canvas>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- Quick Actions Board -->
-      <div class="chart-card glass-panel quick-actions-panel">
-        <div class="chart-header">
-          <h3>Quick Operations</h3>
-          <span class="chart-subtitle">Common SaaS operator workflows</span>
-        </div>
-        <div class="actions-grid">
-          <a routerLink="/reservations/new" *hasPermission="'reservations.create'" class="action-btn-link booking-action">
-            <span class="action-title">Create Reservation</span>
-            <span class="action-desc">Log a new asset booking reservation</span>
+      <!-- Quick Operations -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Quick Operations</mat-card-title>
+          <mat-card-subtitle>Common SaaS operator workflows</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="flex flex-col gap-2 pt-4">
+
+          <a routerLink="/reservations/new"
+             *hasPermission="'reservations.create'"
+             mat-stroked-button
+             class="quick-action-btn booking-action !justify-start">
+            <mat-icon>add_circle_outline</mat-icon>
+            <span class="flex flex-col items-start ml-2 text-left">
+              <span class="font-medium leading-tight">Create Reservation</span>
+              <span class="text-xs opacity-70 leading-tight">Log a new asset booking reservation</span>
+            </span>
           </a>
-          <a routerLink="/rentals" *hasPermission="'rentals.create'" class="action-btn-link rental-action">
-            <span class="action-title">Process Rental Checkout</span>
-            <span class="action-desc">Check out vehicle or machinery</span>
+
+          <a routerLink="/rentals"
+             *hasPermission="'rentals.create'"
+             mat-stroked-button
+             class="quick-action-btn rental-action !justify-start">
+            <mat-icon>directions_car</mat-icon>
+            <span class="flex flex-col items-start ml-2 text-left">
+              <span class="font-medium leading-tight">Process Rental Checkout</span>
+              <span class="text-xs opacity-70 leading-tight">Check out vehicle or machinery</span>
+            </span>
           </a>
-          <a routerLink="/finance/payments/new" *hasPermission="'finance.create'" class="action-btn-link payment-action">
-            <span class="action-title">Log Invoice Payment</span>
-            <span class="action-desc">Record full/partial payment & issue receipt</span>
+
+          <a routerLink="/finance/payments/new"
+             *hasPermission="'finance.create'"
+             mat-stroked-button
+             class="quick-action-btn payment-action !justify-start">
+            <mat-icon>receipt_long</mat-icon>
+            <span class="flex flex-col items-start ml-2 text-left">
+              <span class="font-medium leading-tight">Log Invoice Payment</span>
+              <span class="text-xs opacity-70 leading-tight">Record full/partial payment &amp; issue receipt</span>
+            </span>
           </a>
-          <a routerLink="/customers" *hasPermission="'customers.view'" class="action-btn-link customer-action">
-            <span class="action-title">Manage Customers</span>
-            <span class="action-desc">View, register, or approve customer profiles</span>
+
+          <a routerLink="/customers"
+             *hasPermission="'customers.view'"
+             mat-stroked-button
+             class="quick-action-btn customer-action !justify-start">
+            <mat-icon>people_alt</mat-icon>
+            <span class="flex flex-col items-start ml-2 text-left">
+              <span class="font-medium leading-tight">Manage Customers</span>
+              <span class="text-xs opacity-70 leading-tight">View, register, or approve customer profiles</span>
+            </span>
           </a>
-        </div>
-      </div>
+
+        </mat-card-content>
+      </mat-card>
 
     </div>
+  }
 
-  </main>
 </div>

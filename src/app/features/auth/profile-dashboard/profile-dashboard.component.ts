@@ -8,7 +8,7 @@ import { HasPermissionDirective } from '../../../shared/directives/has-permissio
   standalone: true,
   imports: [CommonModule, HasPermissionDirective],
   templateUrl: './profile-dashboard.component.html',
-  styleUrl: './profile-dashboard.component.css'
+  styleUrl: './profile-dashboard.component.scss'
 })
 export class ProfileDashboardComponent {
   authService = inject(AuthService);

@@ -5,13 +5,27 @@ import { DashboardService, DashboardStats } from '../../core/services/dashboard.
 import { AuthService } from '../../core/services/auth.service';
 import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
 import { Chart } from 'chart.js/auto';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HasPermissionDirective,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+  ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private dashboardService = inject(DashboardService);

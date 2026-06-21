@@ -2,14 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FinanceService, InvoiceModel } from '../../../core/services/finance.service';
 
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './payment-form.component.html',
-  styleUrls: ['./payment-form.component.css']
+  styleUrl: './payment-form.component.scss',
 })
 export class PaymentFormComponent implements OnInit {
   form!: FormGroup;
@@ -19,11 +39,11 @@ export class PaymentFormComponent implements OnInit {
   errorMessage = '';
 
   readonly paymentMethods = [
-    { value: 'cash',          label: 'Cash' },
-    { value: 'card',          label: 'Credit / Debit Card' },
+    { value: 'cash', label: 'Cash' },
+    { value: 'card', label: 'Credit / Debit Card' },
     { value: 'bank_transfer', label: 'Bank Transfer' },
-    { value: 'cheque',        label: 'Cheque' },
-    { value: 'online',        label: 'Online / Wallet' },
+    { value: 'cheque', label: 'Cheque' },
+    { value: 'online', label: 'Online / Wallet' },
   ];
 
   constructor(
@@ -34,36 +54,37 @@ export class PaymentFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Pre-fill invoice_id from query param if coming from invoice detail page
     const invoiceId = Number(this.route.snapshot.queryParamMap.get('invoice_id')) || null;
 
     this.form = this.fb.group({
-      invoice_id:           [invoiceId, [Validators.required, Validators.min(1)]],
-      amount:               [null, [Validators.required, Validators.min(0.01)]],
-      payment_method:       ['cash', Validators.required],
+      invoice_id: [invoiceId, [Validators.required, Validators.min(1)]],
+      amount: [null, [Validators.required, Validators.min(0.01)]],
+      payment_method: ['cash', Validators.required],
       payment_datetime_utc: [new Date().toISOString().slice(0, 16)],
-      reference_no:         [''],
-      notes:                [''],
+      reference_no: [''],
+      notes: [''],
     });
 
-    // Load invoice details when invoice_id is provided
     if (invoiceId) {
       this.financeService.getInvoice(invoiceId).subscribe({
         next: (inv) => {
           this.invoice = inv;
-          // Auto-fill with balance due
           this.form.patchValue({ amount: inv.balance_due });
         },
-        error: () => {}
+        error: () => {},
       });
     }
 
-    // Reload invoice when invoice_id changes
     this.form.get('invoice_id')?.valueChanges.subscribe(id => {
       if (id && Number(id) > 0) {
         this.financeService.getInvoice(Number(id)).subscribe({
-          next: (inv) => { this.invoice = inv; this.form.patchValue({ amount: inv.balance_due }); },
-          error: () => { this.invoice = null; }
+          next: (inv) => {
+            this.invoice = inv;
+            this.form.patchValue({ amount: inv.balance_due });
+          },
+          error: () => {
+            this.invoice = null;
+          },
         });
       }
     });
@@ -82,7 +103,6 @@ export class PaymentFormComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         this.successMessage = `Payment ${res.payment.payment_no} recorded! Receipt: ${res.payment.receipt?.receipt_no}`;
-        // Redirect to invoice detail after 2 seconds
         setTimeout(() => {
           this.router.navigate(['/finance/invoices', this.form.value.invoice_id]);
         }, 2000);
@@ -90,9 +110,11 @@ export class PaymentFormComponent implements OnInit {
       error: (err) => {
         this.isSubmitting = false;
         this.errorMessage = err?.error?.message ?? 'Failed to record payment. Please try again.';
-      }
+      },
     });
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 }

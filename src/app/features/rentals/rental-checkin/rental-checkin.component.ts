@@ -2,14 +2,34 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RentalService } from '../../../core/services/rental.service';
 
 @Component({
   selector: 'app-rental-checkin',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './rental-checkin.html',
-  styleUrls: ['./rental-checkin.css']
+  styleUrl: './rental-checkin.scss',
 })
 export class RentalCheckinComponent implements OnInit {
   form: FormGroup;
@@ -29,7 +49,7 @@ export class RentalCheckinComponent implements OnInit {
     this.form = this.fb.group({
       fuel_level: [100, [Validators.required, Validators.min(0), Validators.max(100)]],
       odometer_reading: [null, [Validators.required, Validators.min(0)]],
-      notes: ['']
+      notes: [''],
     });
   }
 
@@ -42,7 +62,7 @@ export class RentalCheckinComponent implements OnInit {
           this.rental.set(res?.data ?? res);
           this.loading.set(false);
         },
-        error: () => this.loading.set(false)
+        error: () => this.loading.set(false),
       });
     } else {
       this.loading.set(false);
@@ -69,7 +89,7 @@ export class RentalCheckinComponent implements OnInit {
       error: (err) => {
         this.submitting.set(false);
         this.error.set(err?.error?.message ?? 'Check-in failed. Please try again.');
-      }
+      },
     });
   }
 

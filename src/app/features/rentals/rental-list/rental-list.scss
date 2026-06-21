@@ -1,0 +1,63 @@
+.rental-table-card {
+  overflow: hidden;
+  border-radius: 12px;
+
+  mat-card-content {
+    padding: 0;
+  }
+}
+
+.rental-no {
+  font-weight: 700;
+  color: var(--mat-primary, #6366f1);
+  font-size: 0.875rem;
+}
+
+.year-tag {
+  color: var(--mat-sys-on-surface-variant, #64748b);
+  font-size: 0.8rem;
+}
+
+.date-cell {
+  color: var(--mat-sys-on-surface-variant, #64748b);
+  font-size: 0.875rem;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.action-btn {
+  font-size: 0.8rem;
+}
+
+// Status chip colours
+.status-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  height: 24px;
+
+  &.badge-gray    { background: #f1f5f9; color: #475569; }
+  &.badge-blue    { background: #dbeafe; color: #1d4ed8; }
+  &.badge-green   { background: #dcfce7; color: #15803d; }
+  &.badge-indigo  { background: #e0e7ff; color: #4338ca; }
+  &.badge-red     { background: #fee2e2; color: #b91c1c; }
+  &.badge-amber   { background: #fef3c7; color: #b45309; }
+}
+
+// Mat-table tweaks
+.mat-mdc-header-cell {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+}
+
+.mat-mdc-row:hover {
+  background: #f8fafc;
+  transition: background 150ms ease;
+}

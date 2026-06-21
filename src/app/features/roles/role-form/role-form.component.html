@@ -1,123 +1,120 @@
-<div class="form-page-container">
-  <div class="form-page-content">
+<div class="page-container">
+  <div class="form-wrapper">
 
-    <!-- Header -->
+    <!-- Back Link & Header -->
     <div class="form-page-header">
       <a routerLink="/roles" class="back-link">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="back-icon">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
+        <mat-icon class="text-base">arrow_back</mat-icon>
         Back to Roles
       </a>
       <div>
-        <h1 class="form-title">{{ isEditMode() ? 'Edit Role' : 'Create New Role' }}</h1>
-        <p class="form-subtitle">{{ isEditMode() ? 'Modify the role name and its permission set.' : 'Define a new role and assign the permissions it grants.' }}</p>
+        <h1 class="page-title">{{ isEditMode() ? 'Edit Role' : 'Create New Role' }}</h1>
+        <p class="page-subtitle">
+          {{ isEditMode() ? 'Modify the role name and its permission set.' : 'Define a new role and assign the permissions it grants.' }}
+        </p>
       </div>
     </div>
 
     <!-- Alerts -->
-    <div *ngIf="successMessage()" class="alert-box success">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
+    <div *ngIf="successMessage()" class="alert-success">
+      <mat-icon>check_circle</mat-icon>
       {{ successMessage() }}
     </div>
-    <div *ngIf="errorMessage()" class="alert-box error">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-      </svg>
+    <div *ngIf="errorMessage()" class="alert-error">
+      <mat-icon>error_outline</mat-icon>
       {{ errorMessage() }}
     </div>
 
-    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="form-layout">
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
 
       <!-- Role Info Card -->
-      <div class="glass-card form-card">
-        <div class="card-section-title">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-          </svg>
-          Role Information
-        </div>
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title class="flex items-center gap-2 text-base">
+            <mat-icon color="primary">label</mat-icon>
+            Role Information
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="pt-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div class="form-grid-2">
-          <div class="form-group">
-            <label class="form-label">Role Name <span class="required">*</span></label>
-            <input
-              type="text"
-              formControlName="name"
-              class="form-input"
-              [class.invalid]="hasError('name')"
-              placeholder="e.g. Branch Manager"
-            />
-            <span class="field-error" *ngIf="hasError('name')">Role name is required.</span>
-          </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Role Name</mat-label>
+              <input matInput type="text" formControlName="name" placeholder="e.g. Branch Manager" />
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-error *ngIf="hasError('name')">Role name is required.</mat-error>
+            </mat-form-field>
 
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <input
-              type="text"
-              formControlName="description"
-              class="form-input"
-              placeholder="Brief description of what this role does"
-            />
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <input matInput type="text" formControlName="description"
+                placeholder="Brief description of what this role does" />
+              <mat-icon matSuffix>notes</mat-icon>
+            </mat-form-field>
+
           </div>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
 
       <!-- Permissions Matrix Card -->
-      <div class="glass-card form-card">
-        <div class="card-section-title">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="section-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-          Permissions
-          <span class="perm-count-badge">{{ selectedPermissionIds().length }} selected</span>
-        </div>
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title class="flex items-center gap-2 text-base">
+            <mat-icon color="primary">security</mat-icon>
+            Permissions
+            <span class="perm-count-badge ml-2">{{ selectedPermissionIds().length }} selected</span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="pt-5">
 
-        <div class="permissions-loading" *ngIf="permissionGroups().length === 0 && isLoading()">
-          <div class="spinner"></div>
-          <span>Loading permissions...</span>
-        </div>
+          <!-- Loading permissions -->
+          <div *ngIf="permissionGroups().length === 0 && isLoading()" class="flex items-center gap-3 py-6">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span class="text-sm text-slate-500">Loading permissions...</span>
+          </div>
 
-        <div class="permission-matrix" *ngIf="permissionGroups().length > 0">
-          <div *ngFor="let group of permissionGroups()" class="module-group">
-            <div class="module-header">
-              <label class="module-toggle" (click)="toggleModule(group)">
-                <div class="module-checkbox" [class.checked]="isModuleFullySelected(group)">
-                  <svg *ngIf="isModuleFullySelected(group)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="check-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <span class="module-name">{{ group.module }}</span>
-              </label>
-              <span class="module-badge">{{ group.permissions.length }} actions</span>
-            </div>
+          <!-- Permission Matrix -->
+          <div *ngIf="permissionGroups().length > 0" class="permission-matrix">
+            <div *ngFor="let group of permissionGroups()" class="module-group">
 
-            <div class="permissions-row">
-              <label
-                *ngFor="let perm of group.permissions"
-                class="perm-option"
-                [class.selected]="isPermissionSelected(perm.id)"
-                (click)="togglePermission(perm.id)"
-              >
-                <div class="perm-checkbox" [class.checked]="isPermissionSelected(perm.id)">
-                  <svg *ngIf="isPermissionSelected(perm.id)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="check-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <span class="perm-action">{{ perm.action }}</span>
-              </label>
+              <!-- Module Header with Select-All checkbox -->
+              <div class="module-header">
+                <mat-checkbox
+                  [checked]="isModuleFullySelected(group)"
+                  (change)="toggleModule(group)"
+                  color="primary"
+                  class="module-toggle">
+                  <span class="module-name font-semibold text-slate-700 text-sm">{{ group.module }}</span>
+                </mat-checkbox>
+                <span class="module-badge">{{ group.permissions.length }} actions</span>
+              </div>
+
+              <!-- Individual permissions -->
+              <div class="permissions-row">
+                <mat-checkbox
+                  *ngFor="let perm of group.permissions"
+                  [checked]="isPermissionSelected(perm.id)"
+                  (change)="togglePermission(perm.id)"
+                  color="primary"
+                  class="perm-option">
+                  <span class="text-sm text-slate-600">{{ perm.action }}</span>
+                </mat-checkbox>
+              </div>
+
+              <mat-divider class="mt-3"></mat-divider>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Submit -->
-      <div class="form-actions">
-        <a routerLink="/roles" class="btn-cancel">Cancel</a>
-        <button type="submit" class="btn-submit" [disabled]="isLoading()">
-          <div class="btn-spinner" *ngIf="isLoading()"></div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-3">
+        <a mat-stroked-button routerLink="/roles">Cancel</a>
+        <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()" class="flex items-center gap-2">
+          <mat-spinner *ngIf="isLoading()" diameter="18" class="inline-spinner"></mat-spinner>
           {{ isLoading() ? (isEditMode() ? 'Saving...' : 'Creating...') : (isEditMode() ? 'Save Changes' : 'Create Role') }}
         </button>
       </div>

@@ -1,0 +1,81 @@
+.back-btn {
+  margin-bottom: 1rem;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+  background: rgba(248, 250, 252, 0.4);
+}
+
+.detail-no {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--mat-sys-on-surface, #0f172a);
+  margin-bottom: 0.25rem;
+}
+
+.detail-sub {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+  margin: 0;
+}
+
+.info-block {
+  background: rgba(248, 250, 252, 0.6);
+  border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+}
+
+.info-block-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+  margin: 0 0 0.75rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+}
+
+.detail-label {
+  font-size: 0.82rem;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  color: var(--mat-sys-on-surface, #0f172a);
+  font-weight: 600;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+// Status chip colours
+.status-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  height: 28px;
+
+  &.Draft     { background: #f1f5f9; color: #475569; }
+  &.Confirmed { background: #dbeafe; color: #1d4ed8; }
+  &.Active    { background: #dcfce7; color: #15803d; }
+  &.Completed { background: #e0e7ff; color: #4338ca; }
+  &.Cancelled { background: #fee2e2; color: #b91c1c; }
+}

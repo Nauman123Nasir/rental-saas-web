@@ -5,77 +5,120 @@
       <h1 class="page-title">Active Rentals</h1>
       <p class="page-subtitle">Manage ongoing rental operations</p>
     </div>
-    <a routerLink="checkout" class="btn btn-primary">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-      </svg>
+    <a routerLink="checkout" mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
       New Checkout
     </a>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="loading-state">
-    <div class="spinner-ring"></div>
-    <span>Loading rentals...</span>
-  </div>
+  @if (loading()) {
+    <div class="flex items-center justify-center gap-3 py-16">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span class="text-sm text-gray-500">Loading rentals...</span>
+    </div>
+  }
 
   <!-- Table Card -->
-  <div *ngIf="!loading()" class="glass-card table-card">
-    <!-- Empty State -->
-    <div *ngIf="rentals().length === 0" class="empty-state">
-      <svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-      </svg>
-      <p class="empty-state-title">No active rentals</p>
-      <p class="empty-state-text">Use New Checkout to create a rental from a confirmed reservation.</p>
-    </div>
+  @if (!loading()) {
+    <mat-card class="rental-table-card">
+      <mat-card-content class="p-0">
 
-    <div *ngIf="rentals().length > 0" class="overflow-x-auto">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Rental No.</th>
-            <th>Customer</th>
-            <th>Asset</th>
-            <th>Status</th>
-            <th>Pickup</th>
-            <th>Expected Return</th>
-            <th style="text-align:right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of rentals()">
-            <td>
-              <span class="rental-no">{{ r.rental_no || '#' + r.id }}</span>
-            </td>
-            <td>
-              <span *ngIf="r.customer">
-                {{ r.customer.type === 'Individual' ? (r.customer.first_name + ' ' + r.customer.last_name) : r.customer.company_name }}
-              </span>
-              <span *ngIf="!r.customer">—</span>
-            </td>
-            <td>
-              <span *ngIf="r.asset">
-                {{ r.asset.brand }} {{ r.asset.model }} <span class="year-tag" *ngIf="r.asset.year">({{ r.asset.year }})</span>
-              </span>
-              <span *ngIf="!r.asset">—</span>
-            </td>
-            <td>
-              <span class="badge" [ngClass]="getStatusClass(r.status || '')">{{ r.status || 'Pending' }}</span>
-            </td>
-            <td class="date-cell">{{ r.pickup_datetime_utc | date:'mediumDate' }}</td>
-            <td class="date-cell">{{ r.expected_return_datetime_utc | date:'mediumDate' }}</td>
-            <td style="text-align:right">
-              <a [routerLink]="[r.id, 'checkin']" class="btn btn-accent btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Check-in
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+        <!-- Empty State -->
+        @if (rentals().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-3 py-20 text-center">
+            <mat-icon class="empty-icon text-gray-300">inbox</mat-icon>
+            <p class="text-base font-semibold text-gray-600">No active rentals</p>
+            <p class="text-sm text-gray-400">Use New Checkout to create a rental from a confirmed reservation.</p>
+          </div>
+        }
+
+        <!-- Table -->
+        @if (rentals().length > 0) {
+          <div class="overflow-x-auto">
+            <table mat-table [dataSource]="rentals()" class="w-full">
+
+              <!-- Rental No. -->
+              <ng-container matColumnDef="rental_no">
+                <th mat-header-cell *matHeaderCellDef>Rental No.</th>
+                <td mat-cell *matCellDef="let r">
+                  <span class="rental-no">{{ r.rental_no || '#' + r.id }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Customer -->
+              <ng-container matColumnDef="customer">
+                <th mat-header-cell *matHeaderCellDef>Customer</th>
+                <td mat-cell *matCellDef="let r">
+                  @if (r.customer) {
+                    <span>{{ r.customer.type === 'Individual' ? (r.customer.first_name + ' ' + r.customer.last_name) : r.customer.company_name }}</span>
+                  } @else {
+                    <span class="text-gray-400">—</span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Asset -->
+              <ng-container matColumnDef="asset">
+                <th mat-header-cell *matHeaderCellDef>Asset</th>
+                <td mat-cell *matCellDef="let r">
+                  @if (r.asset) {
+                    <span>{{ r.asset.brand }} {{ r.asset.model }}
+                      @if (r.asset.year) {
+                        <span class="year-tag">({{ r.asset.year }})</span>
+                      }
+                    </span>
+                  } @else {
+                    <span class="text-gray-400">—</span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Status -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let r">
+                  <mat-chip-set>
+                    <mat-chip [class]="'status-chip ' + getStatusClass(r.status || '')" disableRipple>
+                      {{ r.status || 'Pending' }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </td>
+              </ng-container>
+
+              <!-- Pickup Date -->
+              <ng-container matColumnDef="pickup_date">
+                <th mat-header-cell *matHeaderCellDef>Pickup</th>
+                <td mat-cell *matCellDef="let r" class="date-cell">
+                  {{ r.pickup_datetime_utc | date:'mediumDate' }}
+                </td>
+              </ng-container>
+
+              <!-- Return Date -->
+              <ng-container matColumnDef="return_date">
+                <th mat-header-cell *matHeaderCellDef>Expected Return</th>
+                <td mat-cell *matCellDef="let r" class="date-cell">
+                  {{ r.expected_return_datetime_utc | date:'mediumDate' }}
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
+                <td mat-cell *matCellDef="let r" class="text-right">
+                  <a [routerLink]="[r.id, 'checkin']" mat-stroked-button color="accent" class="action-btn">
+                    <mat-icon>check_circle</mat-icon>
+                    Check-in
+                  </a>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 transition-colors"></tr>
+            </table>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
 </div>

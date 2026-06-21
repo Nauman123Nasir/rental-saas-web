@@ -2,14 +2,36 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-role-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './role-form.component.html',
-  styleUrl: './role-form.component.css'
+  styleUrl: './role-form.component.scss',
 })
 export class RoleFormComponent implements OnInit {
   roleForm: FormGroup;
@@ -29,7 +51,7 @@ export class RoleFormComponent implements OnInit {
     private router: Router
   ) {
     this.roleForm = this.fb.group({
-      name:        ['', [Validators.required, Validators.maxLength(100)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(255)]],
     });
   }
@@ -50,7 +72,7 @@ export class RoleFormComponent implements OnInit {
       next: (res) => {
         if (res.success) this.permissionGroups.set(res.data || []);
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
@@ -62,7 +84,7 @@ export class RoleFormComponent implements OnInit {
         if (res.success && res.data) {
           const role = res.data;
           this.roleForm.patchValue({
-            name:        role.name,
+            name: role.name,
             description: role.description || '',
           });
           const permIds = (role.permissions || []).map((p: any) => p.id);
@@ -72,7 +94,7 @@ export class RoleFormComponent implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message || 'Failed to load role details.');
-      }
+      },
     });
   }
 
@@ -131,7 +153,7 @@ export class RoleFormComponent implements OnInit {
         error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.message || 'Failed to update role.');
-        }
+        },
       });
     } else {
       this.userService.createRole(payload).subscribe({
@@ -143,7 +165,7 @@ export class RoleFormComponent implements OnInit {
         error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.message || 'Failed to create role.');
-        }
+        },
       });
     }
   }

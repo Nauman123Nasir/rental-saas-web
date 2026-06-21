@@ -1,118 +1,98 @@
-<div class="dashboard-container">
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
+<div class="page-container">
 
-  <div class="dashboard-content">
-    <!-- Header -->
-    <div class="section-header">
-      <div>
-        <h1 class="main-title">Roles & Permissions</h1>
-        <p class="subtitle">Define roles and configure which permissions each role grants to staff members.</p>
-      </div>
-      <button *hasPermission="'roles.create'" routerLink="/roles/create" class="btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        New Role
-      </button>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Roles &amp; Permissions</h1>
+      <p class="page-subtitle">Define roles and configure which permissions each role grants to staff members.</p>
     </div>
+    <button *hasPermission="'roles.create'" mat-flat-button color="primary" routerLink="/roles/create" class="header-action-btn">
+      <mat-icon>add</mat-icon>
+      New Role
+    </button>
+  </div>
 
-    <!-- Alerts -->
-    <div *ngIf="successMessage()" class="alert-box success">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <span>{{ successMessage() }}</span>
-    </div>
-    <div *ngIf="errorMessage()" class="alert-box error">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-      </svg>
-      <span>{{ errorMessage() }}</span>
-    </div>
+  <!-- Alerts -->
+  <div *ngIf="successMessage()" class="alert-success">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ successMessage() }}</span>
+  </div>
+  <div *ngIf="errorMessage()" class="alert-error">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage() }}</span>
+  </div>
 
-    <!-- Loading -->
-    <div *ngIf="isLoading()" class="loading-overlay">
-      <div class="spinner"></div>
-      <span>Loading roles...</span>
-    </div>
+  <!-- Loading -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span class="ml-3 text-slate-500 text-sm font-medium">Loading roles...</span>
+  </div>
 
-    <!-- Roles Grid -->
-    <div class="roles-grid" *ngIf="!isLoading()">
-      <div *ngFor="let role of roles()" class="role-card glass-card">
+  <!-- Roles Grid -->
+  <div *ngIf="!isLoading()" class="roles-grid">
+
+    <mat-card *ngFor="let role of roles()" class="role-card">
+      <mat-card-content>
         <div class="role-card-header">
           <div class="role-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="role-icon">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
+            <mat-icon>verified_user</mat-icon>
           </div>
-          <div class="role-meta">
-            <div class="role-name-row">
-              <h3 class="role-name">{{ role.name }}</h3>
-              <span class="system-badge" *ngIf="role.is_system">System</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-slate-800 text-base">{{ role.name }}</h3>
+              <mat-chip *ngIf="role.is_system" class="system-chip">System</mat-chip>
             </div>
-            <p class="role-desc">{{ role.description || 'No description provided.' }}</p>
+            <p class="text-sm text-slate-500 leading-snug">{{ role.description || 'No description provided.' }}</p>
           </div>
         </div>
+
+        <mat-divider class="my-3"></mat-divider>
 
         <div class="role-stats">
           <div class="stat-item">
             <span class="stat-value">{{ role.users_count ?? 0 }}</span>
             <span class="stat-label">Users</span>
           </div>
+          <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-value">{{ role.permissions?.length ?? 0 }}</span>
             <span class="stat-label">Permissions</span>
           </div>
         </div>
 
-        <div class="role-perms-preview">
-          <span class="perm-summary">{{ getPermissionSummary(role) }}</span>
-        </div>
+        <p class="perm-summary text-xs text-slate-400 mt-3 truncate">{{ getPermissionSummary(role) }}</p>
+      </mat-card-content>
 
-        <div class="role-card-actions" *ngIf="!role.is_system">
-          <button
-            *hasPermission="'roles.update'"
-            [routerLink]="['/roles', role.id, 'edit']"
-            class="btn-action edit"
-            title="Edit Role"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-            Edit
-          </button>
-          <button
-            *hasPermission="'roles.delete'"
-            (click)="onDeleteRole(role.id, role.name)"
-            class="btn-action delete"
-            title="Delete Role"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-            Delete
-          </button>
-        </div>
-        <div class="role-system-notice" *ngIf="role.is_system">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="lock-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
+      <mat-card-actions *ngIf="!role.is_system" class="role-card-actions" align="end">
+        <button *hasPermission="'roles.update'"
+          mat-stroked-button color="primary"
+          [routerLink]="['/roles', role.id, 'edit']">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+        <button *hasPermission="'roles.delete'"
+          mat-stroked-button color="warn"
+          (click)="onDeleteRole(role.id, role.name)">
+          <mat-icon>delete</mat-icon> Delete
+        </button>
+      </mat-card-actions>
+
+      <mat-card-actions *ngIf="role.is_system" align="end">
+        <span class="system-notice text-xs text-slate-400 flex items-center gap-1 px-3 py-2">
+          <mat-icon class="text-sm">lock</mat-icon>
           Protected system role
-        </div>
-      </div>
+        </span>
+      </mat-card-actions>
+    </mat-card>
 
-      <!-- Empty state -->
-      <div *ngIf="roles().length === 0" class="empty-card glass-card">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="empty-icon">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-        </svg>
-        <h3>No Roles Found</h3>
-        <p>Create your first custom role to assign permissions to staff members.</p>
-      </div>
-    </div>
+    <!-- Empty State -->
+    <mat-card *ngIf="roles().length === 0" class="empty-card">
+      <mat-card-content class="empty-state">
+        <mat-icon class="empty-icon">verified_user</mat-icon>
+        <h3 class="empty-title">No Roles Found</h3>
+        <p class="empty-text">Create your first custom role to assign permissions to staff members.</p>
+      </mat-card-content>
+    </mat-card>
+
   </div>
+
 </div>

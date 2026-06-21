@@ -2,21 +2,53 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReservationService, ReservationModel } from '../../../core/services/reservation';
 
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './reservation-list.html',
-  styleUrls: ['./reservation-list.css']
+  styleUrl: './reservation-list.scss',
 })
 export class ReservationList implements OnInit {
-  // Signal list of reservations
   reservations = signal<ReservationModel[]>([]);
   loading = signal(true);
   currentPage = signal(1);
   totalPages = signal(1);
+
+  displayedColumns: string[] = [
+    'reservation_no',
+    'customer',
+    'status',
+    'pickup_date',
+    'return_date',
+    'actions',
+  ];
 
   constructor(private reservationService: ReservationService) {}
 
@@ -44,17 +76,17 @@ export class ReservationList implements OnInit {
       error: (err) => {
         console.error('Error loading reservations', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
   getStatusClass(status: string): string {
     const map: Record<string, string> = {
-      'Draft':     'badge-gray',
-      'Confirmed': 'badge-blue',
-      'Active':    'badge-green',
-      'Completed': 'badge-indigo',
-      'Cancelled': 'badge-red',
+      Draft: 'badge-gray',
+      Confirmed: 'badge-blue',
+      Active: 'badge-green',
+      Completed: 'badge-indigo',
+      Cancelled: 'badge-red',
     };
     return map[status] ?? 'badge-gray';
   }

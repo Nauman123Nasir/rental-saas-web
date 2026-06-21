@@ -2,14 +2,36 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.css'
+  styleUrl: './user-form.component.scss',
 })
 export class UserFormComponent implements OnInit {
   userForm: FormGroup;
@@ -29,10 +51,10 @@ export class UserFormComponent implements OnInit {
     private router: Router
   ) {
     this.userForm = this.fb.group({
-      name:     ['', [Validators.required, Validators.maxLength(255)]],
-      email:    ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
+      name: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       password: ['', [Validators.minLength(8)]],
-      status:   ['active', [Validators.required]],
+      status: ['active', [Validators.required]],
     });
   }
 
@@ -45,7 +67,6 @@ export class UserFormComponent implements OnInit {
       this.userId.set(+idParam);
       this.loadUserForEdit(+idParam);
     } else {
-      // Password required for new users
       this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
       this.userForm.get('password')?.updateValueAndValidity();
     }
@@ -56,7 +77,7 @@ export class UserFormComponent implements OnInit {
       next: (res) => {
         if (res.success) this.availableRoles.set(res.data || []);
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
@@ -68,8 +89,8 @@ export class UserFormComponent implements OnInit {
         if (res.success && res.data) {
           const u = res.data;
           this.userForm.patchValue({
-            name:   u.name,
-            email:  u.email,
+            name: u.name,
+            email: u.email,
             status: u.status,
           });
           const roleIds = (u.roles || []).map((r: any) => r.id);
@@ -79,7 +100,7 @@ export class UserFormComponent implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message || 'Failed to load user details.');
-      }
+      },
     });
   }
 
@@ -108,9 +129,9 @@ export class UserFormComponent implements OnInit {
 
     const formValue = this.userForm.value;
     const payload: any = {
-      name:     formValue.name,
-      email:    formValue.email,
-      status:   formValue.status,
+      name: formValue.name,
+      email: formValue.email,
+      status: formValue.status,
       role_ids: this.selectedRoleIds(),
     };
 
@@ -128,7 +149,7 @@ export class UserFormComponent implements OnInit {
         error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.message || 'Failed to update user.');
-        }
+        },
       });
     } else {
       this.userService.createUser(payload).subscribe({
@@ -140,7 +161,7 @@ export class UserFormComponent implements OnInit {
         error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.message || 'Failed to create user.');
-        }
+        },
       });
     }
   }
@@ -153,9 +174,11 @@ export class UserFormComponent implements OnInit {
   getError(field: string): string {
     const control = this.userForm.get(field);
     if (!control || !control.errors) return '';
-    if (control.errors['required']) return `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
+    if (control.errors['required'])
+      return `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
     if (control.errors['email']) return 'Please enter a valid email address.';
-    if (control.errors['minlength']) return `Minimum ${control.errors['minlength'].requiredLength} characters required.`;
+    if (control.errors['minlength'])
+      return `Minimum ${control.errors['minlength'].requiredLength} characters required.`;
     return 'Invalid value.';
   }
 }

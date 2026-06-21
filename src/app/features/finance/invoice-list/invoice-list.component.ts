@@ -2,14 +2,38 @@ import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { FinanceService, InvoiceModel } from '../../../core/services/finance.service';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './invoice-list.component.html',
-  styleUrls: ['./invoice-list.component.css']
+  styleUrl: './invoice-list.component.scss',
 })
 export class InvoiceListComponent implements OnInit {
   invoices = signal<InvoiceModel[]>([]);
@@ -19,6 +43,16 @@ export class InvoiceListComponent implements OnInit {
   statusFilter = '';
 
   readonly statuses = ['Draft', 'Issued', 'Paid', 'Partial', 'Void', 'Overdue'];
+
+  displayedColumns: string[] = [
+    'invoice_no',
+    'customer',
+    'status',
+    'total_amount',
+    'balance_due',
+    'issue_date',
+    'actions',
+  ];
 
   constructor(
     private financeService: FinanceService,
@@ -38,7 +72,6 @@ export class InvoiceListComponent implements OnInit {
 
     this.financeService.getInvoices(filters).subscribe({
       next: (res: any) => {
-        // Handle { success, data: { data: [...] } } or { data: [...] } or []
         if (res?.data?.data) {
           this.invoices.set(res.data.data);
           this.totalPages.set(res.data.last_page ?? 1);
@@ -58,7 +91,7 @@ export class InvoiceListComponent implements OnInit {
       error: () => {
         this.isLoading.set(false);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -81,15 +114,15 @@ export class InvoiceListComponent implements OnInit {
     }
   }
 
-  getStatusBadge(status: string): string {
+  getStatusColor(status: string): string {
     const map: Record<string, string> = {
-      'Draft':   'badge-gray',
-      'Issued':  'badge-blue',
-      'Paid':    'badge-green',
-      'Partial': 'badge-amber',
-      'Void':    'badge-red',
-      'Overdue': 'badge-red',
+      Draft: 'default',
+      Issued: 'primary',
+      Paid: 'accent',
+      Partial: 'warn',
+      Void: 'warn',
+      Overdue: 'warn',
     };
-    return map[status] ?? 'badge-gray';
+    return map[status] ?? 'default';
   }
 }

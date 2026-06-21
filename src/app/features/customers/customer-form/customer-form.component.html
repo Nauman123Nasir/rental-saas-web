@@ -1,294 +1,281 @@
-<div class="form-container">
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
+<div class="page-container">
 
-  <div class="form-content">
-    <!-- Back Link -->
-    <a [routerLink]="isEditMode() ? ['/customers', customerId()] : ['/customers']" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="back-icon">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
-      Back to {{ isEditMode() ? 'Details' : 'Directory' }}
-    </a>
+  <!-- Back Link -->
+  <a
+    [routerLink]="isEditMode() ? ['/customers', customerId()] : ['/customers']"
+    class="back-link"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    Back to {{ isEditMode() ? 'Details' : 'Directory' }}
+  </a>
 
-    <!-- Title Header -->
-    <div class="form-header">
-      <h1 class="main-title">{{ isEditMode() ? 'Edit Customer Profile' : 'Register Customer' }}</h1>
-      <p class="subtitle">Complete the fields below. Tenant isolation ensures this data remains private.</p>
+  <!-- Title Header -->
+  <div class="page-header mt-4">
+    <div>
+      <h1 class="page-title">{{ isEditMode() ? 'Edit Customer Profile' : 'Register Customer' }}</h1>
+      <p class="page-subtitle">Complete the fields below. Tenant isolation ensures this data remains private.</p>
     </div>
+  </div>
 
-    <!-- Alerts -->
-    <div *ngIf="successMessage()" class="alert-box success">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span>{{ successMessage() }}</span>
-    </div>
+  <!-- Alerts -->
+  <div *ngIf="successMessage()" class="alert-card alert-success mb-4">
+    <mat-icon class="alert-icon">check_circle</mat-icon>
+    <span>{{ successMessage() }}</span>
+  </div>
 
-    <div *ngIf="errorMessage()" class="alert-box error">
-      <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-      <span>{{ errorMessage() }}</span>
-    </div>
+  <div *ngIf="errorMessage()" class="alert-card alert-error mb-4">
+    <mat-icon class="alert-icon">warning</mat-icon>
+    <span>{{ errorMessage() }}</span>
+  </div>
 
-    <!-- Main Form Card -->
-    <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="customer-form">
-      
-      <!-- Loader Overlay -->
-      <div class="form-loader-overlay" *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value">
-        <div class="spinner"></div>
-        <span>Retrieving customer profile...</span>
-      </div>
+  <!-- Loading overlay for edit mode fetch -->
+  <div *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value" class="loader-overlay">
+    <mat-spinner diameter="48"></mat-spinner>
+    <span class="mt-3 text-sm text-slate-500">Retrieving customer profile…</span>
+  </div>
 
-      <!-- Section 1: Customer Info -->
-      <div class="glass-card form-section">
-        <h2 class="section-title">General Information</h2>
-        
-        <div class="grid-layout">
-          <!-- Code -->
-          <div class="input-group" [class.error]="customerForm.get('customer_code')?.touched && customerForm.get('customer_code')?.invalid">
-            <label for="customer_code">Customer Code *</label>
-            <input 
-              type="text" 
-              id="customer_code" 
-              formControlName="customer_code" 
-              placeholder="e.g. CUST-0092"
-              [readOnly]="isEditMode()"
-            />
-            <span *ngIf="customerForm.get('customer_code')?.touched && customerForm.get('customer_code')?.errors?.['required']" class="error-text">Customer code is required.</span>
-            <span *ngIf="customerForm.get('customer_code')?.touched && customerForm.get('customer_code')?.errors?.['pattern']" class="error-text">Use only alphanumeric characters, dashes, or underscores.</span>
-          </div>
+  <!-- Main Form -->
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+
+    <!-- Section 1: General Information -->
+    <mat-card class="form-section-card mb-5">
+      <mat-card-header>
+        <mat-card-title>General Information</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="pt-5">
+
+        <div class="form-grid">
+
+          <!-- Customer Code -->
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Code *</mat-label>
+            <input matInput formControlName="customer_code" placeholder="e.g. CUST-0092" [readonly]="isEditMode()" />
+            <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['required']">Customer code is required.</mat-error>
+            <mat-error *ngIf="customerForm.get('customer_code')?.errors?.['pattern']">Use only alphanumeric characters, dashes, or underscores.</mat-error>
+          </mat-form-field>
 
           <!-- Type -->
-          <div class="input-group">
-            <label for="type">Customer Type *</label>
-            <div class="select-wrapper">
-              <select id="type" formControlName="type" class="form-select">
-                <option value="Individual">Individual</option>
-                <option value="Business">Business</option>
-              </select>
-            </div>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Type *</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="Individual">Individual</mat-option>
+              <mat-option value="Business">Business</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <!-- Dynamic: First Name (if Individual) -->
-          <div 
-            class="input-group" 
-            *ngIf="customerForm.get('type')?.value === 'Individual'"
-            [class.error]="customerForm.get('first_name')?.touched && customerForm.get('first_name')?.invalid"
-          >
-            <label for="first_name">First Name *</label>
-            <input type="text" id="first_name" formControlName="first_name" placeholder="John" />
-            <span *ngIf="customerForm.get('first_name')?.touched && customerForm.get('first_name')?.errors?.['required']" class="error-text">First name is required.</span>
-          </div>
+          <!-- First Name (Individual) -->
+          <mat-form-field appearance="outline" *ngIf="customerForm.get('type')?.value === 'Individual'">
+            <mat-label>First Name *</mat-label>
+            <input matInput formControlName="first_name" placeholder="John" />
+            <mat-error *ngIf="customerForm.get('first_name')?.errors?.['required']">First name is required.</mat-error>
+          </mat-form-field>
 
-          <!-- Dynamic: Last Name (if Individual) -->
-          <div 
-            class="input-group" 
-            *ngIf="customerForm.get('type')?.value === 'Individual'"
-            [class.error]="customerForm.get('last_name')?.touched && customerForm.get('last_name')?.invalid"
-          >
-            <label for="last_name">Last Name *</label>
-            <input type="text" id="last_name" formControlName="last_name" placeholder="Doe" />
-            <span *ngIf="customerForm.get('last_name')?.touched && customerForm.get('last_name')?.errors?.['required']" class="error-text">Last name is required.</span>
-          </div>
+          <!-- Last Name (Individual) -->
+          <mat-form-field appearance="outline" *ngIf="customerForm.get('type')?.value === 'Individual'">
+            <mat-label>Last Name *</mat-label>
+            <input matInput formControlName="last_name" placeholder="Doe" />
+            <mat-error *ngIf="customerForm.get('last_name')?.errors?.['required']">Last name is required.</mat-error>
+          </mat-form-field>
 
-          <!-- Dynamic: Company Name (if Business) -->
-          <div 
-            class="input-group full-width" 
-            *ngIf="customerForm.get('type')?.value === 'Business'"
-            [class.error]="customerForm.get('company_name')?.touched && customerForm.get('company_name')?.invalid"
-          >
-            <label for="company_name">Company Name *</label>
-            <input type="text" id="company_name" formControlName="company_name" placeholder="e.g. Acme Corporation Ltd." />
-            <span *ngIf="customerForm.get('company_name')?.touched && customerForm.get('company_name')?.errors?.['required']" class="error-text">Company name is required.</span>
-          </div>
+          <!-- Company Name (Business) -->
+          <mat-form-field appearance="outline" class="col-span-2" *ngIf="customerForm.get('type')?.value === 'Business'">
+            <mat-label>Company Name *</mat-label>
+            <input matInput formControlName="company_name" placeholder="e.g. Acme Corporation Ltd." />
+            <mat-error *ngIf="customerForm.get('company_name')?.errors?.['required']">Company name is required.</mat-error>
+          </mat-form-field>
 
           <!-- Email -->
-          <div class="input-group" [class.error]="customerForm.get('email')?.touched && customerForm.get('email')?.invalid">
-            <label for="email">Email Address *</label>
-            <input type="email" id="email" formControlName="email" placeholder="john.doe@company.com" />
-            <span *ngIf="customerForm.get('email')?.touched && customerForm.get('email')?.errors?.['required']" class="error-text">Email is required.</span>
-            <span *ngIf="customerForm.get('email')?.touched && customerForm.get('email')?.errors?.['email']" class="error-text">Enter a valid email address.</span>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Email Address *</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="john.doe@company.com" />
+            <mat-error *ngIf="customerForm.get('email')?.errors?.['required']">Email is required.</mat-error>
+            <mat-error *ngIf="customerForm.get('email')?.errors?.['email']">Enter a valid email address.</mat-error>
+          </mat-form-field>
 
           <!-- Phone -->
-          <div class="input-group" [class.error]="customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid">
-            <label for="phone">Phone Number *</label>
-            <input type="text" id="phone" formControlName="phone" placeholder="+1 (555) 019-9281" />
-            <span *ngIf="customerForm.get('phone')?.touched && customerForm.get('phone')?.errors?.['required']" class="error-text">Phone number is required.</span>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number *</mat-label>
+            <input matInput formControlName="phone" placeholder="+1 (555) 019-9281" />
+            <mat-error *ngIf="customerForm.get('phone')?.errors?.['required']">Phone number is required.</mat-error>
+          </mat-form-field>
 
           <!-- Status -->
-          <div class="input-group">
-            <label for="status">Account Status *</label>
-            <div class="select-wrapper">
-              <select id="status" formControlName="status" class="form-select">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-              </select>
-            </div>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Account Status *</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
+              <mat-option value="suspended">Suspended</mat-option>
+            </mat-select>
+          </mat-form-field>
 
           <!-- Credit Limit -->
-          <div class="input-group" [class.error]="customerForm.get('credit_limit')?.touched && customerForm.get('credit_limit')?.invalid">
-            <label for="credit_limit">Credit Limit ($) *</label>
-            <input type="number" id="credit_limit" formControlName="credit_limit" min="0" />
-            <span *ngIf="customerForm.get('credit_limit')?.touched && customerForm.get('credit_limit')?.errors?.['required']" class="error-text">Credit limit is required.</span>
-            <span *ngIf="customerForm.get('credit_limit')?.touched && customerForm.get('credit_limit')?.errors?.['min']" class="error-text">Limit cannot be less than 0.</span>
-          </div>
-        </div>
-      </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Credit Limit ($) *</mat-label>
+            <input matInput type="number" formControlName="credit_limit" min="0" />
+            <mat-error *ngIf="customerForm.get('credit_limit')?.errors?.['required']">Credit limit is required.</mat-error>
+            <mat-error *ngIf="customerForm.get('credit_limit')?.errors?.['min']">Limit cannot be less than 0.</mat-error>
+          </mat-form-field>
 
-      <!-- Section 2: Verification Documents -->
-      <div class="glass-card form-section">
-        <div class="section-title-wrapper">
-          <h2 class="section-title">Identity & Verification Documents</h2>
-          <button type="button" (click)="addDocument()" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-small-icon">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add Document
-          </button>
         </div>
+      </mat-card-content>
+    </mat-card>
 
-        <div formArrayName="documents" class="array-container">
-          <div 
-            *ngFor="let doc of documents.controls; let idx = index" 
-            [formGroupName]="idx" 
-            class="array-card"
+    <!-- Section 2: Verification Documents -->
+    <mat-card class="form-section-card mb-5">
+      <mat-card-header class="flex items-center justify-between">
+        <mat-card-title>Identity &amp; Verification Documents</mat-card-title>
+        <button type="button" mat-stroked-button color="primary" (click)="addDocument()" class="ml-auto">
+          <mat-icon>add</mat-icon>
+          Add Document
+        </button>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="pt-5">
+
+        <div formArrayName="documents">
+          <div
+            *ngFor="let doc of documents.controls; let idx = index"
+            [formGroupName]="idx"
+            class="array-item"
           >
-            <div class="array-card-header">
-              <h3>Document #{{ idx + 1 }}</h3>
-              <button type="button" (click)="removeDocument(idx)" class="btn-remove" title="Remove Document">
-                Remove
+            <div class="array-item-header">
+              <span class="array-item-title">Document #{{ idx + 1 }}</span>
+              <button type="button" mat-icon-button color="warn" (click)="removeDocument(idx)" matTooltip="Remove Document">
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
+            <mat-divider class="mb-4"></mat-divider>
 
-            <div class="grid-layout three-cols">
+            <div class="form-grid three-cols">
               <!-- Doc Type -->
-              <div class="input-group" [class.error]="doc.get('document_type')?.touched && doc.get('document_type')?.invalid">
-                <label>Document Type *</label>
-                <div class="select-wrapper">
-                  <select formControlName="document_type" class="form-select">
-                    <option value="ID Card">National ID Card</option>
-                    <option value="Passport">Passport</option>
-                    <option value="Drivers License">Driver's License</option>
-                    <option value="Trade License">Trade License (Business)</option>
-                  </select>
-                </div>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Document Type *</mat-label>
+                <mat-select formControlName="document_type">
+                  <mat-option value="ID Card">National ID Card</mat-option>
+                  <mat-option value="Passport">Passport</mat-option>
+                  <mat-option value="Drivers License">Driver's License</mat-option>
+                  <mat-option value="Trade License">Trade License (Business)</mat-option>
+                </mat-select>
+                <mat-error *ngIf="doc.get('document_type')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
 
               <!-- Doc Number -->
-              <div class="input-group" [class.error]="doc.get('document_number')?.touched && doc.get('document_number')?.invalid">
-                <label>Document Number *</label>
-                <input type="text" formControlName="document_number" placeholder="e.g. N1820129A" />
-                <span *ngIf="doc.get('document_number')?.touched && doc.get('document_number')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Document Number *</mat-label>
+                <input matInput formControlName="document_number" placeholder="e.g. N1820129A" />
+                <mat-error *ngIf="doc.get('document_number')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
 
               <!-- Expiry Date -->
-              <div class="input-group" [class.error]="doc.get('expiry_date')?.touched && doc.get('expiry_date')?.invalid">
-                <label>Expiry Date *</label>
-                <input type="date" formControlName="expiry_date" />
-                <span *ngIf="doc.get('expiry_date')?.touched && doc.get('expiry_date')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Expiry Date *</mat-label>
+                <input matInput type="date" formControlName="expiry_date" />
+                <mat-error *ngIf="doc.get('expiry_date')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
             </div>
           </div>
-
-          <!-- Empty State -->
-          <div *ngIf="documents.length === 0" class="array-empty">
-            <p>No verification documents added yet. It is highly recommended to register at least one ID or Passport.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 3: Drivers -->
-      <div class="glass-card form-section">
-        <div class="section-title-wrapper">
-          <h2 class="section-title">Authorized Drivers</h2>
-          <button type="button" (click)="addDriver()" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-small-icon">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add Driver
-          </button>
         </div>
 
-        <div formArrayName="drivers" class="array-container">
-          <div 
-            *ngFor="let driver of drivers.controls; let idx = index" 
-            [formGroupName]="idx" 
-            class="array-card"
+        <!-- Empty State -->
+        <div *ngIf="documents.length === 0" class="array-empty">
+          <mat-icon class="text-slate-300 text-5xl">description</mat-icon>
+          <p class="mt-2 text-sm text-slate-400">No verification documents added yet. It is highly recommended to register at least one ID or Passport.</p>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Section 3: Authorized Drivers -->
+    <mat-card class="form-section-card mb-5">
+      <mat-card-header class="flex items-center justify-between">
+        <mat-card-title>Authorized Drivers</mat-card-title>
+        <button type="button" mat-stroked-button color="primary" (click)="addDriver()" class="ml-auto">
+          <mat-icon>add</mat-icon>
+          Add Driver
+        </button>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="pt-5">
+
+        <div formArrayName="drivers">
+          <div
+            *ngFor="let driver of drivers.controls; let idx = index"
+            [formGroupName]="idx"
+            class="array-item"
           >
-            <div class="array-card-header">
-              <h3>Driver #{{ idx + 1 }}</h3>
-              <button type="button" (click)="removeDriver(idx)" class="btn-remove" title="Remove Driver">
-                Remove
+            <div class="array-item-header">
+              <span class="array-item-title">Driver #{{ idx + 1 }}</span>
+              <button type="button" mat-icon-button color="warn" (click)="removeDriver(idx)" matTooltip="Remove Driver">
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
+            <mat-divider class="mb-4"></mat-divider>
 
-            <div class="grid-layout four-cols">
+            <div class="form-grid four-cols">
               <!-- First Name -->
-              <div class="input-group" [class.error]="driver.get('first_name')?.touched && driver.get('first_name')?.invalid">
-                <label>First Name *</label>
-                <input type="text" formControlName="first_name" placeholder="Jane" />
-                <span *ngIf="driver.get('first_name')?.touched && driver.get('first_name')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>First Name *</mat-label>
+                <input matInput formControlName="first_name" placeholder="Jane" />
+                <mat-error *ngIf="driver.get('first_name')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
 
               <!-- Last Name -->
-              <div class="input-group" [class.error]="driver.get('last_name')?.touched && driver.get('last_name')?.invalid">
-                <label>Last Name *</label>
-                <input type="text" formControlName="last_name" placeholder="Smith" />
-                <span *ngIf="driver.get('last_name')?.touched && driver.get('last_name')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name *</mat-label>
+                <input matInput formControlName="last_name" placeholder="Smith" />
+                <mat-error *ngIf="driver.get('last_name')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
 
               <!-- License Number -->
-              <div class="input-group" [class.error]="driver.get('license_number')?.touched && driver.get('license_number')?.invalid">
-                <label>License Number *</label>
-                <input type="text" formControlName="license_number" placeholder="DL-0921092" />
-                <span *ngIf="driver.get('license_number')?.touched && driver.get('license_number')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>License Number *</mat-label>
+                <input matInput formControlName="license_number" placeholder="DL-0921092" />
+                <mat-error *ngIf="driver.get('license_number')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
 
               <!-- License Expiry -->
-              <div class="input-group" [class.error]="driver.get('license_expiry')?.touched && driver.get('license_expiry')?.invalid">
-                <label>Expiry Date *</label>
-                <input type="date" formControlName="license_expiry" />
-                <span *ngIf="driver.get('license_expiry')?.touched && driver.get('license_expiry')?.errors?.['required']" class="error-text">Required.</span>
-              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Expiry Date *</mat-label>
+                <input matInput type="date" formControlName="license_expiry" />
+                <mat-error *ngIf="driver.get('license_expiry')?.errors?.['required']">Required.</mat-error>
+              </mat-form-field>
             </div>
           </div>
-
-          <!-- Empty State -->
-          <div *ngIf="drivers.length === 0" class="array-empty">
-            <p>No authorized drivers registered under this account. Click "Add Driver" to register one.</p>
-          </div>
         </div>
-      </div>
 
-      <!-- Action Buttons -->
-      <div class="form-actions">
-        <button 
-          type="button" 
-          [routerLink]="isEditMode() ? ['/customers', customerId()] : ['/customers']" 
-          class="btn-cancel"
-          [disabled]="isLoading()"
-        >
-          Cancel
-        </button>
-        <button 
-          type="submit" 
-          [disabled]="isLoading() || customerForm.invalid" 
-          class="btn-primary-submit"
-        >
-          <span *ngIf="!isLoading()">{{ isEditMode() ? 'Save Changes' : 'Register Customer' }}</span>
-          <div *ngIf="isLoading()" class="spinner-small"></div>
-        </button>
-      </div>
+        <!-- Empty State -->
+        <div *ngIf="drivers.length === 0" class="array-empty">
+          <mat-icon class="text-slate-300 text-5xl">drive_eta</mat-icon>
+          <p class="mt-2 text-sm text-slate-400">No authorized drivers registered under this account. Click "Add Driver" to register one.</p>
+        </div>
 
-    </form>
-  </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <button
+        type="button"
+        mat-stroked-button
+        [routerLink]="isEditMode() ? ['/customers', customerId()] : ['/customers']"
+        [disabled]="isLoading()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        color="primary"
+        [disabled]="isLoading() || customerForm.invalid"
+        class="min-w-[160px]"
+      >
+        <mat-spinner *ngIf="isLoading()" diameter="20" class="inline-spinner"></mat-spinner>
+        <span *ngIf="!isLoading()">{{ isEditMode() ? 'Save Changes' : 'Register Customer' }}</span>
+      </button>
+    </div>
+
+  </form>
+
 </div>

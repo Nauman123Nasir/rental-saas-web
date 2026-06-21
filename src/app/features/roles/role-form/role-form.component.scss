@@ -1,0 +1,96 @@
+// ── Role Form ────────────────────────────────────────────────────────────────
+
+.form-wrapper {
+  @apply max-w-3xl mx-auto;
+}
+
+.form-page-header {
+  @apply mb-6;
+}
+
+.back-link {
+  @apply inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 mb-3 transition-colors;
+}
+
+.page-title {
+  @apply text-2xl font-bold text-slate-800;
+}
+
+.page-subtitle {
+  @apply text-sm text-slate-500 mt-0.5;
+}
+
+// Alerts
+.alert-success {
+  @apply flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl px-4 py-3 text-sm mb-4;
+}
+
+.alert-error {
+  @apply flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4;
+}
+
+// Cards
+.form-card {
+  @apply shadow-sm;
+
+  mat-card-header {
+    @apply px-5 pt-4 pb-0;
+  }
+
+  mat-card-title {
+    @apply text-base font-semibold text-slate-700 !important;
+  }
+
+  mat-card-content {
+    @apply px-5 pb-5;
+  }
+}
+
+// Permission count badge
+.perm-count-badge {
+  @apply text-xs font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full;
+}
+
+// Permission matrix
+.permission-matrix {
+  @apply flex flex-col gap-4;
+}
+
+.module-group {
+  @apply rounded-xl border border-slate-100 overflow-hidden;
+}
+
+.module-header {
+  @apply flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100;
+}
+
+.module-toggle {
+  ::ng-deep .mdc-form-field {
+    align-items: center;
+  }
+}
+
+.module-name {
+  @apply font-semibold text-slate-700 text-sm ml-1;
+}
+
+.module-badge {
+  @apply text-xs text-slate-400 font-medium bg-white border border-slate-200 px-2 py-0.5 rounded-full;
+}
+
+.permissions-row {
+  @apply flex flex-wrap gap-x-4 gap-y-1 px-4 py-3;
+}
+
+.perm-option {
+  // mat-checkbox with spacing
+  ::ng-deep .mdc-form-field {
+    align-items: center;
+  }
+}
+
+.inline-spinner {
+  @apply inline-block;
+  width: 18px !important;
+  height: 18px !important;
+}

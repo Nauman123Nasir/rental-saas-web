@@ -5,12 +5,40 @@ import { FormsModule } from '@angular/forms';
 import { AssetService } from '../../../core/services/asset.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
   selector: 'app-asset-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    HasPermissionDirective,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatPaginatorModule,
+    MatTooltipModule,
+  ],
   templateUrl: './asset-list.component.html',
-  styleUrls: ['./asset-list.component.css']
+  styleUrl: './asset-list.component.scss'
 })
 export class AssetListComponent implements OnInit {
   assets = signal<any[]>([]);
@@ -26,6 +54,8 @@ export class AssetListComponent implements OnInit {
   perPage = 10;
 
   loading = signal(false);
+
+  displayedColumns = ['code', 'brand', 'category', 'status', 'year', 'rate', 'actions'];
 
   constructor(private assetService: AssetService) {}
 

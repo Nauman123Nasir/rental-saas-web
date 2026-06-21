@@ -1,0 +1,129 @@
+// Dashboard component — supplemental SCSS.
+// Most layout and spacing is handled by Tailwind utilities in the template.
+// Material theming tokens keep KPI icon colors consistent with MD3.
+
+.dashboard-container {
+  padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+// ── KPI cards ──────────────────────────────────────────────────────────────
+
+.kpi-card {
+  mat-card-content {
+    // Ensure padding is predictable across all KPI cards.
+    padding-inline: 1rem;
+  }
+}
+
+.kpi-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &.assets {
+    background-color: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+  }
+
+  &.available {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+  }
+
+  &.active {
+    background-color: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+  }
+
+  &.pending {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+  }
+
+  &.revenue {
+    background-color: rgba(139, 92, 246, 0.12);
+    color: #8b5cf6;
+  }
+}
+
+// ── Chart cards ────────────────────────────────────────────────────────────
+
+.chart-content {
+  position: relative;
+  height: 280px;
+  padding-top: 1rem;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.doughnut-content {
+  height: 260px;
+}
+
+// ── Quick action buttons ────────────────────────────────────────────────────
+
+.quick-action-btn {
+  width: 100%;
+  height: auto !important;
+  padding: 0.625rem 0.75rem !important;
+  border-radius: 0.5rem !important;
+  line-height: 1 !important;
+  white-space: normal !important;
+
+  &.booking-action {
+    border-color: rgba(99, 102, 241, 0.4) !important;
+    color: #6366f1 !important;
+
+    mat-icon { color: #6366f1; }
+    &:hover { background-color: rgba(99, 102, 241, 0.06) !important; }
+  }
+
+  &.rental-action {
+    border-color: rgba(20, 184, 166, 0.4) !important;
+    color: #14b8a6 !important;
+
+    mat-icon { color: #14b8a6; }
+    &:hover { background-color: rgba(20, 184, 166, 0.06) !important; }
+  }
+
+  &.payment-action {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    color: #8b5cf6 !important;
+
+    mat-icon { color: #8b5cf6; }
+    &:hover { background-color: rgba(139, 92, 246, 0.06) !important; }
+  }
+
+  &.customer-action {
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #f59e0b !important;
+
+    mat-icon { color: #f59e0b; }
+    &:hover { background-color: rgba(245, 158, 11, 0.06) !important; }
+  }
+}
+
+// ── Error card accent ──────────────────────────────────────────────────────
+
+.border-error {
+  border-color: var(--mat-sys-error, #ef4444) !important;
+}
+
+.text-error {
+  color: var(--mat-sys-error, #ef4444);
+}

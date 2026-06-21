@@ -1,0 +1,101 @@
+// ── Invoice List ────────────────────────────────────────────────────────────
+
+.page-header-icon {
+  @apply w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg flex-shrink-0;
+
+  mat-icon {
+    @apply text-white text-xl;
+  }
+}
+
+.filter-card {
+  @apply mb-5 shadow-sm;
+
+  mat-card-content {
+    @apply py-3 px-4;
+  }
+}
+
+.filter-field {
+  min-width: 180px;
+}
+
+.table-card {
+  @apply shadow-sm;
+
+  mat-card-content {
+    @apply p-0 overflow-hidden;
+  }
+}
+
+.loading-state {
+  @apply flex items-center justify-center py-16 px-6;
+}
+
+.empty-state {
+  @apply flex flex-col items-center justify-center py-16 px-6 text-center;
+}
+
+.empty-icon {
+  @apply text-5xl text-slate-300 mb-3;
+  font-size: 3rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+}
+
+.empty-title {
+  @apply text-base font-semibold text-slate-600 mb-1;
+}
+
+.empty-text {
+  @apply text-sm text-slate-400;
+}
+
+.table-responsive {
+  @apply overflow-x-auto;
+}
+
+// Mat-table overrides
+table.mat-mdc-table {
+  @apply w-full;
+}
+
+.mat-mdc-header-cell {
+  @apply text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-200;
+}
+
+.mat-mdc-cell {
+  @apply text-sm text-slate-700 py-3 border-b border-slate-100;
+}
+
+.table-row-hover:hover {
+  @apply bg-indigo-50/40 transition-colors;
+}
+
+// Invoice number icon
+.inv-no-icon {
+  @apply w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0;
+}
+
+// Status chips
+.status-chip {
+  @apply text-xs font-semibold px-2 py-0.5 rounded-full;
+
+  &.status-draft    { @apply bg-slate-100 text-slate-600; }
+  &.status-issued   { @apply bg-blue-100 text-blue-700; }
+  &.status-paid     { @apply bg-emerald-100 text-emerald-700; }
+  &.status-partial  { @apply bg-amber-100 text-amber-700; }
+  &.status-void     { @apply bg-red-100 text-red-600; }
+  &.status-overdue  { @apply bg-orange-100 text-orange-700; }
+}
+
+.btn-sm-action {
+  @apply text-xs !important;
+  height: 30px !important;
+  line-height: 30px !important;
+}
+
+// Pagination
+.pagination-bar {
+  @apply flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/60 flex-wrap gap-3;
+}

@@ -2,15 +2,40 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { UserService } from '../../../core/services/user.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    HasPermissionDirective,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styleUrl: './user-list.component.scss',
 })
 export class UserListComponent implements OnInit {
   users = signal<any[]>([]);
@@ -29,6 +54,8 @@ export class UserListComponent implements OnInit {
   selectedStatus = signal<string>('');
   selectedRoleId = signal<string>('');
 
+  displayedColumns: string[] = ['user', 'email', 'roles', 'status', 'created_at', 'actions'];
+
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
@@ -41,7 +68,7 @@ export class UserListComponent implements OnInit {
       next: (res) => {
         if (res.success) this.roles.set(res.data || []);
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
@@ -54,7 +81,7 @@ export class UserListComponent implements OnInit {
       status: this.selectedStatus(),
       role_id: this.selectedRoleId(),
       page: this.currentPage(),
-      per_page: this.perPage()
+      per_page: this.perPage(),
     };
 
     this.userService.getUsers(filters).subscribe({
@@ -70,7 +97,7 @@ export class UserListComponent implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message || 'Failed to load users.');
-      }
+      },
     });
   }
 
@@ -108,7 +135,7 @@ export class UserListComponent implements OnInit {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message || 'Failed to delete user.');
         setTimeout(() => this.errorMessage.set(''), 4000);
-      }
+      },
     });
   }
 

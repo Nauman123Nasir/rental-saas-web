@@ -1,0 +1,167 @@
+// ── Angular Material MD3 Theme ───────────────────────────────────────────────
+// @use must come before any other rules (SCSS requirement)
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    brand-family: 'Plus Jakarta Sans, sans-serif',
+    plain-family: 'Plus Jakarta Sans, sans-serif',
+    bold-weight: 700,
+    medium-weight: 600,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+html {
+  @include mat.all-component-themes($theme);
+}
+
+// ── Global Reset / Base ───────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+// ── SCSS Design Tokens ───────────────────────────────────────────────────────
+$primary:       #4f46e5;
+$primary-hover: #4338ca;
+$primary-light: #6366f1;
+$accent:        #14b8a6;
+$danger:        #ef4444;
+$success:       #10b981;
+$warning:       #f59e0b;
+
+$text-primary:   #1e293b;
+$text-secondary: #64748b;
+$text-muted:     #94a3b8;
+$border-color:   #e2e8f0;
+$surface:        #ffffff;
+$bg-page:        #f1f5f9;
+
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-xl: 18px;
+
+// ── Material Component Overrides ─────────────────────────────────────────────
+
+// Ensure Material uses our font
+.mat-mdc-form-field,
+.mat-mdc-button,
+.mat-mdc-card,
+.mat-mdc-table,
+.mdc-list-item {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+// Form field sizing
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Mat table striping
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: rgba(79, 70, 229, 0.03);
+}
+
+// Sidenav background
+.mat-drawer {
+  background: #ffffff !important;
+  border-right: 1px solid $border-color;
+}
+
+// Snackbar success
+.snack-success .mdc-snackbar__surface {
+  background: #059669 !important;
+  color: #fff !important;
+}
+
+// Snackbar error
+.snack-error .mdc-snackbar__surface {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
+
+// Status chip colours (used across all list pages)
+.chip-active {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #059669 !important;
+}
+
+.chip-inactive {
+  background: rgba(100, 116, 139, 0.12) !important;
+  color: #475569 !important;
+}
+
+.chip-suspended {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #dc2626 !important;
+}
+
+.chip-pending,
+.chip-confirmed {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #d97706 !important;
+}
+
+.chip-completed,
+.chip-paid {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #059669 !important;
+}
+
+.chip-cancelled,
+.chip-void {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #dc2626 !important;
+}
+
+// ── Page Layout Helper ───────────────────────────────────────────────────────
+.page-container {
+  padding: 2rem 2.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.25rem;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: $text-primary;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: $text-secondary;
+  margin: 0.25rem 0 0;
+}

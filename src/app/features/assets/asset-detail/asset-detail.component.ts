@@ -5,12 +5,31 @@ import { AssetService } from '../../../core/services/asset.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-asset-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, HasPermissionDirective],
+  imports: [
+    CommonModule,
+    RouterLink,
+    HasPermissionDirective,
+    MatCardModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './asset-detail.component.html',
-  styleUrls: ['./asset-detail.component.css']
+  styleUrl: './asset-detail.component.scss'
 })
 export class AssetDetailComponent implements OnInit {
   asset = signal<any>(null);

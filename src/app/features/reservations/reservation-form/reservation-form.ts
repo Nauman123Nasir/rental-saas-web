@@ -2,6 +2,16 @@ import { Component, signal, OnInit, inject, ChangeDetectorRef } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReservationService } from '../../../core/services/reservation';
 import { CustomerService } from '../../../core/services/customer.service';
 import { AssetService } from '../../../core/services/asset.service';
@@ -9,9 +19,23 @@ import { AssetService } from '../../../core/services/asset.service';
 @Component({
   selector: 'app-reservation-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './reservation-form.html',
-  styleUrls: ['./reservation-form.css']
+  styleUrl: './reservation-form.scss',
 })
 export class ReservationForm implements OnInit {
   private fb = inject(FormBuilder);
@@ -32,10 +56,10 @@ export class ReservationForm implements OnInit {
   constructor() {
     this.form = this.fb.group({
       customer_id: [null, [Validators.required]],
-      asset_id:    [null, [Validators.required]],
-      pickup_datetime_utc:  ['', [Validators.required]],
-      return_datetime_utc:  ['', [Validators.required]],
-      notes: ['']
+      asset_id: [null, [Validators.required]],
+      pickup_datetime_utc: ['', [Validators.required]],
+      return_datetime_utc: ['', [Validators.required]],
+      notes: [''],
     });
   }
 
@@ -50,7 +74,7 @@ export class ReservationForm implements OnInit {
         this.customers.set(res?.data?.data ?? res?.data ?? []);
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Failed to load customers', err)
+      error: (err) => console.error('Failed to load customers', err),
     });
   }
 
@@ -60,7 +84,7 @@ export class ReservationForm implements OnInit {
         this.assets.set(res?.data?.data ?? res?.data ?? []);
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Failed to load assets', err)
+      error: (err) => console.error('Failed to load assets', err),
     });
   }
 
@@ -75,7 +99,7 @@ export class ReservationForm implements OnInit {
     const val = this.form.value;
     const payload = {
       ...val,
-      assets: [val.asset_id],  // API expects assets array
+      assets: [val.asset_id], // API expects assets array
     };
     delete payload.asset_id;
 
@@ -87,8 +111,10 @@ export class ReservationForm implements OnInit {
       },
       error: (err) => {
         this.submitting.set(false);
-        this.error.set(err?.error?.message ?? 'Failed to create reservation. Please try again.');
-      }
+        this.error.set(
+          err?.error?.message ?? 'Failed to create reservation. Please try again.'
+        );
+      },
     });
   }
 

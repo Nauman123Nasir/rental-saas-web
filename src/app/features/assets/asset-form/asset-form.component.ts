@@ -4,12 +4,33 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AssetService } from '../../../core/services/asset.service';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-asset-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './asset-form.component.html',
-  styleUrls: ['./asset-form.component.css']
+  styleUrl: './asset-form.component.scss'
 })
 export class AssetFormComponent implements OnInit {
   form: FormGroup;
