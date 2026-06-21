@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReservationService, ReservationModel } from '../../../core/services/reservation';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-reservation-detail',
@@ -23,6 +24,7 @@ import { ReservationService, ReservationModel } from '../../../core/services/res
     MatDividerModule,
     MatChipsModule,
     MatProgressSpinnerModule,
+    SkeletonComponent,
   ],
   templateUrl: './reservation-detail.html',
   styleUrl: './reservation-detail.scss',

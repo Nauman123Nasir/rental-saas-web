@@ -43,10 +43,7 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="loading-overlay">
-    <mat-spinner diameter="32"></mat-spinner>
-    <span>Loading assets...</span>
-  </div>
+  <app-skeleton *ngIf="loading()" type="table" [rows]="6" [cols]="7"></app-skeleton>
 
   <!-- Table -->
   <div *ngIf="!loading()" class="table-container">

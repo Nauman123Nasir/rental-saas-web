@@ -26,10 +26,7 @@
 
       <!-- Loading -->
       @if (loading()) {
-        <div class="loading-overlay">
-          <mat-spinner diameter="36"></mat-spinner>
-          <span class="text-sm text-slate-500 ml-3">Loading rentals...</span>
-        </div>
+        <app-skeleton type="table" [rows]="5" [cols]="7"></app-skeleton>
       }
 
       <!-- Content -->

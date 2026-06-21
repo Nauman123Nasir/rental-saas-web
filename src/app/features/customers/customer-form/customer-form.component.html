@@ -29,10 +29,7 @@
   </div>
 
   <!-- Loading overlay for edit mode fetch -->
-  <div *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value" class="form-loader">
-    <mat-spinner diameter="48"></mat-spinner>
-    <span class="mt-3 text-sm text-slate-500">Retrieving customer profile…</span>
-  </div>
+  <app-skeleton *ngIf="isLoading() && isEditMode() && !customerForm.get('email')?.value" type="form" [rows]="3"></app-skeleton>
 
   <!-- Main Form -->
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">

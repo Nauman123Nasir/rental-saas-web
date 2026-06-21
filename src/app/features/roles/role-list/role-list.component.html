@@ -23,10 +23,7 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading()" class="loading-overlay">
-    <mat-spinner diameter="36"></mat-spinner>
-    <span class="ml-3 text-sm text-slate-500 font-medium">Loading roles...</span>
-  </div>
+  <app-skeleton *ngIf="isLoading()" type="cards" [count]="6"></app-skeleton>
 
   <!-- Roles Grid -->
   <div *ngIf="!isLoading()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

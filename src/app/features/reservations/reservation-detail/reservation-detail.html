@@ -2,10 +2,7 @@
 
   <!-- Loading -->
   @if (loading()) {
-    <div class="loading-overlay">
-      <mat-spinner diameter="32"></mat-spinner>
-      <span>Loading reservation...</span>
-    </div>
+    <app-skeleton type="detail" [rows]="2"></app-skeleton>
   }
 
   @if (!loading() && reservation()) {

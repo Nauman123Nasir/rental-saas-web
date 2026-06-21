@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReservationService, ReservationModel } from '../../../core/services/reservation';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-reservation-list',
@@ -31,6 +32,7 @@ import { ReservationService, ReservationModel } from '../../../core/services/res
     MatProgressSpinnerModule,
     MatCardModule,
     MatPaginatorModule,
+    SkeletonComponent,
   ],
   templateUrl: './reservation-list.html',
   styleUrl: './reservation-list.scss',

@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RentalService, RentalModel } from '../../../core/services/rental.service';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-rental-list',
@@ -31,6 +32,7 @@ import { RentalService, RentalModel } from '../../../core/services/rental.servic
     MatProgressSpinnerModule,
     MatCardModule,
     MatPaginatorModule,
+    SkeletonComponent,
   ],
   templateUrl: './rental-list.html',
   styleUrl: './rental-list.scss',

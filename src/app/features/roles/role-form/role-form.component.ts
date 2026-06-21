@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../../../core/services/user.service';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-role-form',
@@ -29,6 +30,7 @@ import { UserService } from '../../../core/services/user.service';
     MatIconModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    SkeletonComponent,
   ],
   templateUrl: './role-form.component.html',
   styleUrl: './role-form.component.scss',

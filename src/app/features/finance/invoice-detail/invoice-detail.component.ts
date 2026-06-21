@@ -10,6 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FinanceService, InvoiceModel } from '../../../core/services/finance.service';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -25,6 +26,7 @@ import { FinanceService, InvoiceModel } from '../../../core/services/finance.ser
     MatChipsModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    SkeletonComponent,
   ],
   templateUrl: './invoice-detail.component.html',
   styleUrl: './invoice-detail.component.scss',

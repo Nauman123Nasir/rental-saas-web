@@ -14,10 +14,7 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="loading-overlay">
-    <mat-spinner diameter="32"></mat-spinner>
-    <span>Loading asset data...</span>
-  </div>
+  <app-skeleton *ngIf="loading()" type="form" [rows]="3"></app-skeleton>
 
   <form *ngIf="!loading()" [formGroup]="form" (ngSubmit)="onSubmit()">
 

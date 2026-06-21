@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CustomerService } from '../../../core/services/customer.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -15,7 +16,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -23,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-customer-list',
   standalone: true,
   imports: [
+    SkeletonComponent,
     CommonModule,
     FormsModule,
     RouterLink,
@@ -36,7 +37,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
     MatCardModule,
     MatTooltipModule,
   ],

@@ -14,10 +14,7 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="loading-overlay">
-    <mat-spinner diameter="32"></mat-spinner>
-    <span>Loading asset...</span>
-  </div>
+  <app-skeleton *ngIf="loading()" type="detail" [rows]="3"></app-skeleton>
 
   <div *ngIf="!loading() && asset()">
 

@@ -1,9 +1,7 @@
 <div class="page-container">
 
   <!-- Loading Screen -->
-  <div *ngIf="isLoading() && !customer()" class="loading-overlay">
-    <mat-spinner diameter="48"></mat-spinner>
-  </div>
+  <app-skeleton *ngIf="isLoading() && !customer()" type="detail" [rows]="3"></app-skeleton>
 
   <!-- Error (no customer loaded yet) -->
   <div *ngIf="errorMessage() && !customer()" class="alert-error mt-4">

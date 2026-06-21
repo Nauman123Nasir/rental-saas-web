@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FinanceService, InvoiceModel } from '../../../core/services/finance.service';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-invoice-list',
@@ -31,6 +32,7 @@ import { FinanceService, InvoiceModel } from '../../../core/services/finance.ser
     MatProgressSpinnerModule,
     MatCardModule,
     MatPaginatorModule,
+    SkeletonComponent,
   ],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.scss',

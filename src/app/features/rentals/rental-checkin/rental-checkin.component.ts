@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RentalService } from '../../../core/services/rental.service';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-rental-checkin',
@@ -27,6 +28,7 @@ import { RentalService } from '../../../core/services/rental.service';
     MatDividerModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    SkeletonComponent,
   ],
   templateUrl: './rental-checkin.html',
   styleUrl: './rental-checkin.scss',

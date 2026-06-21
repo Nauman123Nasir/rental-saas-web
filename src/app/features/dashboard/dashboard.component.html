@@ -21,9 +21,7 @@
 
   <!-- Loading -->
   @if (loading()) {
-    <div class="loading-overlay">
-      <mat-spinner diameter="48"></mat-spinner>
-    </div>
+    <app-skeleton type="dashboard"></app-skeleton>
   }
 
   <!-- Dashboard Content -->

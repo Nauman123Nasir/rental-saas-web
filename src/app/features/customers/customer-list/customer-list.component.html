@@ -80,10 +80,8 @@
   <!-- Table Container -->
   <div class="table-container">
 
-    <!-- Loading Overlay -->
-    <div *ngIf="isLoading()" class="loading-overlay">
-      <mat-spinner diameter="40"></mat-spinner>
-    </div>
+    <!-- Loading Skeleton -->
+    <app-skeleton *ngIf="isLoading()" type="table" [rows]="6" [cols]="7"></app-skeleton>
 
     <!-- Data Table -->
     <mat-table [dataSource]="customers()" class="w-full">

@@ -8,10 +8,7 @@
 
   <!-- Loading -->
   @if (isLoading) {
-    <div class="loading-overlay">
-      <mat-spinner diameter="40"></mat-spinner>
-      <span class="ml-3 text-slate-500 text-sm font-medium">Loading invoice...</span>
-    </div>
+    <app-skeleton type="detail" [rows]="3"></app-skeleton>
   }
 
   <!-- Error -->

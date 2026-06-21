@@ -64,10 +64,7 @@
         </div>
 
         <!-- Loading permissions -->
-        <div *ngIf="permissionGroups().length === 0 && isLoading()" class="flex items-center gap-3 py-6">
-          <mat-spinner diameter="28"></mat-spinner>
-          <span class="text-sm text-slate-500">Loading permissions...</span>
-        </div>
+        <app-skeleton *ngIf="isLoading()" type="form" [rows]="2"></app-skeleton>
 
         <!-- Permission Matrix -->
         <div *ngIf="permissionGroups().length > 0" class="flex flex-col gap-4">

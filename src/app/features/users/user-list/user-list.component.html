@@ -72,11 +72,8 @@
   <!-- Table -->
   <div class="table-container">
 
-    <!-- Loading overlay -->
-    <div *ngIf="isLoading()" class="loading-overlay">
-      <mat-spinner diameter="36"></mat-spinner>
-      <span class="ml-3 text-sm text-slate-500 font-medium">Fetching users...</span>
-    </div>
+    <!-- Loading Skeleton -->
+    <app-skeleton *ngIf="isLoading()" type="table" [rows]="6" [cols]="6"></app-skeleton>
 
     <!-- Table -->
     <div *ngIf="!isLoading()" class="overflow-x-auto">

@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserService } from '../../../core/services/user.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-role-list',
@@ -31,6 +32,7 @@ import { HasPermissionDirective } from '../../../shared/directives/has-permissio
     MatProgressSpinnerModule,
     MatCardModule,
     MatDividerModule,
+    SkeletonComponent,
   ],
   templateUrl: './role-list.component.html',
   styleUrl: './role-list.component.scss',

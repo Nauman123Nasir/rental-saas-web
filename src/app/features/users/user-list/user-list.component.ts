@@ -14,11 +14,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { UserService } from '../../../core/services/user.service';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [
+    SkeletonComponent,
     CommonModule,
     FormsModule,
     RouterLink,

@@ -9,10 +9,7 @@
 
     <!-- Loading -->
     @if (loading()) {
-      <div class="loading-overlay">
-        <mat-spinner diameter="36"></mat-spinner>
-        <span>Loading rental details...</span>
-      </div>
+      <app-skeleton type="form" [rows]="2"></app-skeleton>
     }
 
     @if (!loading()) {
