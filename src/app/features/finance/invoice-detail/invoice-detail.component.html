@@ -1,222 +1,226 @@
 <div class="page-container">
 
   <!-- Back Link -->
-  <a routerLink="/finance/invoices" class="inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 mb-5 transition-colors">
-    <mat-icon class="text-base" style="font-size:16px; width:16px; height:16px;">arrow_back</mat-icon>
+  <a routerLink="/finance/invoices" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
     Back to Invoices
   </a>
 
   <!-- Loading -->
-  @if (isLoading) {
+  @if (isLoading()) {
     <app-skeleton type="detail" [rows]="3"></app-skeleton>
   }
 
   <!-- Error -->
-  @if (error && !isLoading) {
+  @if (error() && !isLoading()) {
     <div class="alert-error">
       <mat-icon>error_outline</mat-icon>
-      {{ error }}
+      {{ error() }}
     </div>
   }
 
-  <!-- Invoice Content -->
-  @if (invoice && !isLoading) {
+  @if (invoice() && !isLoading()) {
+    @let inv = invoice()!;
 
-    <!-- Header Card -->
-    <mat-card class="mb-6 overflow-hidden">
-      <!-- Indigo banner -->
-      <div class="flex items-center justify-between flex-wrap gap-4 px-6 py-5"
-        style="background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);">
-        <div>
-          <p class="text-indigo-200 text-xs font-semibold uppercase tracking-widest mb-1">Invoice</p>
-          <h1 class="text-white text-2xl font-bold" style="font-family: 'Hanken Grotesk', sans-serif;">
-            {{ invoice.invoice_no }}
-          </h1>
+    <!-- ── Header Card ─────────────────────────────────────────────────────── -->
+    <div class="inv-header-card">
+
+      <!-- Gradient banner -->
+      <div class="inv-banner">
+        <div class="inv-banner-info">
+          <p class="inv-banner-eyebrow">Invoice</p>
+          <h1 class="inv-banner-no">{{ inv.invoice_no }}</h1>
         </div>
-        <div class="flex items-center gap-3 flex-wrap">
-          <span [class]="'chip-' + (invoice.status | lowercase)" class="!text-white !bg-white/20 border border-white/40 !text-sm">
-            {{ invoice.status }}
+        <div class="inv-banner-actions">
+          <span [class]="'inv-status-chip chip-' + (inv.status | lowercase)">
+            {{ inv.status }}
           </span>
-          @if (invoice.status !== 'Void' && invoice.status !== 'Paid') {
-            <button mat-flat-button (click)="goToPayment()"
-              style="background:#fff; color:#4338ca; font-weight:600;">
+          @if (inv.status !== 'Void' && inv.status !== 'Paid') {
+            <button mat-flat-button class="btn-pay" (click)="goToPayment()">
               <mat-icon>payments</mat-icon>
               Record Payment
             </button>
-            <button mat-stroked-button (click)="voidInvoice()" [disabled]="isVoiding"
-              style="border-color:#fff; color:#fff;">
-              {{ isVoiding ? 'Voiding...' : 'Void' }}
+            <button mat-stroked-button class="btn-void-action" (click)="voidInvoice()" [disabled]="isVoiding()">
+              {{ isVoiding() ? 'Voiding…' : 'Void Invoice' }}
             </button>
           }
         </div>
       </div>
 
-      <!-- Meta grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100">
-        <div class="px-6 py-4">
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Customer</p>
-          <p class="text-sm font-bold text-slate-800">{{ invoice.customer?.first_name }} {{ invoice.customer?.last_name }}</p>
-          <p class="text-xs text-slate-400 mt-0.5">{{ invoice.customer?.email }}</p>
+      <!-- Meta row -->
+      <div class="inv-meta-row">
+        <div class="inv-meta-cell">
+          <span class="inv-meta-label">Customer</span>
+          <span class="inv-meta-value">{{ inv.customer?.first_name }} {{ inv.customer?.last_name }}</span>
+          <span class="inv-meta-sub">{{ inv.customer?.email ?? '—' }}</span>
         </div>
-        <div class="px-6 py-4">
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Rental Ref</p>
-          <p class="text-sm font-bold text-slate-800">{{ invoice.rental?.rental_no ?? '—' }}</p>
+        <div class="inv-meta-cell">
+          <span class="inv-meta-label">Rental Ref</span>
+          <span class="inv-meta-value">{{ inv.rental?.rental_no ?? '—' }}</span>
         </div>
-        <div class="px-6 py-4">
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Issue Date</p>
-          <p class="text-sm font-bold text-slate-800">{{ invoice.issue_date | date:'mediumDate' }}</p>
+        <div class="inv-meta-cell">
+          <span class="inv-meta-label">Issue Date</span>
+          <span class="inv-meta-value">{{ inv.issue_date | date:'mediumDate' }}</span>
         </div>
-        <div class="px-6 py-4">
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Due Date</p>
-          <p class="text-sm font-bold text-slate-800">
-            {{ invoice.due_date ? (invoice.due_date | date:'mediumDate') : '—' }}
-          </p>
+        <div class="inv-meta-cell">
+          <span class="inv-meta-label">Due Date</span>
+          <span class="inv-meta-value">{{ inv.due_date ? (inv.due_date | date:'mediumDate') : '—' }}</span>
         </div>
       </div>
-    </mat-card>
 
-    <!-- Line Items -->
-    <mat-card class="mb-6">
-      <mat-card-header>
-        <mat-card-title class="flex items-center gap-2 text-base font-semibold text-slate-700">
-          <mat-icon color="primary">list_alt</mat-icon>
-          Line Items
-        </mat-card-title>
-      </mat-card-header>
+    </div><!-- /inv-header-card -->
+
+    <!-- ── Line Items ──────────────────────────────────────────────────────── -->
+    <div class="card inv-section">
+      <div class="card-header">
+        <mat-icon class="section-icon">list_alt</mat-icon>
+        <h3 class="card-title">Line Items</h3>
+      </div>
       <mat-divider></mat-divider>
-      <mat-card-content class="pt-4 px-0">
-        <div class="overflow-x-auto">
-          <table mat-table [dataSource]="invoice.lines || []" class="w-full">
 
-            <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef>Description</th>
-              <td mat-cell *matCellDef="let line" class="text-sm text-slate-700">{{ line.description }}</td>
+      <div class="inv-table-wrap">
+        <table mat-table [dataSource]="inv.lines || []" class="inv-table">
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let line">{{ line.description }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="line_type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let line">
+              <span class="chip-draft">{{ line.line_type | titlecase }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unit_price">
+            <th mat-header-cell *matHeaderCellDef class="col-right">Unit Price</th>
+            <td mat-cell *matCellDef="let line" class="col-right mono-num">
+              {{ inv.currency_code }} {{ line.unit_price | number:'1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef class="col-right">Qty</th>
+            <td mat-cell *matCellDef="let line" class="col-right mono-num">{{ line.quantity }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef class="col-right">Total</th>
+            <td mat-cell *matCellDef="let line" class="col-right mono-num fw-bold">
+              {{ inv.currency_code }} {{ line.total | number:'1.2-2' }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="lineColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: lineColumns;"></tr>
+
+          <tr class="mat-mdc-no-data-row" *matNoDataRow>
+            <td [attr.colspan]="lineColumns.length" class="no-data-cell">
+              No line items on this invoice.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Totals panel -->
+      <div class="totals-panel">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span class="mono-num">{{ inv.currency_code }} {{ inv.subtotal | number:'1.2-2' }}</span>
+        </div>
+        <div class="totals-row totals-discount">
+          <span>Discount</span>
+          <span class="mono-num">− {{ inv.currency_code }} {{ inv.discount_amount | number:'1.2-2' }}</span>
+        </div>
+        <div class="totals-row">
+          <span>Tax</span>
+          <span class="mono-num">{{ inv.currency_code }} {{ inv.tax_amount | number:'1.2-2' }}</span>
+        </div>
+        <div class="totals-divider"></div>
+        <div class="totals-row totals-grand">
+          <span>Total</span>
+          <span class="mono-num">{{ inv.currency_code }} {{ inv.total_amount | number:'1.2-2' }}</span>
+        </div>
+        <div class="totals-row totals-paid">
+          <span>Amount Paid</span>
+          <span class="mono-num">{{ inv.currency_code }} {{ inv.amount_paid | number:'1.2-2' }}</span>
+        </div>
+        <div class="totals-divider"></div>
+        <div class="totals-row totals-balance"
+          [class.balance-owed]="+(inv.balance_due ?? 0) > 0"
+          [class.balance-clear]="+(inv.balance_due ?? 0) <= 0">
+          <span>Balance Due</span>
+          <span class="mono-num">{{ inv.currency_code }} {{ inv.balance_due | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Payment History ─────────────────────────────────────────────────── -->
+    <div class="card inv-section">
+      <div class="card-header">
+        <mat-icon class="section-icon">payments</mat-icon>
+        <h3 class="card-title">Payment History</h3>
+        @if (inv.payments?.length) {
+          <span class="pay-count-badge">{{ inv.payments!.length }}</span>
+        }
+      </div>
+      <mat-divider></mat-divider>
+
+      @if (inv.payments?.length) {
+        <div class="inv-table-wrap">
+          <table mat-table [dataSource]="inv.payments || []" class="inv-table">
+
+            <ng-container matColumnDef="payment_no">
+              <th mat-header-cell *matHeaderCellDef>Payment #</th>
+              <td mat-cell *matCellDef="let pay" class="fw-bold">{{ pay.payment_no }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="line_type">
-              <th mat-header-cell *matHeaderCellDef>Type</th>
-              <td mat-cell *matCellDef="let line">
-                <span class="chip-draft">{{ line.line_type }}</span>
+            <ng-container matColumnDef="payment_method">
+              <th mat-header-cell *matHeaderCellDef>Method</th>
+              <td mat-cell *matCellDef="let pay">
+                <span class="chip-draft">{{ pay.payment_method | titlecase }}</span>
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="unit_price">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Unit Price</th>
-              <td mat-cell *matCellDef="let line" class="text-right text-sm">
-                {{ invoice.currency_code }} {{ line.unit_price | number:'1.2-2' }}
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef class="col-right">Amount</th>
+              <td mat-cell *matCellDef="let pay" class="col-right mono-num pay-amount">
+                {{ inv.currency_code }} {{ pay.amount | number:'1.2-2' }}
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="quantity">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Qty</th>
-              <td mat-cell *matCellDef="let line" class="text-right text-sm">{{ line.quantity }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="total">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Total</th>
-              <td mat-cell *matCellDef="let line" class="text-right font-bold text-sm">
-                {{ invoice.currency_code }} {{ line.total | number:'1.2-2' }}
+            <ng-container matColumnDef="payment_datetime_utc">
+              <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+              <td mat-cell *matCellDef="let pay" class="text-muted">
+                {{ pay.payment_datetime_utc | date:'medium' }}
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="lineColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: lineColumns;"></tr>
+            <ng-container matColumnDef="receipt_no">
+              <th mat-header-cell *matHeaderCellDef>Receipt #</th>
+              <td mat-cell *matCellDef="let pay" class="text-muted">
+                {{ pay.receipt?.receipt_no ?? '—' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="paymentColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: paymentColumns;"></tr>
           </table>
         </div>
-
-        <!-- Totals Box -->
-        <div class="ml-auto mt-4 max-w-sm w-full px-6">
-          <div class="flex justify-between items-center text-sm py-1.5 text-slate-600">
-            <span>Subtotal</span>
-            <span>{{ invoice.currency_code }} {{ invoice.subtotal | number:'1.2-2' }}</span>
-          </div>
-          <div class="flex justify-between items-center text-sm py-1.5 text-emerald-600">
-            <span>Discount</span>
-            <span>- {{ invoice.currency_code }} {{ invoice.discount_amount | number:'1.2-2' }}</span>
-          </div>
-          <div class="flex justify-between items-center text-sm py-1.5 text-slate-600">
-            <span>Tax</span>
-            <span>{{ invoice.currency_code }} {{ invoice.tax_amount | number:'1.2-2' }}</span>
-          </div>
-          <mat-divider class="my-2"></mat-divider>
-          <div class="flex justify-between items-center font-bold text-base text-slate-800 py-2">
-            <span>Total</span>
-            <span>{{ invoice.currency_code }} {{ invoice.total_amount | number:'1.2-2' }}</span>
-          </div>
-          <div class="flex justify-between items-center text-sm py-1.5 text-emerald-600">
-            <span>Amount Paid</span>
-            <span>{{ invoice.currency_code }} {{ invoice.amount_paid | number:'1.2-2' }}</span>
-          </div>
-          <div class="flex justify-between items-center font-bold text-base py-1.5"
-            [class.text-red-600]="(invoice.balance_due ?? 0) > 0"
-            [class.text-emerald-600]="(invoice.balance_due ?? 0) <= 0">
-            <span>Balance Due</span>
-            <span>{{ invoice.currency_code }} {{ invoice.balance_due | number:'1.2-2' }}</span>
-          </div>
+      } @else {
+        <div class="pay-empty">
+          <mat-icon class="pay-empty-icon">receipt_long</mat-icon>
+          <p class="pay-empty-text">No payments recorded yet.</p>
+          @if (inv.status !== 'Void' && inv.status !== 'Paid') {
+            <button mat-stroked-button class="btn-outline" (click)="goToPayment()">
+              <mat-icon>add</mat-icon>
+              Record First Payment
+            </button>
+          }
         </div>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Payment History -->
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title class="flex items-center gap-2 text-base font-semibold text-slate-700">
-          <mat-icon color="primary">payments</mat-icon>
-          Payment History
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content class="pt-4 px-0">
-
-        @if (invoice.payments?.length) {
-          <div class="overflow-x-auto">
-            <table mat-table [dataSource]="invoice.payments || []" class="w-full">
-
-              <ng-container matColumnDef="payment_no">
-                <th mat-header-cell *matHeaderCellDef>Payment #</th>
-                <td mat-cell *matCellDef="let pay" class="font-bold text-sm">{{ pay.payment_no }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="payment_method">
-                <th mat-header-cell *matHeaderCellDef>Method</th>
-                <td mat-cell *matCellDef="let pay">
-                  <span class="chip-draft">{{ pay.payment_method }}</span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef class="text-right">Amount</th>
-                <td mat-cell *matCellDef="let pay" class="text-right font-bold text-emerald-600 text-sm">
-                  {{ invoice.currency_code }} {{ pay.amount | number:'1.2-2' }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="payment_datetime_utc">
-                <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let pay" class="text-sm text-slate-500">
-                  {{ pay.payment_datetime_utc | date:'medium' }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="receipt_no">
-                <th mat-header-cell *matHeaderCellDef>Receipt #</th>
-                <td mat-cell *matCellDef="let pay" class="text-xs text-slate-400">
-                  {{ pay.receipt?.receipt_no ?? '—' }}
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="paymentColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: paymentColumns;"></tr>
-            </table>
-          </div>
-        } @else {
-          <div class="empty-state" style="padding: 2rem;">
-            <p class="text-sm text-slate-400">No payments recorded yet.</p>
-          </div>
-        }
-
-      </mat-card-content>
-    </mat-card>
+      }
+    </div>
 
   }
 </div>
